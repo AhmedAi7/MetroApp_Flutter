@@ -3,24 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
+class SignUp1Page extends StatelessWidget {
 
-class _LoginPageState extends State<LoginPage> {
-  @override
   String email;
 
-  String password;
+  String name;
 
   final _formKey = GlobalKey<FormState>();
 
-  bool _obscureText = true;
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
@@ -35,11 +28,37 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Image.asset("images/metro-logo.png"),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Form(
                   key: _formKey,
                   child: Column(children: [
+                    Container(
+                      decoration: CustomBoxDecoration.decorationStyle(
+                          Color(0xd6a80f14), 15.0),
+                      child: TextFormField(
+                        onSaved: (val) {
+                          this.name = val;
+                        },
+                        validator: (val) {
+                          if (val.isEmpty) {
+                            return "Name couldn't be blank!";
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.name,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: CustomInputDecoration.textFieldStyle(
+                            " Full Name", Icon(Icons.perm_identity)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     Container(
                       decoration: CustomBoxDecoration.decorationStyle(
                           Color(0xd6a80f14), 15.0),
@@ -63,72 +82,15 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      decoration: CustomBoxDecoration.decorationStyle(
-                          Color(0xd6a80f14), 15.0),
-                      child: TextFormField(
-                        obscureText: _obscureText,
-                        onSaved: (val) {
-                          this.password = val;
-                        },
-                        validator: (val) {
-                          if (val.isEmpty) {
-                            return "Password couldn't be blank!";
-                          } else if (val.length < 6) {
-                            return "Password can't be less than 6 letters!";
-                          }
-                          return null;
-                        },
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: InputDecoration(
-                          errorStyle: TextStyle(
-                              color: Color(0xFFFFFFFF),
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xd6a80f14)),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15.0),
-                            ),
-                          ),
-                          fillColor: Color(0xFFFFFFFF),
-                          filled: true,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                          ),
-                          labelStyle: TextStyle(
-                              color: Color(0xFFE5E5E5),
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic),
-                          labelText: " Password",
-                        ),
-                      ),
-                    ),
-                    SizedBox(
                       height: 25,
                     ),
                     InkWell(
                       onTap: () {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          try {} catch (error) {}
+                          try {
+                            Navigator.pushNamed(context, 'SignUp2');
+                          } catch (error) {}
                         } else {}
                       },
                       child: Container(
@@ -138,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                             Color(0xFFFFFFFF), 10.0),
                         child: Center(
                           child: Text(
-                            "Login",
+                            "Next",
                             style: TextStyle(
                               color: Color(0xFFFFFFFF),
                               fontSize: 20,
@@ -147,20 +109,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        'Forget Password?',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                            color: Color(0xFFE5E5E5)),
                       ),
                     ),
                   ]),
@@ -174,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                       Expanded(
                           child: Divider(color: Color(0xFFE5E5E5), thickness: 1)),
                       Text(
-                        '    Or Login With    ',
+                        '    Or Sign Up With    ',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic,
@@ -204,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account?",
+                    "Already have an account?",
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -213,10 +161,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, 'SignUp1');
-                    },
+                      Navigator.popAndPushNamed(context,'Login');
+                      },
                     child: Text(
-                      '  Sign Up  ',
+                      '  Login  ',
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -235,3 +183,4 @@ class _LoginPageState extends State<LoginPage> {
     throw UnimplementedError();
   }
 }
+

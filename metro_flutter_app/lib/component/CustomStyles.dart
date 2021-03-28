@@ -32,7 +32,8 @@ class CustomBoxDecoration {
       boxShadow: [
         BoxShadow(
           color: color1,
-          offset: Offset(0, 3),
+          offset: Offset(0, 2),
+          spreadRadius: 0.1,
           blurRadius: 6,
         ),
       ],
