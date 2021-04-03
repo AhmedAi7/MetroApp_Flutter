@@ -128,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
+                          Navigator.popAndPushNamed(context,'NavgPage');
                           try {} catch (error) {}
                         } else {}
                       },
