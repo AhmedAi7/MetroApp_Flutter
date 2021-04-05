@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(children: [
                     Container(
                       decoration: CustomBoxDecoration.decorationStyle(
-                          Color(0xd6a80f14), 15.0),
+                          Color(0xffa80f14), 15.0),
                       child: TextFormField(
                         onSaved: (val) {
                           this.email = val;
@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Container(
                       decoration: CustomBoxDecoration.decorationStyle(
-                          Color(0xd6a80f14), 15.0),
+                          Color(0xffa80f14), 15.0),
                       child: TextFormField(
                         obscureText: _obscureText,
                         onSaved: (val) {
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                               fontWeight: FontWeight.bold,
                               fontSize: 11),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xd6a80f14)),
+                            borderSide: BorderSide(color: Color(0xffa80f14)),
                             borderRadius: BorderRadius.all(
                               Radius.circular(15.0),
                             ),
@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          Navigator.popAndPushNamed(context,'NavgPage');
+                          Navigator.popAndPushNamed(context, 'NavgPage');
                           try {} catch (error) {}
                         } else {}
                       },
@@ -173,7 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 50.0),
                     child: Row(children: [
                       Expanded(
-                          child: Divider(color: Color(0xFFE5E5E5), thickness: 1)),
+                          child:
+                              Divider(color: Color(0xFFE5E5E5), thickness: 1)),
                       Text(
                         '    Or Login With    ',
                         style: TextStyle(
@@ -182,7 +183,8 @@ class _LoginPageState extends State<LoginPage> {
                             color: Color(0xFFE5E5E5)),
                       ),
                       Expanded(
-                          child: Divider(color: Color(0xFFE5E5E5), thickness: 1)),
+                          child:
+                              Divider(color: Color(0xFFE5E5E5), thickness: 1)),
                     ]),
                   ),
                   SizedBox(
