@@ -43,34 +43,48 @@ class _homepageState extends State<homepage> {
                       children: [
                         Positioned(
                           right: 100,
-                          child: CircleAvatar(
-                            maxRadius: 75,
-                            backgroundColor: Colors.white,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  balance.toString(),
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xffa80f14),
+                              borderRadius: BorderRadius.circular(75),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xffa80f14),
+                                  offset: Offset(0, 1),
+                                  spreadRadius: 0.1,
+                                  blurRadius: 6,
                                 ),
-                                Text(
-                                  'EGP',
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xffa80f14),
-                                  ),
-                                )
                               ],
+                            ),
+                            child: CircleAvatar(
+                              maxRadius: 75,
+                              backgroundColor: Colors.white,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    balance.toString(),
+                                    style: TextStyle(
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    'EGP',
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xffa80f14),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
                         Positioned(
-                          left: 10,
+                          //left: 10,
                           child: Column(
                             children: [
                               SizedBox(
@@ -188,6 +202,14 @@ class _homepageState extends State<homepage> {
                             decoration: BoxDecoration(
                               color: Color(0xffa80f14),
                               borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(0, 1),
+                                  spreadRadius: -2,
+                                  blurRadius: 6,
+                                ),
+                              ],
                             ),
                             child: Center(
                               child: Text(
@@ -210,6 +232,14 @@ class _homepageState extends State<homepage> {
                             decoration: BoxDecoration(
                               color: Color(0xFFFFFFFF),
                               borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xffa80f14),
+                                  offset: Offset(0, 1),
+                                  spreadRadius: -2,
+                                  blurRadius: 6,
+                                ),
+                              ],
                             ),
                             child: Center(
                               child: Text(
