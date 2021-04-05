@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomInputDecoration {
-  static InputDecoration textFieldStyle(name,Icon icon) {
+  static InputDecoration textFieldStyle(name, Icon icon) {
     return InputDecoration(
-      errorStyle: TextStyle(color: Color(0xFFFFFFFF),fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontSize: 11),
+      errorStyle: TextStyle(
+          color: Color(0xFFFFFFFF),
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.bold,
+          fontSize: 11),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xd6a80f14)),
+        borderSide: BorderSide(color: Color(0xffa80f14)),
         borderRadius: BorderRadius.all(
           Radius.circular(15.0),
         ),
@@ -25,15 +29,15 @@ class CustomInputDecoration {
 }
 
 class CustomBoxDecoration {
-  static BoxDecoration decorationStyle(Color color1,size) {
+  static BoxDecoration decorationStyle(Color color1, size) {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(size),
-      color: Color(0xd6a80f14),
+      color: Color(0xffa80f14),
       boxShadow: [
         BoxShadow(
           color: color1,
           offset: Offset(0, 2),
-          spreadRadius: 0.1,
+          spreadRadius: -2,
           blurRadius: 6,
         ),
       ],
