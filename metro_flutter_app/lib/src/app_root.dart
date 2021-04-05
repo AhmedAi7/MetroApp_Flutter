@@ -8,6 +8,7 @@ import 'package:metro_flutter_app/view/Settings.dart';
 import 'package:metro_flutter_app/view/SignUp1Page.dart';
 import 'package:metro_flutter_app/view/SignUp2Page.dart';
 import 'package:metro_flutter_app/view/SubscriptionPage.dart';
+import 'package:metro_flutter_app/view/nearest_station.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -23,8 +24,12 @@ class MyApp extends StatelessWidget {
         'HomePage': (context) => homepage(),
         'Subscription': (context) => subscription(),
         'Settings': (context) => settings(),
-        "NavgPage": (context) => navScreen(),
-        //"MyTickets":(context)=>MyTickets(),
+        'NavgPage': (context) => navScreen(),
+        'NearestStation': (context) => NearestStation(),
+        //'GetRoute': (context) => GetRoute();
+        //'ContactUs': (context) => ContactUs();
+        //'LogOut': (context) => LogOut();
+        //"MyTickets":(context)=> MyTickets(),
         //'SignUp3' :(context) => SignUp3Page(),
       },
       debugShowCheckedModeBanner: false,
