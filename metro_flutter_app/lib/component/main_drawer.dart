@@ -6,7 +6,7 @@ class MainDrawer extends StatelessWidget {
       leading: Icon(
         icon,
         size: 24,
-        color: Color(0xd6a80f14),
+        color: Color(0xffa80f14),
       ),
       title: Text(
         title,
@@ -14,7 +14,7 @@ class MainDrawer extends StatelessWidget {
           fontFamily: 'RobotoCondensed',
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: Color(0xd6a80f14),
+          color: Color(0xffa80f14),
         ),
       ),
       onTap: () {
@@ -28,7 +28,7 @@ class MainDrawer extends StatelessWidget {
     return ListTile(
       leading: ImageIcon(
         AssetImage(name),
-        color: Color(0xd6a80f14),
+        color: Color(0xffa80f14),
         size: size,
       ),
       title: Text(
@@ -37,7 +37,7 @@ class MainDrawer extends StatelessWidget {
           fontFamily: 'RobotoCondensed',
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: Color(0xd6a80f14),
+          color: Color(0xffa80f14),
         ),
       ),
       onTap: () {
@@ -56,7 +56,7 @@ class MainDrawer extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(20),
             alignment: Alignment.centerLeft,
-            color: Color(0xd6a80f14),
+            color: Color(0xffa80f14),
             // #A80F14 red
             child: Text(
               'User123',
