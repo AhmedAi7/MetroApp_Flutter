@@ -41,8 +41,86 @@ class _homepageState extends State<homepage> {
                     child: Stack(
                       overflow: Overflow.visible,
                       children: [
-                        Positioned(
-                          right: 100,
+                        Padding(
+                          padding: EdgeInsets.only(left: 120),
+                          //left: 10,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 18,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  //Navigator.popAndPushNamed(context, 'Recharge');
+                                },
+                                child: Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffa80f14),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0, 1),
+                                        spreadRadius: -2,
+                                        blurRadius: 6,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Recharge",
+                                      style: TextStyle(
+                                        color: Color(0xFFFFFFFF),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  //Navigator.pushNamed(context, 'MyTickets');
+                                },
+                                child: Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffa80f14),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0, 1),
+                                        spreadRadius: -2,
+                                        blurRadius: 6,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "  My Tickets",
+                                      style: TextStyle(
+                                        color: Color(0xFFFFFFFF),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 1),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Color(0xffa80f14),
@@ -81,83 +159,6 @@ class _homepageState extends State<homepage> {
                                 ],
                               ),
                             ),
-                          ),
-                        ),
-                        Positioned(
-                          //left: 10,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 18,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  //Navigator.popAndPushNamed(context, 'Recharge');
-                                },
-                                child: Container(
-                                  width: 170,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffa80f14),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.white,
-                                        offset: Offset(0, 1),
-                                        spreadRadius: -2,
-                                        blurRadius: 6,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Recharge",
-                                      style: TextStyle(
-                                        color: Color(0xFFFFFFFF),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  //Navigator.pushNamed(context, 'MyTickets');
-                                },
-                                child: Container(
-                                  width: 170,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffa80f14),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.white,
-                                        offset: Offset(0, 1),
-                                        spreadRadius: -2,
-                                        blurRadius: 6,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "My Tickets",
-                                      style: TextStyle(
-                                        color: Color(0xFFFFFFFF),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ],
