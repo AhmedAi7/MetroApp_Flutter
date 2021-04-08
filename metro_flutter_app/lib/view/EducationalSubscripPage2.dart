@@ -44,6 +44,7 @@ class _edusub2State extends State<edusub2> {
   }
   final _formKey3 = GlobalKey<FormState>();
   Widget build(BuildContext context) {
+    double screenwidth=  MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: buildAppBar(),
         body: SingleChildScrollView(
@@ -63,7 +64,7 @@ class _edusub2State extends State<edusub2> {
                       child: Form(
                           key: _formKey3,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
                             child: Column(mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -82,104 +83,54 @@ class _edusub2State extends State<edusub2> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  textfield("National ID", Icons.credit_card, email, 55, 250),
+                                  textfield("National ID", Icons.credit_card, email, 55, screenwidth),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   Container(
-                                      alignment: Alignment.centerLeft,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15.0),
-                                        color: const Color(0xffffffff),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: const Color(0xffa80f14),
-                                            offset: Offset(0, 3),
-                                            blurRadius: 6,
-                                          ),
-                                        ],
+                                    width: screenwidth/2.34,
+                                    height: 55,
+                                    decoration: CustomBoxDecoration.decorationStyle(
+                                        Color(0xd6a80f14), 15.0),
+                                    child: TextFormField(
+                                      onTap: _openImagePicker,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      height: 55.0,
-                                      width: 175.0,
-                                      child:
-
-                                      ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              primary: Colors.transparent
-                                              ,
-                                              shadowColor: Colors.transparent
-                                          ),
-                                          onPressed: _openImagePicker2,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Upload National ID",
-                                                style: TextStyle(
-                                                    fontSize: 13.0,
-                                                    fontWeight: FontWeight.w300,
-                                                    fontFamily: "OpenSans"
-                                                    ,
-                                                    color: const Color(0x59000000)),
-                                              ),
-                                              Icon(Icons.add_a_photo,color: Colors.grey ,)
-                                            ],
-                                          )
-                                      )
+                                      decoration: CustomInputDecoration.textFieldStyle(
+                                          "Upload National ID", Icon(Icons.add_a_photo)),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  textfield("Edu ID", Icons.credit_card, email, 55, 250),
+                                  textfield("Edu ID", Icons.credit_card, email, 55, screenwidth),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   Container(
-                                      alignment: Alignment.centerLeft,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15.0),
-                                        color: const Color(0xffffffff),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: const Color(0xffa80f14),
-                                            offset: Offset(0, 3),
-                                            blurRadius: 6,
-                                          ),
-                                        ],
+                                    width: screenwidth/2.34,
+                                    height: 55,
+                                    decoration: CustomBoxDecoration.decorationStyle(
+                                        Color(0xd6a80f14), 15.0),
+                                    child: TextFormField(
+                                      onTap: _openImagePicker2,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      height: 55.0,
-                                      width: 175.0,
-                                      child:
-
-                                      ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              primary: Colors.transparent
-                                              ,
-                                              shadowColor: Colors.transparent
-                                          ),
-                                          onPressed: _openImagePicker,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Upload Edu ID",
-                                                style: TextStyle(
-                                                    fontSize: 13.0,
-                                                    fontWeight: FontWeight.w300,
-                                                    fontFamily: "OpenSans"
-                                                    ,
-                                                    color: const Color(0x59000000)),
-                                              ),
-                                              Icon(Icons.add_a_photo,color: Colors.grey ,)
-                                            ],
-                                          )
-                                      )
+                                      decoration: CustomInputDecoration.textFieldStyle(
+                                          "Upload Edu Photo", Icon(Icons.add_a_photo)),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      textfield("Station 1", Icons.my_location, Station1, 55, 160),
-                                      textfield("Station 2", Icons.location_on_outlined, Station2, 55, 160),
+                                      textfield("Station 1", Icons.my_location, Station1, 55, screenwidth/2.34),
+                                      textfield("Station 2", Icons.location_on_outlined, Station2, 55, screenwidth/2.34),
                                     ],
                                   ),
                                   SizedBox(

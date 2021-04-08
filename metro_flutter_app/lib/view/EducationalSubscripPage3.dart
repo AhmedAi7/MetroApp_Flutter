@@ -46,7 +46,7 @@ class _edusub3State extends State<edusub3> {
                 ),),
             ),
             SizedBox(height: 20.0,),
-            Button1("Done", navScreen(), context, 18, 80, 170)
+            Button1("Done", navScreen(0), context, 18, 80, 170)
           ],
         ),
         ),

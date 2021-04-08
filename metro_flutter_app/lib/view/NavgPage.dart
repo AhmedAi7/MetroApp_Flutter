@@ -7,8 +7,10 @@ import 'package:metro_flutter_app/view/SubscriptionPage.dart';
 import '../component/main_drawer.dart';
 
 class navScreen extends StatefulWidget {
+  final index1;
+  const navScreen(this.index1);
   @override
-  _navScreenState createState() => _navScreenState();
+  _navScreenState createState() => _navScreenState(index1);
 }
 
 class _navScreenState extends State<navScreen> {
@@ -22,8 +24,13 @@ class _navScreenState extends State<navScreen> {
     "Subscription": Icons.subscriptions,
     "Settings": Icons.settings,
   };
-  int currentindex = 0;
+  int currentindex ;
   String currentpage;
+
+  _navScreenState(index1)
+  {
+   currentindex=index1;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

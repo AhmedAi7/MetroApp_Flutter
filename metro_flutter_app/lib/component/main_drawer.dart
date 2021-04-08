@@ -50,7 +50,7 @@ class MainDrawer extends StatelessWidget {
             height: 120,
             width: double.infinity,
             padding: EdgeInsets.all(20),
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.centerRight,
             color: Color(0xffa80f14),
             // #A80F14 red
             child: Text(
