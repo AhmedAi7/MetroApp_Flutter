@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/Textfeildd.dart';
+import 'package:metro_flutter_app/component/main_drawer.dart';
 
 class normalsup2 extends StatefulWidget {
   @override
@@ -21,7 +22,9 @@ class _normalsup2State extends State<normalsup2> {
 
   bool _obscureText = true;
   Widget build(BuildContext context) {
+   double screenwidth=  MediaQuery.of(context).size.width;
     return Scaffold(
+      drawer: MainDrawer(),
         appBar:buildAppBar(),
         body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
@@ -40,7 +43,7 @@ class _normalsup2State extends State<normalsup2> {
         child: Form(
             key: _formKey1,
             child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Column(mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -56,26 +59,26 @@ class _normalsup2State extends State<normalsup2> {
                 SizedBox(
                   height: 10,
                 ),
-                textfield("Fullname", Icons.perm_contact_cal_sharp, fullname, 55, 250),
+                textfield("Fullname", Icons.perm_contact_cal_sharp, fullname, 55, screenwidth),
                 SizedBox(
                   height: 10,
                 ),
-                textfield("Email", Icons.email, email, 55, 250),
+                textfield("Email", Icons.email, email, 55, screenwidth),
                 SizedBox(
                   height: 10,
                 ),
-                textfield("Phone Number", Icons.phone, phonenumber, 55, 250),
+                textfield("Phone Number", Icons.phone, phonenumber, 55, screenwidth),
                 SizedBox(
                   height: 10,
                 ),
-                textfield("National ID", Icons.credit_card, email, 55, 250),
+                textfield("National ID", Icons.credit_card, email, 55, screenwidth),
                 SizedBox(
                   height: 10,
                 ),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    textfield("Country", Icons.location_city, country, 55, 160),
-                    textfield("City", Icons.location_city, city, 55, 160),
+                    textfield("Country", Icons.location_city, country, 55, screenwidth/2.34),
+                    textfield("City", Icons.location_city, city, 55, screenwidth/2.34),
                   ],
                 ),
                 SizedBox(
@@ -83,8 +86,8 @@ class _normalsup2State extends State<normalsup2> {
                 ),
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        textfield("Station 1", Icons.my_location, Station1, 55, 160),
-                        textfield("Station 2", Icons.location_on_outlined, Station2, 55, 160),
+                        textfield("Station 1", Icons.my_location, Station1, 55, screenwidth/2.34),
+                        textfield("Station 2", Icons.location_on_outlined, Station2, 55, screenwidth/2.34),
                       ],
                     ),
                     SizedBox(

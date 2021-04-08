@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:metro_flutter_app/view/ChargeWallet.dart';
 import 'package:metro_flutter_app/view/HomePage.dart';
 import 'package:metro_flutter_app/view/LoginPage.dart';
 import 'package:metro_flutter_app/view/NavgPage.dart';
@@ -8,8 +9,6 @@ import 'package:metro_flutter_app/view/Settings.dart';
 import 'package:metro_flutter_app/view/SignUp1Page.dart';
 import 'package:metro_flutter_app/view/SignUp2Page.dart';
 import 'package:metro_flutter_app/view/SubscriptionPage.dart';
-import 'package:metro_flutter_app/view/nearest_station.dart';
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -21,11 +20,12 @@ class MyApp extends StatelessWidget {
         'Login': (context) => LoginPage(),
         'SignUp1': (context) => SignUp1Page(),
         'SignUp2': (context) => SignUp2Page(),
-        'HomePage': (context) => homepage(),
-        'Subscription': (context) => subscription(),
-        'Settings': (context) => settings(),
-        'NavgPage': (context) => navScreen(),
-        'NearestStation': (context) => NearestStation(),
+        'HomePage': (context) => navScreen(0),
+        'Subscription': (context) => navScreen(1),
+        'Settings': (context) => navScreen(2),
+        'NavgPage': (context) => navScreen(0),
+        'Recharge' : (context) => chargewallet(),
+        //'NearestStation': (context) =>
         //'GetRoute': (context) => GetRoute();
         //'ContactUs': (context) => ContactUs();
         //'LogOut': (context) => LogOut();

@@ -39,6 +39,7 @@ class _edusub1State extends State<edusub1> {
   final _formKey2 = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
+    double screenwidth=  MediaQuery.of(context).size.width;
     return Scaffold(
         appBar:buildAppBar(),
         body: SingleChildScrollView(
@@ -58,7 +59,7 @@ class _edusub1State extends State<edusub1> {
           child: Form(
               key: _formKey2,
               child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Column(mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -80,70 +81,42 @@ class _edusub1State extends State<edusub1> {
                 ),
                 textfield(
                     "Fullname", Icons.perm_contact_cal_sharp, fullname, 55,
-                    250),
+                    screenwidth),
                 SizedBox(
                   height: 10,
                 ),
-                textfield("Email", Icons.email, email, 55, 250),
+                textfield("Email", Icons.email, email, 55, screenwidth),
                 SizedBox(
                   height: 10,
                 ),
-                textfield("Phone Number", Icons.phone, phonenumber, 55, 250),
+                textfield("Phone Number", Icons.phone, phonenumber, 55, screenwidth),
                 SizedBox(
                   height: 10,
                 ),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    textfield("Country", Icons.location_city, country, 55, 160),
-                    textfield("City", Icons.location_city, city, 55, 160),
+                    textfield("Country", Icons.location_city, country, 55, screenwidth/2.34),
+                    textfield("City", Icons.location_city, city, 55, screenwidth/2.34),
                   ],
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                  //_image=null,
-                  //Button2("Upload Profile picture", _openImagePicker()),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    color: const Color(0xffffffff),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xffa80f14),
-                        offset: Offset(0, 3),
-                        blurRadius: 6,
-                      ),
-                    ],
-                  ),
-                  height: 55.0,
-                  width: 175.0,
-                  child:
-
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent
-                      ,
-                      shadowColor: Colors.transparent
-                    ),
-                      onPressed: _openImagePicker,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Upload Profile Photo",
-                          style: TextStyle(
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w300,
-                              fontFamily: "OpenSans"
-                              ,
-                              color: const Color(0x59000000)),
+                    Container(
+                      width: screenwidth/2.34,
+                      decoration: CustomBoxDecoration.decorationStyle(
+                          Color(0xd6a80f14), 15.0),
+                      child: TextFormField(
+                        onTap: _openImagePicker,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Icon(Icons.add_a_photo,color: Colors.grey ,)
-                      ],
-                    )
-                    )
-                  ),
-                SizedBox(
+                        decoration: CustomInputDecoration.textFieldStyle(
+                            "Upload Profile Photo", Icon(Icons.add_a_photo)),
+                      ),
+                    ),
+                    SizedBox(
                 height: 10,
               ),
               InkWell(
