@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:metro_flutter_app/view/Buy%20Tickets.dart';
 import 'package:metro_flutter_app/view/ChargeWallet.dart';
 import 'package:metro_flutter_app/view/HomePage.dart';
 import 'package:metro_flutter_app/view/LoginPage.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         'Settings': (context) => navScreen(2),
         'NavgPage': (context) => navScreen(0),
         'Recharge' : (context) => chargewallet(),
+        'BuyTickets' :(context)=> buyticket(),
         //'NearestStation': (context) =>
         //'GetRoute': (context) => GetRoute();
         //'ContactUs': (context) => ContactUs();
