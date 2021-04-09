@@ -9,6 +9,7 @@ import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/Buttonn.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/Textfeildd.dart';
+import 'package:metro_flutter_app/component/main_drawer.dart';
 
 import 'EducationalSubscripPage2.dart';
 
@@ -42,6 +43,7 @@ class _edusub1State extends State<edusub1> {
     double screenwidth=  MediaQuery.of(context).size.width;
     return Scaffold(
         appBar:buildAppBar(),
+        drawer: MainDrawer(),
         body: SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
             child: Stack(
@@ -55,102 +57,119 @@ class _edusub1State extends State<edusub1> {
                   colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(0.8), BlendMode.dstIn)),
             )),
-        Container(
-          child: Form(
-              key: _formKey2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Column(mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                  SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Fill the form to apply for\nEducational Subscription", style:
-                TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'Segoe UI',
-                    color: const Color(0xffffffff),
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2
-                ), textAlign: TextAlign.left,),
-                SizedBox(
-                  height: 10,
-                ),
-                textfield(
-                    "Fullname", Icons.perm_contact_cal_sharp, fullname, 55,
-                    screenwidth),
-                SizedBox(
-                  height: 10,
-                ),
-                textfield("Email", Icons.email, email, 55, screenwidth),
-                SizedBox(
-                  height: 10,
-                ),
-                textfield("Phone Number", Icons.phone, phonenumber, 55, screenwidth),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    textfield("Country", Icons.location_city, country, 55, screenwidth/2.34),
-                    textfield("City", Icons.location_city, city, 55, screenwidth/2.34),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                    Container(
-                      width: screenwidth/2.34,
-                      decoration: CustomBoxDecoration.decorationStyle(
-                          Color(0xd6a80f14), 15.0),
-                      child: TextFormField(
-                        onTap: _openImagePicker,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: CustomInputDecoration.textFieldStyle(
-                            "Upload Profile Photo", Icon(Icons.add_a_photo)),
-                      ),
-                    ),
-                    SizedBox(
-                height: 10,
-              ),
-              InkWell(
-                onTap: () {
-                  if (_formKey2.currentState.validate()) {
-                    _formKey2.currentState.save();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => edusub2()));
-                    try {} catch (error) {}
-                  } else {}
-                },
+        InkWell(
+        onTap: () {
+          Navigator.pop(context);
+        },
+     child:Padding(
+       padding: const EdgeInsets.all(12.0),
+       child: Container(
+         width:30 ,
+         alignment:Alignment.topLeft,
+            child: Icon(Icons.arrow_back,color: Colors.white,semanticLabel: "back",
+            ),
+          ),
+     )
+    ),
+        Padding(
+          padding: const EdgeInsets.only(top: 40.0),
+          child: Container(
+            child: Form(
+                key: _formKey2,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 80.0),
-                  child: Container(
-                    width: 200,
-                    height: 50,
-                    decoration: CustomBoxDecoration.decorationStyle(
-                        Color(0xFFFFFFFF), 10.0),
-                    child: Center(
-                      child: Text(
-                        "Next",
-                        style: TextStyle(
-                          color: Color(0xFFFFFFFF),
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Fill the form to apply for\nEducational Subscription", style:
+                  TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Segoe UI',
+                      color: const Color(0xffffffff),
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2
+                  ), textAlign: TextAlign.left,),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  textfield(
+                      "Fullname", Icons.perm_contact_cal_sharp, fullname, 55,
+                      screenwidth),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  textfield("Email", Icons.email, email, 55, screenwidth),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  textfield("Phone Number", Icons.phone, phonenumber, 55, screenwidth),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      textfield("Country", Icons.location_city, country, 55, screenwidth/2.34),
+                      textfield("City", Icons.location_city, city, 55, screenwidth/2.34),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                      Container(
+                        width: screenwidth/2.34,
+                        decoration: CustomBoxDecoration.decorationStyle(
+                            Color(0xd6a80f14), 15.0),
+                        child: TextFormField(
+                          onTap: _openImagePicker,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: CustomInputDecoration.textFieldStyle(
+                              "Upload Profile Photo", Icon(Icons.add_a_photo)),
+                        ),
+                      ),
+                      SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    if (_formKey2.currentState.validate()) {
+                      _formKey2.currentState.save();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => edusub2()));
+                      try {} catch (error) {}
+                    } else {}
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 80.0),
+                    child: Container(
+                      width: 200,
+                      height: 50,
+                      decoration: CustomBoxDecoration.decorationStyle(
+                          Color(0xFFFFFFFF), 10.0),
+                      child: Center(
+                        child: Text(
+                          "Next",
+                          style: TextStyle(
+                            color: Color(0xFFFFFFFF),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
-              ]),
-        )))]
+                )
+                ]),
+          ))),
+        )]
     )
     )
     );

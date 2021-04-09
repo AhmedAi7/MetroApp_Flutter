@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/Buttonn.dart';
 import 'package:metro_flutter_app/component/SubTypes.dart';
+import 'package:metro_flutter_app/component/main_drawer.dart';
 
 import 'NormalSubscripPage2.dart';
 
@@ -16,6 +17,7 @@ class _normalsub1State extends State<normalsub1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
+        drawer: MainDrawer(),
         body : Stack(
         children :[ Container(
     height: MediaQuery.of(context).size.height,
@@ -28,8 +30,23 @@ class _normalsub1State extends State<normalsub1> {
     Colors.black.withOpacity(0.8), BlendMode.dstIn)),
     ),
     ),
+    InkWell(
+    onTap: () {
+    Navigator.pop(context);
+    },
+    child:
+    Padding(
+    padding: const EdgeInsets.all(12.0),
+    child: Container(
+    width:30 ,
+    alignment:Alignment.topLeft,
+    child: Icon(Icons.arrow_back,color: Colors.white,semanticLabel: "back",
+    ),
+    ),
+    )
+    ),
       Padding(
-        padding: const EdgeInsets.only(top: 38.0),
+        padding: const EdgeInsets.only(top: 42.0),
         child: Container(
           alignment: Alignment.bottomCenter,
           child:

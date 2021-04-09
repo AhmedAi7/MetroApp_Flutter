@@ -195,7 +195,7 @@ class _homepageState extends State<homepage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            //Navigator.popAndPushNamed(context, 'BuyTicket');
+                            Navigator.popAndPushNamed(context, 'BuyTickets');
                           },
                           child: Container(
                             width: 240,

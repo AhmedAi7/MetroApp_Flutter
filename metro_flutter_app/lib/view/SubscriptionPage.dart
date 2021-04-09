@@ -27,15 +27,17 @@ class _subscriptionState extends State<subscription> {
                   Colors.black.withOpacity(0.8), BlendMode.dstIn)),
         ),
       ),
-        SizedBox(height: 5.0,),
-        Text("You dont have subscription\nPlease choose one:", style: TextStyle(
-            fontSize: 18,
-            fontFamily: 'Segoe UI',
-            color: const Color(0xffffffff),
-            fontStyle: FontStyle.italic,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2
-            ),textAlign: TextAlign.left,),
+        Padding(
+          padding: const EdgeInsets.only(top: 35,left: 35),
+          child: Text("You dont have subscription\nPlease choose one:", style: TextStyle(
+              fontSize: 18,
+              fontFamily: 'Segoe UI',
+              color: const Color(0xffffffff),
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2
+              ),textAlign: TextAlign.left,),
+        ),
         Container(
           alignment: Alignment.center,
           child: Column(
