@@ -62,13 +62,20 @@ class _LocationInputState extends State<LocationInput> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHight = MediaQuery.of(context).size.height;
     return Padding(
       padding: EdgeInsets.only(top: 50),
       child: Column(
         children: [
           Container(
-            height: 170,
-            width: 370,
+            height: (screenHight -
+                    AppBar().preferredSize.height -
+                    MediaQuery.of(context).viewPadding.top -
+                    MediaQuery.of(context).viewPadding.bottom -
+                    kBottomNavigationBarHeight) *
+                0.3,
+            width: screenWidth * 0.88,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -134,7 +141,7 @@ class _LocationInputState extends State<LocationInput> {
               children: [
                 Container(
                   height: 50,
-                  width: 350,
+                  width: screenWidth * 0.88,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("images/walk.png"),
@@ -180,7 +187,7 @@ class _LocationInputState extends State<LocationInput> {
                     Navigator.pushNamed(context, 'GetRoute');
                   },
                   child: Container(
-                    width: 200,
+                    width: screenWidth * 0.5,
                     height: 50,
                     decoration: BoxDecoration(
                       color: Color(0xffa80f14),
@@ -215,7 +222,7 @@ class _LocationInputState extends State<LocationInput> {
                     Navigator.pushNamed(context, 'BuyTicket');
                   },
                   child: Container(
-                    width: 200,
+                    width: screenWidth * 0.5,
                     height: 50,
                     decoration: BoxDecoration(
                       color: Color(0xffa80f14),
