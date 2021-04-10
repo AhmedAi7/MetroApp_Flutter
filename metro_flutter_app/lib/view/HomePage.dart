@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../component/main_drawer.dart';
-import '../component/CustomStyles.dart';
 import '../component/Textfeildd.dart';
 
 class homepage extends StatefulWidget {
@@ -22,7 +20,13 @@ class _homepageState extends State<homepage> {
         child: Column(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.only(top: 0, bottom: 0),
+              margin: EdgeInsets.only(top: 0, bottom: 0),
+              height: MediaQuery.of(context).size.height -
+                  AppBar().preferredSize.height -
+                  MediaQuery.of(context).viewPadding.top -
+                  MediaQuery.of(context).viewPadding.bottom -
+                  kBottomNavigationBarHeight,
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -51,11 +55,15 @@ class _homepageState extends State<homepage> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.popAndPushNamed(context, 'Recharge');
+                                  Navigator.pushNamed(context, 'Recharge');
                                 },
                                 child: Container(
-                                  width: 200,
-                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  height: (MediaQuery.of(context).size.height -
+                                          MediaQuery.of(context).padding.top -
+                                          AppBar().preferredSize.height) *
+                                      0.08,
                                   decoration: BoxDecoration(
                                     color: Color(0xffa80f14),
                                     borderRadius: BorderRadius.circular(20),
@@ -89,8 +97,12 @@ class _homepageState extends State<homepage> {
                                   //Navigator.pushNamed(context, 'MyTickets');
                                 },
                                 child: Container(
-                                  width: 200,
-                                  height: 50,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  height: (MediaQuery.of(context).size.height -
+                                          MediaQuery.of(context).padding.top -
+                                          AppBar().preferredSize.height) *
+                                      0.08,
                                   decoration: BoxDecoration(
                                     color: Color(0xffa80f14),
                                     borderRadius: BorderRadius.circular(20),
@@ -195,7 +207,7 @@ class _homepageState extends State<homepage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.popAndPushNamed(context, 'BuyTickets');
+                            Navigator.pushNamed(context, 'BuyTickets');
                           },
                           child: Container(
                             width: 240,
