@@ -53,12 +53,24 @@ class MainDrawer extends StatelessWidget {
             alignment: Alignment.centerRight,
             color: Color(0xffa80f14),
             // #A80F14 red
-            child: Text(
-              'User123',
-              style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 25,
-                  color: Color(0xFFFFFFFF)),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.supervised_user_circle,
+                  color: Colors.white,
+                  size: 35,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  'User123',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 25,
+                      color: Color(0xFFFFFFFF)),
+                ),
+              ],
             ),
           ),
           SizedBox(
