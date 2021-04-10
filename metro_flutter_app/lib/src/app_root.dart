@@ -8,6 +8,8 @@ import 'package:metro_flutter_app/view/LoginPage.dart';
 import 'package:metro_flutter_app/view/NavgPage.dart';
 import 'package:metro_flutter_app/view/SignUp1Page.dart';
 import 'package:metro_flutter_app/view/SignUp2Page.dart';
+import 'package:metro_flutter_app/view/reset_password.dart';
+import 'package:metro_flutter_app/view/update_info.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,6 +29,8 @@ class MyApp extends StatelessWidget {
         'Recharge': (context) => chargewallet(),
         'BuyTickets': (context) => buyticket(),
         'NearestStation': (context) => NearestStation(),
+        'UpdateInfo': (context) => UpdateInfo(),
+        'ResetPassword': (context) => ResetPassword(),
         //'GetRoute': (context) => GetRoute();
         //'ContactUs': (context) => ContactUs();
         //'LogOut': (context) => LogOut();
