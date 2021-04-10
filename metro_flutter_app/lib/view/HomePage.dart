@@ -187,15 +187,15 @@ class _homepageState extends State<homepage> {
                           50, //height
                           screenWidth * 0.89, //width
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: textfield(
-                            "Destination",
-                            Icons.location_on_outlined,
-                            destination,
-                            50,
-                            screenWidth * 0.89,
-                          ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        textfield(
+                          "Destination",
+                          Icons.location_on_outlined,
+                          destination,
+                          50,
+                          screenWidth * 0.89,
                         ),
                       ],
                     ),
