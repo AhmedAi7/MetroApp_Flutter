@@ -14,6 +14,8 @@ class _homepageState extends State<homepage> {
   double price = 0.0;
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
@@ -22,7 +24,7 @@ class _homepageState extends State<homepage> {
             Container(
               padding: EdgeInsets.only(top: 0, bottom: 0),
               margin: EdgeInsets.only(top: 0, bottom: 0),
-              height: MediaQuery.of(context).size.height -
+              height: screenHight -
                   AppBar().preferredSize.height -
                   MediaQuery.of(context).viewPadding.top -
                   MediaQuery.of(context).viewPadding.bottom -
@@ -58,9 +60,8 @@ class _homepageState extends State<homepage> {
                                   Navigator.pushNamed(context, 'Recharge');
                                 },
                                 child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  height: (MediaQuery.of(context).size.height -
+                                  width: screenWidth * 0.5,
+                                  height: (screenHight -
                                           MediaQuery.of(context).padding.top -
                                           AppBar().preferredSize.height) *
                                       0.08,
@@ -97,9 +98,8 @@ class _homepageState extends State<homepage> {
                                   //Navigator.pushNamed(context, 'MyTickets');
                                 },
                                 child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  height: (MediaQuery.of(context).size.height -
+                                  width: screenWidth * 0.5,
+                                  height: (screenHight -
                                           MediaQuery.of(context).padding.top -
                                           AppBar().preferredSize.height) *
                                       0.08,
@@ -184,8 +184,8 @@ class _homepageState extends State<homepage> {
                           "Source",
                           Icons.my_location,
                           source,
-                          50,
-                          350,
+                          50, //height
+                          screenWidth * 0.89, //width
                         ),
                         Padding(
                           padding: const EdgeInsets.all(15.0),
@@ -194,7 +194,7 @@ class _homepageState extends State<homepage> {
                             Icons.location_on_outlined,
                             destination,
                             50,
-                            350,
+                            screenWidth * 0.89,
                           ),
                         ),
                       ],
@@ -210,7 +210,7 @@ class _homepageState extends State<homepage> {
                             Navigator.pushNamed(context, 'BuyTickets');
                           },
                           child: Container(
-                            width: 240,
+                            width: screenWidth * 0.5,
                             height: 50,
                             decoration: BoxDecoration(
                               color: Color(0xffa80f14),
@@ -240,7 +240,7 @@ class _homepageState extends State<homepage> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
                           child: Container(
-                            width: 100,
+                            width: screenWidth * 0.25,
                             height: 50,
                             decoration: BoxDecoration(
                               color: Color(0xFFFFFFFF),
