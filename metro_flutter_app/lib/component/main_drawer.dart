@@ -76,6 +76,13 @@ class MainDrawer extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
+          buildListTile(
+            'Home',
+            Icons.home,
+            () {
+              Navigator.pushNamed(context, 'HomePage');
+            },
+          ),
           buildIcon(
             'My Tickets',
             'ticket.png',
