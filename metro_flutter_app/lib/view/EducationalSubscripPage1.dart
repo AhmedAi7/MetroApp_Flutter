@@ -57,20 +57,8 @@ class _edusub1State extends State<edusub1> {
                   colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(0.8), BlendMode.dstIn)),
             )),
-        InkWell(
-        onTap: () {
-          Navigator.pop(context);
-        },
-     child:Padding(
-       padding: const EdgeInsets.all(12.0),
-       child: Container(
-         width:30 ,
-         alignment:Alignment.topLeft,
-            child: Icon(Icons.arrow_back,color: Colors.white,semanticLabel: "back",
-            ),
-          ),
-     )
-    ),
+        arrowback(context)
+                  ,
         Padding(
           padding: const EdgeInsets.only(top: 40.0),
           child: Container(

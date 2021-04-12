@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/Buttonn.dart';
+import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/SubTypes.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
 
@@ -30,23 +31,9 @@ class _normalsub1State extends State<normalsub1> {
     Colors.black.withOpacity(0.8), BlendMode.dstIn)),
     ),
     ),
-    InkWell(
-    onTap: () {
-    Navigator.pop(context);
-    },
-    child:
-    Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Container(
-    width:30 ,
-    alignment:Alignment.topLeft,
-    child: Icon(Icons.arrow_back,color: Colors.white,semanticLabel: "back",
-    ),
-    ),
-    )
-    ),
+    arrowback(context),
       Padding(
-        padding: const EdgeInsets.only(top: 42.0),
+        padding: const EdgeInsets.symmetric(horizontal:22.0 ,vertical:60),
         child: Container(
           alignment: Alignment.bottomCenter,
           child:

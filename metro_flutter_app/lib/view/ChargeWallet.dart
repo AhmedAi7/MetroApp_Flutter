@@ -47,20 +47,7 @@ class _chargewalletState extends State<chargewallet> {
                           colorFilter: ColorFilter.mode(
                               Colors.black.withOpacity(0.8), BlendMode.dstIn)),
                     )),
-                  InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, "HomePage");
-                      },
-                      child:Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Container(
-                          width:30 ,
-                          alignment:Alignment.topLeft,
-                          child: Icon(Icons.arrow_back,color: Colors.white,semanticLabel: "back",
-                          ),
-                        ),
-                      )
-                  ),
+                  arrowbackhome(context),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0),
                     child: Container(
