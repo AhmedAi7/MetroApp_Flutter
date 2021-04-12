@@ -28,7 +28,7 @@ class _subscriptionState extends State<subscription> {
         ),
       ),
         Padding(
-          padding: const EdgeInsets.only(top: 30,left: 35),
+          padding: const EdgeInsets.only(top: 35,left: 35),
           child: Text("You dont have subscription\nPlease choose one:", style: TextStyle(
               fontSize: 18,
               fontFamily: 'Segoe UI',

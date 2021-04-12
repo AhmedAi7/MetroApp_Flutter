@@ -5,7 +5,6 @@ import 'package:metro_flutter_app/view/Buy%20Tickets.dart';
 import 'package:metro_flutter_app/view/ChargeWallet.dart';
 import 'package:metro_flutter_app/view/HomePage.dart';
 import 'package:metro_flutter_app/view/LoginPage.dart';
-import 'package:metro_flutter_app/view/MyTicketss.dart';
 import 'package:metro_flutter_app/view/NavgPage.dart';
 import 'package:metro_flutter_app/view/Settings.dart';
 import 'package:metro_flutter_app/view/SignUp1Page.dart';
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
         //'GetRoute': (context) => GetRoute();
         //'ContactUs': (context) => ContactUs();
         //'LogOut': (context) => LogOut();
-        "MyTickets":(context)=> mytickets(),
+        //"MyTickets":(context)=> MyTickets(),
         //'SignUp3' :(context) => SignUp3Page(),
       },
       debugShowCheckedModeBanner: false,
