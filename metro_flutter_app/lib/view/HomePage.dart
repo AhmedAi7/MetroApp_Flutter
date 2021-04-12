@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../component/main_drawer.dart';
-import '../component/CustomStyles.dart';
 import '../component/Textfeildd.dart';
 
 class homepage extends StatefulWidget {
@@ -16,13 +14,21 @@ class _homepageState extends State<homepage> {
   double price = 0.0;
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.only(top: 0, bottom: 0),
+              margin: EdgeInsets.only(top: 0, bottom: 0),
+              height: screenHight -
+                  AppBar().preferredSize.height -
+                  MediaQuery.of(context).viewPadding.top -
+                  MediaQuery.of(context).viewPadding.bottom -
+                  kBottomNavigationBarHeight,
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -51,11 +57,14 @@ class _homepageState extends State<homepage> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.popAndPushNamed(context, 'Recharge');
+                                  Navigator.pushNamed(context, 'Recharge');
                                 },
                                 child: Container(
-                                  width: 200,
-                                  height: 50,
+                                  width: screenWidth * 0.5,
+                                  height: (screenHight -
+                                          MediaQuery.of(context).padding.top -
+                                          AppBar().preferredSize.height) *
+                                      0.08,
                                   decoration: BoxDecoration(
                                     color: Color(0xffa80f14),
                                     borderRadius: BorderRadius.circular(20),
@@ -89,8 +98,11 @@ class _homepageState extends State<homepage> {
                                   //Navigator.pushNamed(context, 'MyTickets');
                                 },
                                 child: Container(
-                                  width: 200,
-                                  height: 50,
+                                  width: screenWidth * 0.5,
+                                  height: (screenHight -
+                                          MediaQuery.of(context).padding.top -
+                                          AppBar().preferredSize.height) *
+                                      0.08,
                                   decoration: BoxDecoration(
                                     color: Color(0xffa80f14),
                                     borderRadius: BorderRadius.circular(20),
@@ -172,18 +184,18 @@ class _homepageState extends State<homepage> {
                           "Source",
                           Icons.my_location,
                           source,
-                          50,
-                          350,
+                          50, //height
+                          screenWidth * 0.89, //width
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: textfield(
-                            "Destination",
-                            Icons.location_on_outlined,
-                            destination,
-                            50,
-                            350,
-                          ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        textfield(
+                          "Destination",
+                          Icons.location_on_outlined,
+                          destination,
+                          50,
+                          screenWidth * 0.89,
                         ),
                       ],
                     ),
@@ -195,10 +207,10 @@ class _homepageState extends State<homepage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.popAndPushNamed(context, 'BuyTickets');
+                            Navigator.pushNamed(context, 'BuyTickets');
                           },
                           child: Container(
-                            width: 240,
+                            width: screenWidth * 0.5,
                             height: 50,
                             decoration: BoxDecoration(
                               color: Color(0xffa80f14),
@@ -228,7 +240,7 @@ class _homepageState extends State<homepage> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
                           child: Container(
-                            width: 100,
+                            width: screenWidth * 0.25,
                             height: 50,
                             decoration: BoxDecoration(
                               color: Color(0xFFFFFFFF),
