@@ -31,9 +31,8 @@ class MyApp extends StatelessWidget {
         'Recharge': (context) => chargewallet(),
         'BuyTickets': (context) => buyticket(),
         'NearestStation': (context) => NearestStation(),
-        //'UpdateInfo': (context) => UpdateInfo(),
         //'ResetPassword': (context) => ResetPassword(),
-        "MyTickets":(context)=> mytickets(),
+        "MyTickets": (context) => mytickets(),
         //'GetRoute': (context) => GetRoute();
         //'ContactUs': (context) => ContactUs();
         //'LogOut': (context) => LogOut();
