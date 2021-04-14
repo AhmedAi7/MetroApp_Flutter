@@ -80,7 +80,7 @@ class MainDrawer extends StatelessWidget {
             'Home',
             Icons.home,
             () {
-              Navigator.pushNamed(context, 'HomePage');
+              Navigator.popAndPushNamed(context, 'HomePage');
             },
           ),
           buildIcon(
