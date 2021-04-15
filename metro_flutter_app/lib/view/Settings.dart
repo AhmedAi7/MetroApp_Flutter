@@ -147,7 +147,7 @@ class _settingsState extends State<settings> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        //physics: NeverScrollableScrollPhysics(),
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
@@ -180,20 +180,20 @@ class _settingsState extends State<settings> {
                   fontSize: 16,
                 ),
               ),
+              Text(
+                '         ' + user.name,
+                style: TextStyle(
+                  color: Color(0xffa80f14),
+                  fontFamily: 'Segoe UI',
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 25,
+                ),
+              ),
               Row(
                 children: [
-                  Text(
-                    '         ' + user.name,
-                    style: TextStyle(
-                      color: Color(0xffa80f14),
-                      fontFamily: 'Segoe UI',
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 25,
-                    ),
-                  ),
                   SizedBox(
-                    width: screenWidth * 0.25,
+                    width: screenWidth * 0.7,
                   ),
                   _buildInkWell(
                     'New Full Name',
@@ -216,20 +216,20 @@ class _settingsState extends State<settings> {
                   fontSize: 16,
                 ),
               ),
+              Text(
+                '         ' + user.phoneNumber,
+                style: TextStyle(
+                  color: Color(0xffa80f14),
+                  fontFamily: 'Segoe UI',
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 25,
+                ),
+              ),
               Row(
                 children: [
-                  Text(
-                    '         ' + user.phoneNumber,
-                    style: TextStyle(
-                      color: Color(0xffa80f14),
-                      fontFamily: 'Segoe UI',
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 25,
-                    ),
-                  ),
                   SizedBox(
-                    width: screenWidth * 0.25,
+                    width: screenWidth * 0.7,
                   ),
                   InkWell(
                     child: Text(
@@ -257,17 +257,20 @@ class _settingsState extends State<settings> {
                   fontSize: 16,
                 ),
               ),
+              Text(
+                '         ' + user.email,
+                style: TextStyle(
+                  color: Color(0xffa80f14),
+                  fontFamily: 'Segoe UI',
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 25,
+                ),
+              ),
               Row(
                 children: [
-                  Text(
-                    '         ' + user.email,
-                    style: TextStyle(
-                      color: Color(0xffa80f14),
-                      fontFamily: 'Segoe UI',
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 25,
-                    ),
+                  SizedBox(
+                    width: screenWidth * 0.7,
                   ),
                   InkWell(
                     child: Text(
@@ -295,20 +298,20 @@ class _settingsState extends State<settings> {
                   fontSize: 16,
                 ),
               ),
+              Text(
+                '         ' + user.dateOfBirth,
+                style: TextStyle(
+                  color: Color(0xffa80f14),
+                  fontFamily: 'Segoe UI',
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 25,
+                ),
+              ),
               Row(
                 children: [
-                  Text(
-                    '         ' + user.dateOfBirth,
-                    style: TextStyle(
-                      color: Color(0xffa80f14),
-                      fontFamily: 'Segoe UI',
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 25,
-                    ),
-                  ),
                   SizedBox(
-                    width: screenWidth * 0.25,
+                    width: screenWidth * 0.7,
                   ),
                   _editDate(),
                 ],
