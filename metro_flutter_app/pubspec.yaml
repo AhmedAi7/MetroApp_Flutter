@@ -31,6 +31,8 @@ dependencies:
   location: ^4.1.1
   google_maps_flutter: ^2.0.3
   http: ^0.13.1
+  url_launcher: ^6.0.3
+  flutter_datetime_picker: ^1.5.0
 
 
   # The following adds the Cupertino Icons font to your application.
