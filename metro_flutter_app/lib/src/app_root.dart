@@ -40,7 +40,6 @@ class MyApp extends StatelessWidget {
         //'LogOut': (context) => LogOut(),
         "UseTickets": (context) => useticket(),
         //'LogOut': (context) => LogOut();
-        //"MyTickets":(context)=> MyTickets(),
         //'SignUp3' :(context) => SignUp3Page(),
       },
       debugShowCheckedModeBanner: false,
