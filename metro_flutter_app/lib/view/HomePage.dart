@@ -15,7 +15,7 @@ class _homepageState extends State<homepage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHight = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
@@ -24,7 +24,7 @@ class _homepageState extends State<homepage> {
             Container(
               padding: EdgeInsets.only(top: 0, bottom: 0),
               margin: EdgeInsets.only(top: 0, bottom: 0),
-              height: screenHight -
+              height: screenHeight -
                   AppBar().preferredSize.height -
                   MediaQuery.of(context).viewPadding.top -
                   MediaQuery.of(context).viewPadding.bottom -
@@ -61,7 +61,7 @@ class _homepageState extends State<homepage> {
                                 },
                                 child: Container(
                                   width: screenWidth * 0.5,
-                                  height: (screenHight -
+                                  height: (screenHeight -
                                           MediaQuery.of(context).padding.top -
                                           AppBar().preferredSize.height) *
                                       0.08,
@@ -99,7 +99,7 @@ class _homepageState extends State<homepage> {
                                 },
                                 child: Container(
                                   width: screenWidth * 0.5,
-                                  height: (screenHight -
+                                  height: (screenHeight -
                                           MediaQuery.of(context).padding.top -
                                           AppBar().preferredSize.height) *
                                       0.08,
