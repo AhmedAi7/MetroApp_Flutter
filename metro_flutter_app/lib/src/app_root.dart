@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:metro_flutter_app/view/Buy%20Tickets.dart';
 import 'package:metro_flutter_app/view/ChargeWallet.dart';
 import 'package:metro_flutter_app/view/MyTicketss.dart';
+import 'package:metro_flutter_app/view/UseTicket.dart';
 import 'package:metro_flutter_app/view/nearest_station.dart';
 import 'package:metro_flutter_app/view/LoginPage.dart';
 import 'package:metro_flutter_app/view/NavgPage.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         "MyTickets": (context) => mytickets(),
         //'GetRoute': (context) => GetRoute();
         'ContactUs': (context) => ContactUs(),
+        "UseTickets": (context)=>useticket()
         //'LogOut': (context) => LogOut();
         //"MyTickets":(context)=> MyTickets(),
         //'SignUp3' :(context) => SignUp3Page(),

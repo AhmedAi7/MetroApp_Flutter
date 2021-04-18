@@ -124,7 +124,7 @@ class _myticketsState extends State<mytickets> {
             height: 50,
             width: 135,
             child: RaisedButton(
-              onPressed: () => Navigator.pushNamed(context, "HomePage"),
+              onPressed: () => Navigator.pushNamed(context, "UseTickets"),
               //padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(

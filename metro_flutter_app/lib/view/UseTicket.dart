@@ -20,18 +20,63 @@ class _useticketState extends State<useticket> {
         drawer: MainDrawer(),
         body : Stack(
             children :[ Container(
-              height: MediaQuery.of(context).size.height,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("images\Background.png"),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.8), BlendMode.dstIn)),
-              ),
-            ),
+                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("images/Background.png"),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.8), BlendMode.dstIn)),
+                )),
              arrowbackhome(context),
-             Column(
+              Padding(
+                padding: const EdgeInsets.only(bottom: 320.0,),
+                child: Center(
+                    child: ic),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 50.0,),
+                child: Center(
+                      child: CircleAvatar(
+
+                          backgroundColor: switchControl==true? Color(0xffa80f14):Colors.white,
+                          radius: 66.0,
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 30.0),
+                              child: IconButton(
+                                onPressed:() {
+                                  if (switchControl == false) {
+                                    setState(() {
+                                      switchControl = true;
+                                      ic = Icon(
+                                          Icons.wifi_outlined, size: 150.0,
+                                          color: const Color(0xffa80f14));
+                                    });
+                                    print('Switch is ON');
+                                    // Put your code here which you want to execute on Switch ON event.
+                                  }
+                                  else {
+                                    setState(() {
+                                      switchControl = false;
+                                      ic = null;
+                                    });
+                                    print('Switch is OFF');
+                                  }
+                                },
+                                icon:  Icon(Icons.power_settings_new),
+                                iconSize: 120.0,
+                                color: switchControl==true?Colors.white:Color(0xffa80f14),
+
+                              ),
+                            ),
+                          )
+
+                      ),
+                    ),
+              ),
+              Column(
                mainAxisAlignment: MainAxisAlignment.end,
                children: [
                  Card(ticket),
@@ -143,4 +188,26 @@ class _useticketState extends State<useticket> {
       ),
     );
   }
+  bool switchControl = false;
+  var textHolder = 'Switch is OFF';
+  Icon ic;
+  void toggleSwitch(bool value) {
+    if (switchControl == false) {
+      setState(() {
+        switchControl = true;
+        ic = Icon(Icons.wifi_tethering_outlined,size: 100.0,color: const Color(0xffa80f14));
+      });
+      print('Switch is ON');
+      // Put your code here which you want to execute on Switch ON event.
+    }
+    else {
+      setState(() {
+        switchControl = false;
+        ic = null;
+      });
+      print('Switch is OFF');
+      // Put your code here which you want to execute on Switch OFF event.
+    }
+  }
+
 }
