@@ -27,7 +27,7 @@ class ContactUs extends StatelessWidget {
     Future<void> _launchFacebook() async {
       try {
         bool launched =
-            await launch("fb://page/CairoMetropage", forceSafariVC: false);
+            await launch("fb://page?id=CairoMetropage", forceSafariVC: false);
 
         if (!launched) {
           await launch("https://www.facebook.com/CairoMetropage/",
