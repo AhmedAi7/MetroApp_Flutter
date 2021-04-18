@@ -100,7 +100,7 @@ class SignUp2Page extends StatelessWidget {
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
                             try {
-                              Navigator.pushNamed(context,'SignUp3Page');
+                              Navigator.pushNamed(context,'SignUp3');
                             } catch (error) {}
                           } else {}
                         },

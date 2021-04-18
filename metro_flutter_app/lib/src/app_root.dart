@@ -10,10 +10,15 @@ import 'package:metro_flutter_app/view/LoginPage.dart';
 import 'package:metro_flutter_app/view/NavgPage.dart';
 import 'package:metro_flutter_app/view/SignUp1Page.dart';
 import 'package:metro_flutter_app/view/SignUp2Page.dart';
+<<<<<<< Updated upstream
 import 'package:metro_flutter_app/view/contact_us.dart';
 import 'package:metro_flutter_app/view/get_route.dart';
 //import 'package:metro_flutter_app/view/reset_password.dart';
 //import 'package:metro_flutter_app/view/update_info.dart';
+=======
+import 'package:metro_flutter_app/view/SignUp3Page.dart';
+import 'package:metro_flutter_app/view/SignUp4Page.dart';
+>>>>>>> Stashed changes
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -26,6 +31,7 @@ class MyApp extends StatelessWidget {
         'Login': (context) => LoginPage(),
         'SignUp1': (context) => SignUp1Page(),
         'SignUp2': (context) => SignUp2Page(),
+<<<<<<< Updated upstream
         'HomePage': (context) => navScreen(0),
         'Subscription': (context) => navScreen(1),
         'Settings': (context) => navScreen(2),
@@ -41,6 +47,10 @@ class MyApp extends StatelessWidget {
         "UseTickets": (context) => useticket(),
         //'LogOut': (context) => LogOut();
         //'SignUp3' :(context) => SignUp3Page(),
+=======
+        'SignUp3': (context) => SignUp3Page(),
+        'SignUp4' :(context) => SignUp4Page(),
+>>>>>>> Stashed changes
       },
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
