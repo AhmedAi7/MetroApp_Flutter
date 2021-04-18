@@ -10,6 +10,7 @@ import 'package:metro_flutter_app/view/NavgPage.dart';
 import 'package:metro_flutter_app/view/SignUp1Page.dart';
 import 'package:metro_flutter_app/view/SignUp2Page.dart';
 import 'package:metro_flutter_app/view/contact_us.dart';
+import 'package:metro_flutter_app/view/get_route.dart';
 //import 'package:metro_flutter_app/view/reset_password.dart';
 //import 'package:metro_flutter_app/view/update_info.dart';
 
@@ -33,10 +34,9 @@ class MyApp extends StatelessWidget {
         'NearestStation': (context) => NearestStation(),
         //'ResetPassword': (context) => ResetPassword(),
         "MyTickets": (context) => mytickets(),
-        //'GetRoute': (context) => GetRoute();
+        'GetRoute': (context) => GetRoute(),
         'ContactUs': (context) => ContactUs(),
-        //'LogOut': (context) => LogOut();
-        //"MyTickets":(context)=> MyTickets(),
+        //'LogOut': (context) => LogOut(),
         //'SignUp3' :(context) => SignUp3Page(),
       },
       debugShowCheckedModeBanner: false,
