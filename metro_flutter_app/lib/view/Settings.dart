@@ -17,6 +17,7 @@ class _settingsState extends State<settings> {
   void _changeUserName() {
     if (newFullName == null) return;
     setState(() {
+      print(newFullName);
       ChangeUserName(newFullName);
     });
   }
@@ -137,6 +138,7 @@ class _settingsState extends State<settings> {
             minTime: DateTime(1921, 1, 1),
             maxTime: DateTime(2121, 12, 31), onConfirm: (date) {
           newDateOfBirth = date.toString();
+          _changeDateOfBirth();
         }, currentTime: DateTime.now(), locale: LocaleType.en);
       },
     );
@@ -149,7 +151,11 @@ class _settingsState extends State<settings> {
       body: SingleChildScrollView(
         //physics: NeverScrollableScrollPhysics(),
         child: Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height -
+              AppBar().preferredSize.height -
+              MediaQuery.of(context).viewPadding.top -
+              MediaQuery.of(context).viewPadding.bottom -
+              kBottomNavigationBarHeight,
           width: double.infinity,
           decoration: BoxDecoration(
             color: Color(0xffD3D3D3),
@@ -241,6 +247,7 @@ class _settingsState extends State<settings> {
                     ),
                     onTap: () {
                       // navigate to change phone number
+                      Navigator.of(context).pushNamed('EditPhoneNumber');
                     },
                   ),
                 ],
@@ -282,6 +289,7 @@ class _settingsState extends State<settings> {
                     ),
                     onTap: () {
                       // navigate to change email
+                      Navigator.of(context).pushNamed('EditEmail');
                     },
                   ),
                 ],
