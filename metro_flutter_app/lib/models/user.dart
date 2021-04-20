@@ -30,3 +30,15 @@ void ChangeUserName(String name) {
 void changeDateOfBirth(String dateOfBirth) {
   user.dateOfBirth = dateOfBirth;
 }
+
+void changePassword(String password) {
+  user.password = password;
+}
+
+void changePhoneNumber(String phoneNumber) {
+  user.phoneNumber = phoneNumber;
+}
+
+void changeEmail(String email) {
+  user.email = email;
+}
