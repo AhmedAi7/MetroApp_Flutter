@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metro_flutter_app/component/Textfeildd.dart';
 import 'package:metro_flutter_app/models/user.dart';
 import '../models/user.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:metro_flutter_app/component/CustomStyles.dart';
+import 'package:intl/intl.dart';
 
 class settings extends StatefulWidget {
   @override
@@ -14,12 +15,15 @@ class _settingsState extends State<settings> {
   String newFullName;
   String newDateOfBirth;
   DateTime selectedDate = DateTime.now();
+  final _textEditingController = TextEditingController();
+
   void _changeUserName() {
     if (newFullName == null) return;
     setState(() {
-      print(newFullName);
+      print("newFullName");
       ChangeUserName(newFullName);
     });
+    Navigator.pop(context);
   }
 
   void _changeDateOfBirth() {
@@ -27,100 +31,6 @@ class _settingsState extends State<settings> {
     setState(() {
       changeDateOfBirth(newDateOfBirth);
     });
-  }
-
-  InkWell _buildInkWell(String title, String input, Function change,
-      double screenWidth, IconData icon) {
-    return InkWell(
-      child: Text(
-        'Edit',
-        style: TextStyle(
-          decoration: TextDecoration.underline,
-          fontSize: 15,
-        ),
-      ),
-      onTap: () {
-        showModalBottomSheet<void>(
-          context: context,
-          builder: (BuildContext context) {
-            return Container(
-              height: 200, // height modal bottom
-              color: Color(0xffD3D3D3),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 15,
-                  ),
-                  textfield(
-                    title,
-                    icon,
-                    input,
-                    50,
-                    screenWidth * 0.8,
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        height: 30,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          color: Color(0xffa80f14),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.white,
-                              offset: Offset(0, 1),
-                              spreadRadius: -2,
-                              blurRadius: 6,
-                            ),
-                          ],
-                        ),
-                        child: InkWell(
-                          child: Center(
-                            child: Text(
-                              'Apply',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            change();
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InkWell(
-                        child: Text(
-                          'Close  ',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.black,
-                          ),
-                        ),
-                        onTap: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 
   InkWell _editDate() {
@@ -137,7 +47,9 @@ class _settingsState extends State<settings> {
             showTitleActions: true,
             minTime: DateTime(1921, 1, 1),
             maxTime: DateTime(2121, 12, 31), onConfirm: (date) {
-          newDateOfBirth = date.toString();
+          final formattedStr = DateFormat.yMMMd().format(date);
+          newDateOfBirth = formattedStr.toString();
+          //String x = date.;
           _changeDateOfBirth();
         }, currentTime: DateTime.now(), locale: LocaleType.en);
       },
@@ -201,13 +113,111 @@ class _settingsState extends State<settings> {
                   SizedBox(
                     width: screenWidth * 0.7,
                   ),
-                  _buildInkWell(
-                    'New Full Name',
-                    newFullName,
-                    _changeUserName,
-                    screenWidth,
-                    Icons.perm_identity,
-                  ),
+                  InkWell(
+                    child: Text(
+                      'Edit',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 15,
+                      ),
+                    ),
+                    onTap: () {
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 200, // height modal bottom
+                            color: Color(0xffD3D3D3),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Container(
+                                  width: screenWidth * 0.89,
+                                  decoration:
+                                      CustomBoxDecoration.decorationStyle(
+                                    Color(0xffa80f14),
+                                    15.0,
+                                  ),
+                                  child: TextFormField(
+                                    controller: _textEditingController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    decoration:
+                                        CustomInputDecoration.textFieldStyle(
+                                      "New Full Name",
+                                      Icon(Icons.perm_identity),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xffa80f14),
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.white,
+                                            offset: Offset(0, 1),
+                                            spreadRadius: -2,
+                                            blurRadius: 6,
+                                          ),
+                                        ],
+                                      ),
+                                      child: InkWell(
+                                        child: Center(
+                                          child: Text(
+                                            'Apply',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              fontStyle: FontStyle.italic,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          newFullName =
+                                              _textEditingController.text;
+                                          _changeUserName();
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    InkWell(
+                                      child: Text(
+                                        'Close  ',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      onTap: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  )
                 ],
               ),
               SizedBox(
