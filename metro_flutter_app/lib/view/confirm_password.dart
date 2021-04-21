@@ -53,7 +53,7 @@ class _ConfirmPasswordState extends State<ConfirmPassword>
   void _checkCode() {
     inputCode = digit_1 + digit_2 + digit_3 + digit_4 + digit_5 + digit_6;
     if (inputCode == actualCode) {
-      //changePassword(widget.new)
+      changePassword(widget.newPassword);
       Navigator.of(context).popAndPushNamed("Settings");
     }
   }
