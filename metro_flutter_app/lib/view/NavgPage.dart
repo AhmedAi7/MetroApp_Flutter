@@ -24,12 +24,11 @@ class _navScreenState extends State<navScreen> {
     "Subscription": Icons.subscriptions,
     "Settings": Icons.settings,
   };
-  int currentindex ;
+  int currentindex;
   String currentpage;
 
-  _navScreenState(index1)
-  {
-   currentindex=index1;
+  _navScreenState(index1) {
+    currentindex = index1;
   }
   @override
   Widget build(BuildContext context) {
