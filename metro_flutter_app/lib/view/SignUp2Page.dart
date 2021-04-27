@@ -2,14 +2,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:metro_flutter_app/view/SignUp3Page.dart';
 
 class SignUp2Page extends StatelessWidget {
-  int phoneNumber;
+  String phoneNumber;
 
   String dateOfBirth;
 
   TextEditingController dateCtl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  void _sendDataToSecondScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignUp3Page(
+          phoneNumber: phoneNumber,
+        ),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -18,10 +33,11 @@ class SignUp2Page extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("images/Background.png"),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.8), BlendMode.dstIn)),
+              image: AssetImage("images/Background.png"),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.8), BlendMode.dstIn),
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 150),
@@ -39,7 +55,7 @@ class SignUp2Page extends StatelessWidget {
                             Color(0xd6a80f14), 15.0),
                         child: TextFormField(
                           onSaved: (val) {
-                            this.phoneNumber = int.parse(val);
+                            this.phoneNumber = val;
                           },
                           validator: (val) {
                             if (val.isEmpty) {
@@ -53,7 +69,11 @@ class SignUp2Page extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           decoration: CustomInputDecoration.textFieldStyle(
-                              " Phone Number", Icon(Icons.phone)),
+                            " Phone Number",
+                            Icon(
+                              Icons.phone,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -61,19 +81,23 @@ class SignUp2Page extends StatelessWidget {
                       ),
                       Container(
                         decoration: CustomBoxDecoration.decorationStyle(
-                            Color(0xd6a80f14), 15.0),
+                          Color(0xd6a80f14),
+                          15.0,
+                        ),
                         child: TextFormField(
                           controller: dateCtl,
-                          onTap: () async {
-                            DateTime date = DateTime(1900);
-                            FocusScope.of(context).requestFocus(new FocusNode());
-                            date = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2100),
-                            );
-                            dateCtl.text = date.toString().substring(0,10);
+                          onTap: () {
+                            DatePicker.showDatePicker(context,
+                                showTitleActions: true,
+                                minTime: DateTime(1921, 1, 1),
+                                maxTime: DateTime(2121, 12, 31),
+                                onConfirm: (date) {
+                              final formattedStr =
+                                  DateFormat.yMMMd().format(date);
+                              dateCtl.text = formattedStr.toString();
+                            },
+                                currentTime: DateTime.now(),
+                                locale: LocaleType.en);
                           },
                           onSaved: (val) {
                             this.dateOfBirth = val;
@@ -89,7 +113,11 @@ class SignUp2Page extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           decoration: CustomInputDecoration.textFieldStyle(
-                              " Date Of Birth", Icon(Icons.calendar_today)),
+                            " Date Of Birth",
+                            Icon(
+                              Icons.calendar_today,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -100,7 +128,7 @@ class SignUp2Page extends StatelessWidget {
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
                             try {
-                              Navigator.pushNamed(context,'SignUp3');
+                              _sendDataToSecondScreen(context);
                             } catch (error) {}
                           } else {}
                         },
