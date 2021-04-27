@@ -82,20 +82,24 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber>
               children: [
                 Column(
                   children: [
-                    Text("Verify Your Phone Number",
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
+                    Text(
+                      "Verify Your Phone Number",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
                       otpText,
                       style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.grey[400],
-                          fontWeight: FontWeight.bold),
+                        fontSize: 17,
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(
                       height: 10,
@@ -106,9 +110,10 @@ class _ConfirmPhoneNumberState extends State<ConfirmPhoneNumber>
                         Text(
                           widget.newPhoneNumber,
                           style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         SizedBox(
                           width: 5,
