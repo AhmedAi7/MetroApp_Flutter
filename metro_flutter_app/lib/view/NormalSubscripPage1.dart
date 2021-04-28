@@ -44,7 +44,7 @@ class _normalsub1State extends State<normalsub1> {
                 SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2
                   , crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
-                  childAspectRatio: .9,
+                  childAspectRatio: .7
                 ),
                     itemBuilder: (context, index) => Card(products[index])),
               )

@@ -49,7 +49,7 @@ class _myticketsState extends State<mytickets> {
     else if(selectedindex==2)
       count=5;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal:22.0 ,vertical:80),
+      padding: const EdgeInsets.symmetric(horizontal:22.0 ,vertical:90),
       child: Container(
           alignment: Alignment.bottomCenter,
           child:
@@ -61,7 +61,7 @@ class _myticketsState extends State<mytickets> {
               crossAxisCount: 2
               , crossAxisSpacing: 5,
               mainAxisSpacing: 5,
-              childAspectRatio: .9,
+              childAspectRatio: .7,
             ),
                 itemBuilder: (context, index) => Card(productss[selectedindex])),
           )
@@ -197,7 +197,8 @@ class _myticketsState extends State<mytickets> {
             ),
           ),
           itemCount: cat.length,
-          scrollDirection: Axis.horizontal,),
+          scrollDirection: Axis.horizontal,
+        ),
       ),
     );
   }
