@@ -41,7 +41,7 @@ class _buyticketState extends State<buyticket> {
                       SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2
                         , crossAxisSpacing: 5,
                         mainAxisSpacing: 5,
-                        childAspectRatio: .9,
+                        childAspectRatio: .7,
                       ),
                           itemBuilder: (context, index) => Card(productss[index])),
                     )
