@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'CustomStyles.dart';
-Container textfield(String Name,IconData icon,String input,double height, double width) {
+
+Container textfield(
+    String name, IconData icon, String input, double height, double width) {
   return Container(
-    height: height ,
-    width: width ,
+    height: height,
+    width: width,
     decoration: CustomBoxDecoration.decorationStyle(
-        Color(0xd6a80f14), 15.0),
+      Color(0xd6a80f14),
+      15.0,
+    ),
     child: TextFormField(
       onSaved: (val) {
         input = val;
@@ -24,7 +28,11 @@ Container textfield(String Name,IconData icon,String input,double height, double
         fontWeight: FontWeight.bold,
       ),
       decoration: CustomInputDecoration.textFieldStyle(
-          Name, Icon(icon)),
+        name,
+        Icon(
+          icon,
+        ),
+      ),
     ),
   );
 }
