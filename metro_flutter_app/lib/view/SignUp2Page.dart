@@ -6,12 +6,19 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:metro_flutter_app/view/SignUp3Page.dart';
 
-class SignUp2Page extends StatelessWidget {
+// ignore: must_be_immutable
+class SignUp2Page extends StatefulWidget {
+  @override
+  _SignUp2PageState createState() => _SignUp2PageState();
+}
+
+class _SignUp2PageState extends State<SignUp2Page> {
   String phoneNumber;
 
   String dateOfBirth;
 
   TextEditingController dateCtl = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   void _sendDataToSecondScreen(BuildContext context) {
@@ -23,6 +30,22 @@ class SignUp2Page extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _getDateOfBirth(BuildContext context) {
+    DatePicker.showDatePicker(context,
+        showTitleActions: true,
+        minTime: DateTime(1921, 1, 1),
+        maxTime: DateTime(2121, 12, 31), onConfirm: (date) {
+      final formattedStr = DateFormat.yMMMd().format(date);
+      setState(() {
+        dateOfBirth = formattedStr.toString();
+      });
+    }, currentTime: DateTime.now(), locale: LocaleType.en);
+  }
+
+  bool _checkDate() {
+    return (dateOfBirth == null) ? false : true;
   }
 
   Widget build(BuildContext context) {
@@ -79,53 +102,60 @@ class SignUp2Page extends StatelessWidget {
                       SizedBox(
                         height: 15,
                       ),
-                      Container(
-                        decoration: CustomBoxDecoration.decorationStyle(
-                          Color(0xd6a80f14),
-                          15.0,
-                        ),
-                        child: TextFormField(
-                          controller: dateCtl,
-                          onTap: () {
-                            DatePicker.showDatePicker(context,
-                                showTitleActions: true,
-                                minTime: DateTime(1921, 1, 1),
-                                maxTime: DateTime(2121, 12, 31),
-                                onConfirm: (date) {
-                              final formattedStr =
-                                  DateFormat.yMMMd().format(date);
-                              dateCtl.text = formattedStr.toString();
-                            },
-                                currentTime: DateTime.now(),
-                                locale: LocaleType.en);
-                          },
-                          onSaved: (val) {
-                            this.dateOfBirth = val;
-                          },
-                          validator: (val) {
-                            if (val.isEmpty) {
-                              return " Date Of Birth couldn't be blank!";
-                            }
-                            return null;
-                          },
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: CustomInputDecoration.textFieldStyle(
-                            " Date Of Birth",
-                            Icon(
-                              Icons.calendar_today,
+                      InkWell(
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.87,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xffa80f14),
+                                    offset: Offset(0, 1),
+                                    spreadRadius: 0.1,
+                                    blurRadius: 6,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 15, left: 10),
+                                child: Text(
+                                  dateOfBirth == null
+                                      ? " Date of Birth"
+                                      : dateOfBirth,
+                                  style: TextStyle(
+                                    color: dateOfBirth == null
+                                        ? Colors.grey.withOpacity(0.3)
+                                        : Colors.black,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: dateOfBirth == null ? 18 : 20,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 15, left: 325),
+                              child: Icon(
+                                Icons.calendar_today,
+                              ),
+                            ),
+                          ],
                         ),
+                        onTap: () {
+                          _getDateOfBirth(context);
+                        },
                       ),
                       SizedBox(
                         height: 30,
                       ),
                       InkWell(
                         onTap: () {
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState.validate() &&
+                              _checkDate()) {
                             _formKey.currentState.save();
                             try {
                               _sendDataToSecondScreen(context);
@@ -159,7 +189,5 @@ class SignUp2Page extends StatelessWidget {
         ),
       ),
     );
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
