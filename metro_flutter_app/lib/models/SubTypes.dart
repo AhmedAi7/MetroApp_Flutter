@@ -1,10 +1,9 @@
 import 'dart:core';
-import 'package:flutter/material.dart';
 
-class product {
+class Product {
   String trips, stations, months, price;
   int id;
-  product({
+  Product({
     this.trips,
     this.stations,
     this.months,
@@ -13,26 +12,26 @@ class product {
   });
 }
 
-List<product> products = [
-  product(
+List<Product> products = [
+  Product(
       trips: "120 Trip",
       stations: "9 Stations",
       months: "3 Months",
       price: "250 EGP",
       id: 1),
-  product(
+  Product(
       trips: "120 Trip",
       stations: "16 Stations",
       months: "3 Months",
       price: "380 EGP",
       id: 2),
-  product(
+  Product(
       trips: "120 Trip",
       stations: "36 Stations",
       months: "3 Months",
       price: "480 EGP",
       id: 3),
-  product(
+  Product(
       trips: "120 Trip",
       stations: "9 Stations",
       months: "1 Months",
