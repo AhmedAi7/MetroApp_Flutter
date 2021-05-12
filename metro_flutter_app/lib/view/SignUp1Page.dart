@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 
+// ignore: must_be_immutable
 class SignUp1Page extends StatelessWidget {
-
   String email;
 
   String name;
@@ -19,16 +19,18 @@ class SignUp1Page extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("images/Background.png"),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.8), BlendMode.dstIn)),
+              image: AssetImage("images/Background.png"),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.8),
+                BlendMode.dstIn,
+              ),
+            ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Image.asset("images/metro-logo.png"),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Form(
@@ -53,7 +55,11 @@ class SignUp1Page extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                         decoration: CustomInputDecoration.textFieldStyle(
-                            " Full Name", Icon(Icons.perm_identity)),
+                          " Full Name",
+                          Icon(
+                            Icons.perm_identity,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -78,7 +84,11 @@ class SignUp1Page extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                         decoration: CustomInputDecoration.textFieldStyle(
-                            " Email", Icon(Icons.email)),
+                          " Email",
+                          Icon(
+                            Icons.email,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -118,19 +128,30 @@ class SignUp1Page extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                    child: Row(children: [
-                      Expanded(
-                          child: Divider(color: Color(0xFFE5E5E5), thickness: 1)),
-                      Text(
-                        '    Or Sign Up With    ',
-                        style: TextStyle(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            color: Color(0xFFE5E5E5),
+                            thickness: 1,
+                          ),
+                        ),
+                        Text(
+                          '    Or Sign Up With    ',
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic,
-                            color: Color(0xFFE5E5E5)),
-                      ),
-                      Expanded(
-                          child: Divider(color: Color(0xFFE5E5E5), thickness: 1)),
-                    ]),
+                            color: Color(0xFFE5E5E5),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Color(0xFFE5E5E5),
+                            thickness: 1,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -139,11 +160,13 @@ class SignUp1Page extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       InkWell(
-                          onTap: () {},
-                          child: Image.asset("images/facebook-logo.png")),
+                        onTap: () {},
+                        child: Image.asset("images/facebook-logo.png"),
+                      ),
                       InkWell(
-                          onTap: () {},
-                          child: Image.asset("images/google-logo.png")),
+                        onTap: () {},
+                        child: Image.asset("images/google-logo.png"),
+                      ),
                     ],
                   ),
                 ],
@@ -154,22 +177,24 @@ class SignUp1Page extends StatelessWidget {
                   Text(
                     "Already have an account?",
                     style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        color: Color(0xFFE5E5E5)),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                      color: Color(0xFFE5E5E5),
+                    ),
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.popAndPushNamed(context,'Login');
-                      },
+                      Navigator.popAndPushNamed(context, 'Login');
+                    },
                     child: Text(
                       '  Login  ',
                       style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
-                          color: Color(0xFFE5E5E5)),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        color: Color(0xFFE5E5E5),
+                      ),
                     ),
                   )
                 ],
@@ -179,8 +204,5 @@ class SignUp1Page extends StatelessWidget {
         ),
       ),
     );
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
-
