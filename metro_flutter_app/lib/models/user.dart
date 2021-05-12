@@ -23,7 +23,7 @@ User user = User(
   dateOfBirth: 'Jun 9, 1999',
   password: 'mb20170224',
 );
-void ChangeUserName(String name) {
+void changeUserName(String name) {
   user.name = name;
 }
 
