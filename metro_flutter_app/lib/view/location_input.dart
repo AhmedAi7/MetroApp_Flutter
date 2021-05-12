@@ -4,6 +4,7 @@ import 'map_screen.dart';
 import '../helpers/location_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+// ignore: must_be_immutable
 class LocationInput extends StatefulWidget {
   String _nearestStation = "Al-Sayeda Zainab";
   final Function onSelectPlace;
@@ -27,6 +28,7 @@ class _LocationInputState extends State<LocationInput> {
 
   Future<void> _getCurrentLocation() async {
     try {
+      // ignore: unused_local_variable
       final locData = await Location().getLocation().then((value) {
         _showPreview(value.latitude, value.longitude);
         widget.onSelectPlace(value.latitude, value.longitude);
@@ -107,6 +109,7 @@ class _LocationInputState extends State<LocationInput> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // ignore: deprecated_member_use
               FlatButton.icon(
                 icon: Icon(Icons.location_on),
                 label: Text(
@@ -119,6 +122,7 @@ class _LocationInputState extends State<LocationInput> {
                 textColor: Colors.white,
                 onPressed: _getCurrentLocation,
               ),
+              // ignore: deprecated_member_use
               FlatButton.icon(
                 icon: Icon(Icons.map),
                 label: Text(
@@ -184,7 +188,7 @@ class _LocationInputState extends State<LocationInput> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, 'GetRoute');
+                    Navigator.popAndPushNamed(context, 'GetRoute');
                   },
                   child: Container(
                     width: screenWidth * 0.5,
@@ -219,7 +223,7 @@ class _LocationInputState extends State<LocationInput> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, 'BuyTicket');
+                    Navigator.popAndPushNamed(context, 'BuyTickets');
                   },
                   child: Container(
                     width: screenWidth * 0.5,
