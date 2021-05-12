@@ -7,7 +7,6 @@ class ContactUs extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     String phone = "201221116048";
-    String whatsappUrl = "whatsapp://send?phone=$phone";
 
     Future<void> _launchWhatsApp() async {
       try {
