@@ -9,7 +9,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  @override
   String email;
 
   String password;
@@ -234,7 +233,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
