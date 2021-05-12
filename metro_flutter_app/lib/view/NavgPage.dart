@@ -6,18 +6,18 @@ import 'package:metro_flutter_app/view/Settings.dart';
 import 'package:metro_flutter_app/view/SubscriptionPage.dart';
 import '../component/main_drawer.dart';
 
-class navScreen extends StatefulWidget {
+class NavScreen extends StatefulWidget {
   final index1;
-  const navScreen(this.index1);
+  const NavScreen(this.index1);
   @override
-  _navScreenState createState() => _navScreenState(index1);
+  _NavScreenState createState() => _NavScreenState(index1);
 }
 
-class _navScreenState extends State<navScreen> {
+class _NavScreenState extends State<NavScreen> {
   List<Widget> screens = [
-    homepage(),
-    subscription(),
-    settings(),
+    HomePage(),
+    Subscription(),
+    Settings(),
   ];
   Map<String, IconData> icons = {
     "Home": Icons.home,
@@ -27,7 +27,7 @@ class _navScreenState extends State<navScreen> {
   int currentindex;
   String currentpage;
 
-  _navScreenState(index1) {
+  _NavScreenState(index1) {
     currentindex = index1;
   }
   @override
@@ -40,15 +40,19 @@ class _navScreenState extends State<navScreen> {
         backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         items: icons
-            .map((title, icon) => MapEntry(
+            .map(
+              (title, icon) => MapEntry(
                 title,
                 BottomNavigationBarItem(
                   icon: Icon(
                     icon,
                     size: 30.0,
                   ),
+                  // ignore: deprecated_member_use
                   title: Text(title),
-                )))
+                ),
+              ),
+            )
             .values
             .toList(),
         currentIndex: currentindex,
