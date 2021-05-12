@@ -3,6 +3,7 @@ import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/view/confirm_email.dart';
 
+// ignore: must_be_immutable
 class EditEmail extends StatelessWidget {
   String newEmail;
   final _formKey = GlobalKey<FormState>();
