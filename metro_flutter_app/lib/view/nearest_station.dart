@@ -13,14 +13,8 @@ class _NearestStationState extends State<NearestStation> {
     _pickedLocation = PlaceLocation(latitude: lat, longitude: lng);
   }
 
+  // ignore: unused_field
   PlaceLocation _pickedLocation;
-
-  void _savePlace() {
-    if (_pickedLocation == null) {
-      return;
-    }
-    Navigator.of(context).pop();
-  }
 
   @override
   Widget build(BuildContext context) {
