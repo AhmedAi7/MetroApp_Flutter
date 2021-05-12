@@ -6,12 +6,12 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:intl/intl.dart';
 
-class settings extends StatefulWidget {
+class Settings extends StatefulWidget {
   @override
-  _settingsState createState() => _settingsState();
+  _SettingsState createState() => _SettingsState();
 }
 
-class _settingsState extends State<settings> {
+class _SettingsState extends State<Settings> {
   String newFullName;
   String newDateOfBirth;
   DateTime selectedDate = DateTime.now();
@@ -21,7 +21,7 @@ class _settingsState extends State<settings> {
     if (newFullName == null) return;
     setState(() {
       print("newFullName");
-      ChangeUserName(newFullName);
+      changeUserName(newFullName);
     });
     Navigator.pop(context);
   }
