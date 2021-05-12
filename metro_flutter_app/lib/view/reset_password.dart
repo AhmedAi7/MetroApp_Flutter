@@ -153,10 +153,11 @@ class _ResetPasswordState extends State<ResetPassword> {
                           ),
                           decoration: InputDecoration(
                             errorStyle: TextStyle(
-                                color: Color(0xFFFFFFFF),
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11),
+                              color: Color(0xFFFFFFFF),
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color(0xd6a80f14)),
                               borderRadius: BorderRadius.all(
@@ -184,7 +185,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.italic,
                             ),
-                            labelText: " Old Password",
+                            labelText: " Current Password",
                           ),
                         ),
                       ),
