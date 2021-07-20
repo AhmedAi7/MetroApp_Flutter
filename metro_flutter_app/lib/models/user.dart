@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class User {
+  int id;
   String name;
   String email;
   String phoneNumber;
@@ -8,6 +9,7 @@ class User {
   String dateOfBirth;
 
   User({
+    @required this.id,
     @required this.name,
     @required this.email,
     @required this.phoneNumber,
@@ -16,13 +18,24 @@ class User {
   });
 }
 
-User user = User(
+List<User> Users = [
+User(
+id: 6,
+name: 'Muhammad Bakr',
+email: 'mbakr7757@gmail.com',
+phoneNumber: '01151825393',
+dateOfBirth: 'Jun 9, 1999',
+password: 'mb20170224',),
+]
+;
+User user =User(
+  id: 6,
   name: 'Muhammad Bakr',
   email: 'mbakr7757@gmail.com',
   phoneNumber: '01151825393',
   dateOfBirth: 'Jun 9, 1999',
-  password: 'mb20170224',
-);
+  password: 'mb20170224',);
+
 void changeUserName(String name) {
   user.name = name;
 }

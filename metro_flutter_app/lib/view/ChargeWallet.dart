@@ -14,12 +14,9 @@ class _ChargeWalletState extends State<ChargeWallet> {
   String expireDate, expireYear;
   TextEditingController dateCtl = TextEditingController();
   TextEditingController dateCtl2 = TextEditingController();
-  String fullname;
-  String email;
-  String phonenumber;
+  final Credit_number= TextEditingController();
+  final Cvvnumber= TextEditingController();
   String nationalid;
-  String country, city;
-  String station1, station2;
   final _formKey2 = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
@@ -74,12 +71,15 @@ class _ChargeWalletState extends State<ChargeWallet> {
                         SizedBox(
                           height: 30,
                         ),
-                        textfield(
-                          "Credit Card",
-                          Icons.arrow_drop_down,
-                          fullname,
-                          55,
-                          screenwidth,
+                        Text(
+                          "Credit Card Details :",style: TextStyle(
+                          fontSize: 30,
+                     fontFamily: 'Segoe UI',
+                   color: const Color(0xffffffff),
+                  fontStyle: FontStyle.italic,
+                   fontWeight: FontWeight.bold,
+                   letterSpacing: 2,
+                        ),
                         ),
                         SizedBox(
                           height: 10,
@@ -87,7 +87,7 @@ class _ChargeWalletState extends State<ChargeWallet> {
                         textfield(
                           "Credit Card Number",
                           Icons.credit_card,
-                          email,
+                          Credit_number,
                           55,
                           screenwidth,
                         ),
@@ -97,7 +97,7 @@ class _ChargeWalletState extends State<ChargeWallet> {
                         textfield(
                           "CVV Number",
                           Icons.credit_card_sharp,
-                          phonenumber,
+                          Cvvnumber,
                           55,
                           screenwidth,
                         ),

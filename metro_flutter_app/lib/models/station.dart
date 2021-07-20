@@ -195,7 +195,7 @@ List<Station> stationsLine1 = [
 List<Station> stationsLine2 = [
   // Line 2
   Station(
-    stationName: "El-Mounib",
+    stationName: "moneb",
     state: false,
     line: 2,
   ),
@@ -235,7 +235,7 @@ List<Station> stationsLine2 = [
     line: 2,
   ),
   Station(
-    stationName: "Opera",
+    stationName: "opera",
     state: false,
     line: 2,
   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:nfc_in_flutter/nfc_in_flutter.dart';
+//import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 
 class NFC{
   String source;
