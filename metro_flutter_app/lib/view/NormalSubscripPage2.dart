@@ -97,7 +97,7 @@ int period;
      }
      else
        {
-         await alertDialog("Already have an Subscription",context);
+         await alertDialog("Check Your balance or your info",context);
        }
    }
    else

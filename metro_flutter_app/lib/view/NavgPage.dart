@@ -6,6 +6,7 @@ import 'package:metro_flutter_app/view/NormalSubscripPage1.dart';
 import 'package:metro_flutter_app/view/Settings.dart';
 import 'package:metro_flutter_app/view/SubscriptionPage.dart';
 import '../component/main_drawer.dart';
+import 'SubscriptionSwitch.dart';
 
 class NavScreen extends StatefulWidget {
   final index1;
@@ -22,7 +23,7 @@ class _NavScreenState extends State<NavScreen> {
 
   List<Widget> screens = [
     HomePage(),
-    NormalSubscription1(),
+    SubscriptionSwitch(),
     Settings(),
   ];
   Map<String, IconData> icons = {
