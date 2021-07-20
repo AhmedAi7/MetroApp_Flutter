@@ -74,7 +74,7 @@ class _MyTicketsState extends State<MyTickets> {
   }
 
   Container card(products) {
-    final Product product1 = products;
+    final Productt product1 = products;
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

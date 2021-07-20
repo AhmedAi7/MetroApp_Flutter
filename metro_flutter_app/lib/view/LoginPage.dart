@@ -1,7 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
+import 'package:http/http.dart' as http;
+import 'package:metro_flutter_app/component/User_Status.dart';
+import 'package:metro_flutter_app/models/LoginRequest.dart';
+import 'package:metro_flutter_app/view/NavgPage.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,13 +20,50 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String email;
+  String username;
 
   String password;
+ static var response;
 
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;
+
+  Future Login(String username,String password,BuildContext context)async
+  {
+    //SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
+    var Url="http://localhost:8080/auth/Login";
+    var jsonResponse;
+    setState(() {
+      print(username+" "+password);
+    });
+     response =await http.post(Uri.parse(Url),
+        headers: <String,String>{"Content-Type":"application/json"},
+        body: jsonEncode(<String,String>{
+          "username":username,
+          "password":password
+        }));
+    setState(() {
+      print(response.statusCode);
+    });
+
+    if(response.statusCode==200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : "+response.body);
+      loginStatues.writetoken(jsonResponse["Authorization"]);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: (context) => NavScreen(0)
+    ));
+    }
+    else
+      {
+        setState(() {
+          print(response.statusCode);
+        });
+      }
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -44,7 +92,9 @@ class _LoginPageState extends State<LoginPage> {
                           Color(0xffa80f14), 15.0),
                       child: TextFormField(
                         onSaved: (val) {
-                          this.email = val;
+                          setState(() {
+                            this.username = val;
+                          });
                         },
                         validator: (val) {
                           if (val.isEmpty) {
@@ -52,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                           return null;
                         },
-                        keyboardType: TextInputType.emailAddress,
+                        keyboardType: TextInputType.name,
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -70,13 +120,13 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextFormField(
                         obscureText: _obscureText,
                         onSaved: (val) {
-                          this.password = val;
+                          setState(() {
+                            this.password = val;
+                          });
                         },
                         validator: (val) {
                           if (val.isEmpty) {
                             return "Password couldn't be blank!";
-                          } else if (val.length < 6) {
-                            return "Password can't be less than 6 letters!";
                           }
                           return null;
                         },
@@ -124,12 +174,24 @@ class _LoginPageState extends State<LoginPage> {
                       height: 25,
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async{
+                        try{
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          Navigator.popAndPushNamed(context, 'NavgPage');
-                          try {} catch (error) {}
-                        } else {}
+                          LoginRequestModel model = await Login(username,password,context);
+
+                        }
+                        }catch(e)
+                        {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Invalid User !'),
+                                action: SnackBarAction(
+                                  label: 'Undo',
+                                  onPressed: () {
+                                    print('Action in Snackbar has been pressed.');
+                                  },)
+                          ));
+                        }
                       },
                       child: Container(
                         width: 280,

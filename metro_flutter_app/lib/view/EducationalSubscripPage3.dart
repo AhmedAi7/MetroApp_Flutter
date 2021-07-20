@@ -55,7 +55,7 @@ class _EducationSubscription3State extends State<EducationSubscription3> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    button1("Done", NavScreen(0), context, 18, 80, 170)
+                    //button1("Done", NavScreen(0), context, 18, 80, 170)
                   ],
                 ),
               ),

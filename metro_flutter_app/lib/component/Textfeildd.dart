@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'CustomStyles.dart';
 
-Container textfield(
-    String name, IconData icon, String input, double height, double width) {
+Container textfield(String name, IconData icon, TextEditingController input, double height, double width) {
   return Container(
     height: height,
     width: width,
@@ -13,8 +12,8 @@ Container textfield(
       15.0,
     ),
     child: TextFormField(
+      controller: input,
       onSaved: (val) {
-        input = val;
       },
       validator: (val) {
         if (val.isEmpty) {

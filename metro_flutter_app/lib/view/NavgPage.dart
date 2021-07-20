@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/view/HomePage.dart';
+import 'package:metro_flutter_app/view/NormalSubscripPage1.dart';
 import 'package:metro_flutter_app/view/Settings.dart';
 import 'package:metro_flutter_app/view/SubscriptionPage.dart';
 import '../component/main_drawer.dart';
@@ -9,14 +10,19 @@ import '../component/main_drawer.dart';
 class NavScreen extends StatefulWidget {
   final index1;
   const NavScreen(this.index1);
+
   @override
   _NavScreenState createState() => _NavScreenState(index1);
 }
 
 class _NavScreenState extends State<NavScreen> {
+  _NavScreenState(index1) {
+    currentindex = index1;
+  }
+
   List<Widget> screens = [
     HomePage(),
-    Subscription(),
+    NormalSubscription1(),
     Settings(),
   ];
   Map<String, IconData> icons = {
@@ -27,9 +33,6 @@ class _NavScreenState extends State<NavScreen> {
   int currentindex;
   String currentpage;
 
-  _NavScreenState(index1) {
-    currentindex = index1;
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -60,7 +60,7 @@ class _BuyTicketState extends State<BuyTicket> {
   }
 
   Container card(products) {
-    final Product product1 = products;
+    final Productt product1 = products;
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
