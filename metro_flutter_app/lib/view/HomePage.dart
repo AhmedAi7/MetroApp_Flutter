@@ -1,21 +1,97 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:metro_flutter_app/component/User_Status.dart';
 import 'package:metro_flutter_app/helpers/location_helper.dart';
 import 'package:metro_flutter_app/models/place.dart';
 import 'package:metro_flutter_app/models/station.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'map_screen.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
+
 class _HomePageState extends State<HomePage> {
+
+  Future<bool> GetUser()async
+  {
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
+    String token="Bearer "+sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+
+    var jsonResponse;
+    var Url="http://localhost:8080/GetUser";
+    var response =await http.get(Uri.parse(Url),
+        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
+
+    if(response.statusCode==200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : "+response.body);
+      print("Response :"+jsonResponse["balance"]);
+      setState(() {
+        loginStatues().setUser(jsonResponse["fullname"], jsonResponse["email"], jsonResponse["password"], jsonResponse["phone_number"], jsonResponse["date_of_birth"]);
+        var bala  = double.parse(jsonResponse["balance"]);
+        assert(bala is double);
+        balance=bala;
+      });
+    }
+    else
+    {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
+  Future GetTicketPrice(BuildContext context)async
+  {
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
+    String token="Bearer "+sharedPreferences.getString("token");
+    setState(() {
+      print(source+" "+destination+" ");
+      print(token);
+    });
+
+    Map<String, String> queryParams = {
+      'source': source,
+      'destination': destination,
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "http://localhost:8080/GetTicketPrice" + '?' + queryString;
+
+    var jsonResponse;
+    var response =await http.get(Uri.parse(Url),
+        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
+    if(response.statusCode==200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : "+response.body);
+      setState(() {
+        price=jsonResponse["ticket_price"];
+      });
+    }
+    else
+    {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
   String source;
   String destination;
-  double balance = 50.75;
+  double balance = 0;
   double price = 0.0;
   String _previewImageUrl;
   bool flag = false;
@@ -26,7 +102,7 @@ class _HomePageState extends State<HomePage> {
   List _getChildren(int count, List<Station> stations, int type) =>
       List<Widget>.generate(
         count,
-        (i) => ListTile(
+            (i) => ListTile(
           leading: Icon(
             Icons.directions_train_sharp,
             color: Color(0xffa80f14),
@@ -43,10 +119,13 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             onTap: () {
-              if (type == 1)
+              if (type == 1) {
                 source = stations[i].stationName;
-              else
+                _checkPrice();
+              } else {
                 destination = stations[i].stationName;
+                _checkPrice();
+              }
               setState(() {
                 Navigator.pop(context);
               });
@@ -79,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 children:
-                    _getChildren(stationsLine1.length, stationsLine1, type),
+                _getChildren(stationsLine1.length, stationsLine1, type),
               ),
               ExpansionTile(
                 title: Text(
@@ -92,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 children:
-                    _getChildren(stationsLine2.length, stationsLine2, type),
+                _getChildren(stationsLine2.length, stationsLine2, type),
               ),
               ExpansionTile(
                 title: Text(
@@ -105,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 children:
-                    _getChildren(stationsLine3.length, stationsLine3, type),
+                _getChildren(stationsLine3.length, stationsLine3, type),
               ),
             ],
           ),
@@ -160,6 +239,12 @@ class _HomePageState extends State<HomePage> {
     //print(selectedLocation.latitude);
   }
 
+  void _checkPrice() async {
+    if (source != null && destination != null) {
+            GetTicketPrice(context);
+    }
+  }
+
   void _set(String str, int type) {
     if (type == 1)
       source = str;
@@ -190,10 +275,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Container(
                       height: (MediaQuery.of(context).size.height -
-                              AppBar().preferredSize.height -
-                              MediaQuery.of(context).viewPadding.top -
-                              MediaQuery.of(context).viewPadding.bottom -
-                              kBottomNavigationBarHeight) *
+                          AppBar().preferredSize.height -
+                          MediaQuery.of(context).viewPadding.top -
+                          MediaQuery.of(context).viewPadding.bottom -
+                          kBottomNavigationBarHeight) *
                           0.3,
                       width: MediaQuery.of(context).size.width * 0.88,
                       alignment: Alignment.center,
@@ -211,18 +296,18 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: _previewImageUrl == null
                           ? Text(
-                              'No Loaction is Selected',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
-                            )
+                        'No Loaction is Selected',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      )
                           : Image.network(
-                              _previewImageUrl,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                            ),
+                        _previewImageUrl,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -376,9 +461,15 @@ class _HomePageState extends State<HomePage> {
       _previewImageUrl = null;
     });
   }
-
+  int counter =0;
   @override
   Widget build(BuildContext context) {
+    while(counter==0) {
+      GetUser();
+      setState(() {
+        counter=counter+1;
+      });
+    }
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -428,8 +519,8 @@ class _HomePageState extends State<HomePage> {
                                 child: Container(
                                   width: screenWidth * 0.5,
                                   height: (screenHeight -
-                                          MediaQuery.of(context).padding.top -
-                                          AppBar().preferredSize.height) *
+                                      MediaQuery.of(context).padding.top -
+                                      AppBar().preferredSize.height) *
                                       0.08,
                                   decoration: BoxDecoration(
                                     color: Color(0xffa80f14),
@@ -466,8 +557,8 @@ class _HomePageState extends State<HomePage> {
                                 child: Container(
                                   width: screenWidth * 0.5,
                                   height: (screenHeight -
-                                          MediaQuery.of(context).padding.top -
-                                          AppBar().preferredSize.height) *
+                                      MediaQuery.of(context).padding.top -
+                                      AppBar().preferredSize.height) *
                                       0.08,
                                   decoration: BoxDecoration(
                                     color: Color(0xffa80f14),

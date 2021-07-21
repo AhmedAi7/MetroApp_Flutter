@@ -3,14 +3,12 @@ import 'package:flutter/foundation.dart';
 class Station {
   String stationName;
   bool state;
-  String direction;
   int line;
 
   Station({
     @required this.stationName,
     @required this.state,
     @required this.line,
-    this.direction,
   });
 }
 

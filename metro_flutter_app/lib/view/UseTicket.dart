@@ -85,7 +85,7 @@ class _UseTicketState extends State<UseTicket> {
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              card(ticket),
+              //card(ticket),
               SizedBox(
                 height: 25.0,
               ),

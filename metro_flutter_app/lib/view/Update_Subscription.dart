@@ -25,14 +25,12 @@ class Item {
   final int period;
 }
 
-class NormalSubscription1 extends StatefulWidget {
-  NormalSubscription1();
-
+class UpdateSubscription extends StatefulWidget {
   @override
-  _NormalSubscription1State createState() => _NormalSubscription1State();
+  _UpdateSubscriptionState createState() => _UpdateSubscriptionState();
 }
 
-class _NormalSubscription1State extends State<NormalSubscription1> {
+class _UpdateSubscriptionState extends State<UpdateSubscription> {
 
   Future<bool> alertDialog(String text, BuildContext context) {
     return showDialog(
@@ -92,6 +90,50 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
       });
     }
   }
+
+  Future update(BuildContext context)async
+  {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+
+    var jsonResponse;
+
+    setState(() {
+      print(source + " " + destination + " ");
+      print(selected_user.period);
+      print(token);
+    });
+    Map<String, String> queryParams = {
+      'source': source,
+      'target': destination,
+      'period': selected_user.period.toString()
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "http://localhost:8080/UpdateNormalSubscription" + '?' +
+        queryString;
+
+    var response = await http.post(Uri.parse(Url),
+        headers: <String, String>{
+          "Content-Type": "application/json",
+          HttpHeaders.authorizationHeader: token
+        });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      if (jsonResponse["message"] == "success") {
+        await alertDialog("Subscription is Updated", context);
+        Navigator.popAndPushNamed(context, 'NavgPage');
+      }
+      else {
+        await alertDialog("Check balance or info", context);
+        setState(() {
+          print(response.statusCode);
+        });
+      }
+    }
+  }
   String source;
   String destination;
   String period;
@@ -104,9 +146,9 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
   String _nearestStation = "Al-Sayeda Zainab";
 
   static List<Item> Periods = <Item>[
-  const Item('1 Month',Icon(Icons.date_range,color:  const Color(0xffa80f14),),1),
-  const Item('3 Months',Icon(Icons.date_range,color:  const Color(0xffa80f14),),3),
-  const Item('1 year',Icon(Icons.date_range,color:  const Color(0xffa80f14),),12),
+    const Item('1 Month',Icon(Icons.date_range,color:  const Color(0xffa80f14),),1),
+    const Item('3 Months',Icon(Icons.date_range,color:  const Color(0xffa80f14),),3),
+    const Item('1 year',Icon(Icons.date_range,color:  const Color(0xffa80f14),),12),
   ];
   Item selected_user=Periods[0];
   List _getChildren(int count, List<Station> stations, int type) =>
@@ -490,121 +532,121 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 60),
             child: Container(
-              alignment: Alignment.bottomCenter,
-              child:
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 60, 5, 5),
-                child : Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          child: Container(
-                            width: screenWidth * 0.85,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffa80f14),
-                                  offset: Offset(0, 1),
-                                  spreadRadius: 0.1,
-                                  blurRadius: 6,
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 15, left: 10),
-                              child: Text(
-                                source == null ? "Source" : source,
-                                style: TextStyle(
-                                  color: source == null
-                                      ? Colors.grey.withOpacity(0.3)
-                                      : Colors.black,
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: source == null ? 15 : 20,
+                alignment: Alignment.bottomCenter,
+                child:
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 60, 5, 5),
+                  child : Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              width: screenWidth * 0.85,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xffa80f14),
+                                    offset: Offset(0, 1),
+                                    spreadRadius: 0.1,
+                                    blurRadius: 6,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 15, left: 10),
+                                child: Text(
+                                  source == null ? "Source" : source,
+                                  style: TextStyle(
+                                    color: source == null
+                                        ? Colors.grey.withOpacity(0.3)
+                                        : Colors.black,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: source == null ? 15 : 20,
+                                  ),
                                 ),
                               ),
                             ),
+                            onTap: () {
+                              _showStations(1);
+                            },
                           ),
-                          onTap: () {
-                            _showStations(1);
-                          },
-                        ),
-                        InkWell(
-                          child: Icon(
-                            Icons.add_location_alt_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          onTap: () {
-                            _showLocation(1);
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          child: Container(
-                            width: screenWidth * 0.85,
-                            height: 50,
-                            decoration: BoxDecoration(
+                          InkWell(
+                            child: Icon(
+                              Icons.add_location_alt_outlined,
+                              size: 30,
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffa80f14),
-                                  offset: Offset(0, 1),
-                                  spreadRadius: 0.1,
-                                  blurRadius: 6,
-                                ),
-                              ],
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 15, left: 10),
-                              child: Text(
-                                destination == null
-                                    ? "Destination"
-                                    : destination,
-                                style: TextStyle(
-                                  color: destination == null
-                                      ? Colors.grey.withOpacity(0.3)
-                                      : Colors.black,
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: destination == null ? 15 : 20,
+                            onTap: () {
+                              _showLocation(1);
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              width: screenWidth * 0.85,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xffa80f14),
+                                    offset: Offset(0, 1),
+                                    spreadRadius: 0.1,
+                                    blurRadius: 6,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 15, left: 10),
+                                child: Text(
+                                  destination == null
+                                      ? "Destination"
+                                      : destination,
+                                  style: TextStyle(
+                                    color: destination == null
+                                        ? Colors.grey.withOpacity(0.3)
+                                        : Colors.black,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: destination == null ? 15 : 20,
+                                  ),
                                 ),
                               ),
                             ),
+                            onTap: () {
+                              _showStations(2);
+                            },
                           ),
-                          onTap: () {
-                            _showStations(2);
-                          },
-                        ),
-                        InkWell(
-                          child: Icon(
-                            Icons.add_location_alt_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          onTap: () {
-                            _showLocation(2);
-                          },
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 15.0),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 30.0),
-                      child: Container(
+                          InkWell(
+                            child: Icon(
+                              Icons.add_location_alt_outlined,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            onTap: () {
+                              _showLocation(2);
+                            },
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 15.0),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 30.0),
+                        child: Container(
                           width: screenWidth * 0.85,
                           height: 50,
                           decoration: BoxDecoration(
@@ -619,282 +661,164 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                               ),
                             ],
                           ),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 7, left: 10),
-                        child: DropdownButton<Item>(
-                          focusColor:Colors.transparent ,
-                          isExpanded: true,
-                          hint:  Text("Select Period"),
-                          value: selected_user,
-                          onChanged: (Item Value) {
-                            setState(() {
-                              selected_user = Value;
-                            });
-                          },
-                          items: Periods.map((Item user) {
-                            return  DropdownMenuItem<Item>(
-                              value: user,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    user.name,
-                                    style: TextStyle(color: Colors.black,
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: user.name == null ? 15 : 20,
-                                    )
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 7, left: 10),
+                            child: DropdownButton<Item>(
+                              focusColor:Colors.transparent ,
+                              isExpanded: true,
+                              hint:  Text("Select Period"),
+                              value: selected_user,
+                              onChanged: (Item Value) {
+                                setState(() {
+                                  selected_user = Value;
+                                });
+                              },
+                              items: Periods.map((Item user) {
+                                return  DropdownMenuItem<Item>(
+                                  value: user,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                          user.name,
+                                          style: TextStyle(color: Colors.black,
+                                            fontStyle: FontStyle.italic,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: user.name == null ? 15 : 20,
+                                          )
+                                      ),
+                                      user.icon,
+                                    ],
                                   ),
-                                  user.icon,
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(35, 15, 5, 5),
-                      child: Row(
-                        children: [
-                          InkWell (
-                            onTap: () async{
-                              await GetSubscriptionPrice(context);
-                            },
-                            child: Container(
-                              width: screenWidth * 0.5,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Color(0xffa80f14),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    offset: Offset(0, 1),
-                                    spreadRadius: -2,
-                                    blurRadius: 6,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Show Price",
-                                  style: TextStyle(
-                                    color: Color(0xFFFFFFFF),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                              ),
+                                );
+                              }).toList(),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
-                            child: Container(
-                              width: screenWidth * 0.25,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFFFFFFF),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xffa80f14),
-                                    offset: Offset(0, 1),
-                                    spreadRadius: -2,
-                                    blurRadius: 6,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  price + " EGP",
-                                  style: TextStyle(
-                                    color: Color(0xffa80f14),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(35, 15, 5, 5),
+                        child: Row(
+                          children: [
+                            InkWell (
+                              onTap: () async{
+                                await GetSubscriptionPrice(context);
+                              },
+                              child: Container(
+                                width: screenWidth * 0.5,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffa80f14),
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(0, 1),
+                                      spreadRadius: -2,
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Show Price",
+                                    style: TextStyle(
+                                      color: Color(0xFFFFFFFF),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          )
-                        ],
-                      ),
-                    )
-                    ,
-                    SizedBox(height:5.0),
-                    Center(
-                      child: InkWell(
-                        onTap: () async {
-                          try {
-                            if (source != null && destination != null) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        NormalSubscription2(source, destination,
-                                            selected_user.period),
-                                  ));
-                            }
-                            else
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
+                              child: Container(
+                                width: screenWidth * 0.25,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFFFFFFF),
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xffa80f14),
+                                      offset: Offset(0, 1),
+                                      spreadRadius: -2,
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    price + " EGP",
+                                    style: TextStyle(
+                                      color: Color(0xffa80f14),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                      ,
+                      SizedBox(height:5.0),
+                      Center(
+                        child: InkWell(
+                          onTap: () async {
+                            try {
+                              if (source != null && destination != null) {
+                                 await update(context);
+                              }
+                              else
                               {
                                 await alertDialog("Check Empty Fields",context);
                               }
-                          }
-                          catch(e){
+                            }
+                            catch(e){
 
-                          }
-                        },
-                        child: Container(
-                          width: screenWidth * 0.5,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Color(0xffa80f14),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white,
-                                offset: Offset(0, 1),
-                                spreadRadius: -2,
-                                blurRadius: 6,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Subscripe",
-                              style: TextStyle(
-                                color: Color(0xFFFFFFFF),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
+                            }
+                          },
+                          child: Container(
+                            width: screenWidth * 0.5,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Color(0xffa80f14),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(0, 1),
+                                  spreadRadius: -2,
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Update Subscription",
+                                style: TextStyle(
+                                  color: Color(0xFFFFFFFF),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
+                    ],
+                  ),
+                )
             ),
           ),
         ],
       ),
     );
   }
-  //
-  // Container card(products,int index) {
-  //   final Product product1 = products;
-  //   return Container(
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.start,
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: <Widget>[
-  //         //Expanded(
-  //         //child:
-  //         Container(
-  //           alignment: Alignment.bottomCenter,
-  //           height: 135,
-  //           width: 144,
-  //           padding: EdgeInsets.all(5),
-  //           decoration: BoxDecoration(
-  //             color: Colors.white,
-  //             borderRadius: BorderRadius.only(
-  //               topLeft: Radius.circular(16),
-  //               topRight: Radius.circular(16),
-  //             ),
-  //           ),
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: [
-  //               Text(
-  //                 "${product1.trips} ",
-  //                 style: TextStyle(
-  //                   fontSize: 16,
-  //                   color: Colors.black,
-  //                   fontStyle: FontStyle.italic,
-  //                   fontWeight: FontWeight.w600,
-  //                   fontFamily: 'Segoe UI',
-  //                 ),
-  //               ),
-  //               Text(
-  //                 "${product1.stations}",
-  //                 style: TextStyle(
-  //                   fontSize: 16,
-  //                   color: Colors.black,
-  //                   fontStyle: FontStyle.italic,
-  //                   fontWeight: FontWeight.w600,
-  //                   fontFamily: 'Segoe UI',
-  //                 ),
-  //               ),
-  //               Text(
-  //                 "${product1.months} ",
-  //                 style: TextStyle(
-  //                   fontSize: 16,
-  //                   color: Colors.black,
-  //                   fontStyle: FontStyle.italic,
-  //                   fontWeight: FontWeight.w600,
-  //                   fontFamily: 'Segoe UI',
-  //                 ),
-  //               ),
-  //               Text(
-  //                 "___________",
-  //                 style: TextStyle(
-  //                   fontSize: 16,
-  //                   color: Colors.black,
-  //                 ),
-  //               ),
-  //               Text(
-  //                 "${product1.price} ",
-  //                 style: TextStyle(
-  //                   fontSize: 16,
-  //                   color: Colors.black,
-  //                   fontStyle: FontStyle.italic,
-  //                   fontWeight: FontWeight.w600,
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //         Container(
-  //           padding:
-  //               EdgeInsets.only(left: 0.0, top: 0.0, right: 0, bottom: 10.0),
-  //           height: 50,
-  //           width: 144,
-  //           // ignore: deprecated_member_use
-  //           child: RaisedButton(
-  //             onPressed: () => Navigator.push(
-  //               context,
-  //               MaterialPageRoute(
-  //                 builder: (context) => NormalSubscription2(),
-  //               ),
-  //             ),
-  //             //padding: EdgeInsets.all(15.0),
-  //             shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.only(
-  //                 bottomRight: Radius.circular(30.0),
-  //                 bottomLeft: Radius.circular(30.0),
-  //               ),
-  //             ),
-  //             color: const Color(0xffa80f14),
-  //             child: Text(
-  //               "Subscripe",
-  //               style: TextStyle(
-  //                 fontSize: 22,
-  //                 fontStyle: FontStyle.italic,
-  //                 fontWeight: FontWeight.bold,
-  //                 fontFamily: 'Segoe UI',
-  //                 letterSpacing: 1.5,
-  //                 color: Colors.white,
-  //               ),
-  //             ),
-  //           ),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
 }

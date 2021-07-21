@@ -1,3 +1,7 @@
+import 'dart:collection';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -6,8 +10,10 @@ import 'package:metro_flutter_app/helpers/location_helper.dart';
 import 'package:metro_flutter_app/models/place.dart';
 import 'package:metro_flutter_app/models/station.dart';
 import 'package:metro_flutter_app/view/station_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'map_screen.dart';
 import '../helpers/location_helper.dart';
+import 'package:http/http.dart' as http;
 
 class GetRoute extends StatefulWidget {
   @override
@@ -21,64 +27,81 @@ class _GetRouteState extends State<GetRoute> {
   bool fullFlag = false;
   String _previewImageUrl;
   bool flag = false;
+ // Map<String,bool> Path1;
+  Map Path1 = new HashMap<String, dynamic>();
+
   // ignore: unused_field
   PlaceLocation _pickedLocation;
   String _nearestStation = "Al-Sayeda Zainab";
 
-  List<Station> shortRoute = [
-    Station(
-      stationName: 'Bahoos',
-      state: false,
-      line: 2,
-    ),
-    Station(
-      stationName: 'Saddat',
-      state: true,
-      direction: 'Helwan Way',
-      line: 1,
-    ),
-    Station(
-      stationName: 'Saad Zaghloul',
-      state: false,
-      line: 1,
-    ),
-  ];
-  List<Station> fullRoute = [
-    Station(
-      stationName: 'Bahoos',
-      state: false,
-      line: 2,
-    ),
-    Station(
-      stationName: 'Dokki',
-      state: false,
-      line: 2,
-    ),
-    Station(
-      stationName: 'Opera',
-      state: false,
-      line: 2,
-    ),
-    Station(
-      stationName: 'Saddat',
-      state: true,
-      direction: 'Helwan Way',
-      line: 1,
-    ),
-    Station(
-      stationName: 'Saad Zaghloul',
-      state: false,
-      line: 1,
-    ),
-  ];
+  Future<bool> GetPath()async
+  {
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
+    String token="Bearer "+sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    Map<String, String> queryParams = {
+      'source': source,
+      'destination': destination,
+    };
 
+    String queryString = Uri(queryParameters: queryParams).query;
+    var Url = "http://localhost:8080/GetPath" + '?' + queryString;
+    var jsonResponse;
+    var response =await http.get(Uri.parse(Url),
+        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
+    if(response.statusCode==200) {
+     // final j="[" + response.body + "]";
+      jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
+      print("Response" +jsonResponse["path"].toString());
+      print(jsonResponse["path"].runtimeType);
+      setState(() {
+          Path1=jsonResponse["path"] ;
+          _setFullRoute();
+          _setShortRoute();
+
+      });
+    }
+    else
+    {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+  List<Station> shortRoute = [];
+  List<Station> fullRoute = [];
   void _getFullRoute() {
     setState(() {
       fullFlag = true;
       shortFlag = false;
     });
   }
+  void _setFullRoute()
+  {
+    setState(() {
+      Path1.forEach((k, v)
+          {
+            Station s=Station(stationName: k, state: v, line: 0);
+            fullRoute.add(s);
+          }
+    );
+  });
+}
 
+  void _setShortRoute()
+  {
+    setState(() {
+      for(int i=0;i<fullRoute.length; i++)
+        {
+           if(i==0||i==fullRoute.length-1 ||fullRoute[i].state==true)
+             {
+               shortRoute.add(fullRoute[i]);
+             }
+        }
+    });
+  }
   void _getShortRoute() {
     setState(() {
       shortFlag = true;
@@ -588,8 +611,9 @@ class _GetRouteState extends State<GetRoute> {
                   height: 20,
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: ()async {
                     if (_checkValidate()) {
+                      await GetPath();
                       _getShortRoute();
                       try {} catch (error) {}
                     }

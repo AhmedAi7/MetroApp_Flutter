@@ -1,24 +1,94 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/Textfeildd.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
+import 'package:metro_flutter_app/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class ChargeWallet extends StatefulWidget {
   @override
   _ChargeWalletState createState() => _ChargeWalletState();
 }
 
+
 class _ChargeWalletState extends State<ChargeWallet> {
   String expireDate, expireYear;
   TextEditingController dateCtl = TextEditingController();
-  TextEditingController dateCtl2 = TextEditingController();
   final Credit_number= TextEditingController();
   final Cvvnumber= TextEditingController();
-  String nationalid;
+  final Amount=TextEditingController();
   final _formKey2 = GlobalKey<FormState>();
+  Future ChargeWallett(BuildContext context)async
+  {
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
+    String token="Bearer "+sharedPreferences.getString("token");
 
+    var Url="http://localhost:8080/charges";
+    var jsonResponse;
+    var exp_month = int.parse(dateCtl.text.split("-")[1]);
+    assert(exp_month is int);
+    var exp_year  = int.parse(dateCtl.text.split("-")[0]);
+    assert(exp_year is int);
+    var amount = int.parse(Amount.text);
+    assert(amount is int);
+
+    setState(() {
+      print(Credit_number.text+" "+Cvvnumber.text+" "+exp_month.toString()+" "+exp_year.toString()+" "+amount.toString());
+      print(token);
+    });
+    var response =await http.post(Uri.parse(Url),
+        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token},
+        body: jsonEncode(<String,dynamic>{
+          "amount" :amount ,
+          "cardnum":Credit_number.text ,
+          "cvv": Cvvnumber.text  ,
+          "exp_month" : exp_month ,
+          "exp_year" :exp_year  ,
+        }));
+    if(response.statusCode==200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : "+response.body);
+      if(jsonResponse["message"]=="Balance Charged Successfully") {
+        await alertDialog("Balance Charged Successfully",context);
+        Navigator.pushNamed(context, "HomePage");
+      }
+      else
+      {
+        await alertDialog("Check Your balance or your info",context);
+      }
+    }
+    else
+    {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+
+  }
+  Future<bool> alertDialog(String text, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Done'),
+            content: Text(text),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -85,6 +155,16 @@ class _ChargeWalletState extends State<ChargeWallet> {
                           height: 10,
                         ),
                         textfield(
+                          "Amount of Money",
+                          Icons.credit_card,
+                          Amount,
+                          55,
+                          screenwidth,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        textfield(
                           "Credit Card Number",
                           Icons.credit_card,
                           Credit_number,
@@ -146,10 +226,10 @@ class _ChargeWalletState extends State<ChargeWallet> {
                           height: 25,
                         ),
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
                             if (_formKey2.currentState.validate()) {
                               _formKey2.currentState.save();
-                              Navigator.pushNamed(context, "HomePage");
+                              await ChargeWallett(context);
                               try {} catch (error) {}
                             } else {}
                           },
