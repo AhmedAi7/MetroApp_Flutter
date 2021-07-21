@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
@@ -11,12 +12,29 @@ class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsState extends State<Settings>  {
+
   String newFullName;
   String newDateOfBirth;
   DateTime selectedDate = DateTime.now();
   final _textEditingController = TextEditingController();
+  String fullname;
+  String email;
+  String phone;
+  String dateofbirth;
 
+Future getUser()async
+{
+  SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
+  setState(() {
+    fullname=sharedPreferences.getString("fullname");
+    email=sharedPreferences.getString("email");
+    phone=sharedPreferences.getString("phone_number");
+    dateofbirth=sharedPreferences.getString("date_of_birth");
+
+  });
+  
+}
   void _changeUserName() {
     if (newFullName == null) return;
     setState(() {
@@ -55,9 +73,15 @@ class _SettingsState extends State<Settings> {
       },
     );
   }
-
+  int counter =0;
   @override
   Widget build(BuildContext context) {
+    while(counter==0) {
+      getUser();
+      setState(() {
+        counter=counter+1;
+      });
+    }
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
@@ -99,7 +123,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               Text(
-                '         ' + user.name,
+                '         ' + fullname,
                 style: TextStyle(
                   color: Color(0xffa80f14),
                   fontFamily: 'Segoe UI',
@@ -233,7 +257,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               Text(
-                '         ' + user.phoneNumber,
+                '         ' + phone,
                 style: TextStyle(
                   color: Color(0xffa80f14),
                   fontFamily: 'Segoe UI',
@@ -275,7 +299,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               Text(
-                '         ' + user.email,
+                '         ' + email,
                 style: TextStyle(
                   color: Color(0xffa80f14),
                   fontFamily: 'Segoe UI',
@@ -317,7 +341,7 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               Text(
-                '         ' + user.dateOfBirth,
+                '         ' + dateofbirth,
                 style: TextStyle(
                   color: Color(0xffa80f14),
                   fontFamily: 'Segoe UI',

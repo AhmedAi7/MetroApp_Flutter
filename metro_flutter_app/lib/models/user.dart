@@ -1,16 +1,19 @@
+import 'dart:collection';
+
 import 'package:flutter/foundation.dart';
+import 'package:metro_flutter_app/models/Ticket.dart';
 
 class User {
-  int id;
-  String name;
+  String fullname;
   String email;
   String phoneNumber;
   String password;
   String dateOfBirth;
+  double balance;
+ // Set tickets=new HashSet<Ticket>();
 
   User({
-    @required this.id,
-    @required this.name,
+    @required this.fullname,
     @required this.email,
     @required this.phoneNumber,
     @required this.dateOfBirth,
@@ -18,26 +21,16 @@ class User {
   });
 }
 
-List<User> Users = [
-User(
-id: 6,
-name: 'Muhammad Bakr',
-email: 'mbakr7757@gmail.com',
-phoneNumber: '01151825393',
-dateOfBirth: 'Jun 9, 1999',
-password: 'mb20170224',),
-]
-;
+
 User user =User(
-  id: 6,
-  name: 'Muhammad Bakr',
+  fullname: 'Muhammad Bakr',
   email: 'mbakr7757@gmail.com',
   phoneNumber: '01151825393',
   dateOfBirth: 'Jun 9, 1999',
   password: 'mb20170224',);
 
 void changeUserName(String name) {
-  user.name = name;
+  user.fullname = name;
 }
 
 void changeDateOfBirth(String dateOfBirth) {

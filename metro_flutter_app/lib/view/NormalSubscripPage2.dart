@@ -30,7 +30,6 @@ class _NormalSubscription2State extends State<NormalSubscription2> {
 
   int id=14;
   final full_name=TextEditingController();
-  User user =Users[0];
   final email=TextEditingController();
   final phone=TextEditingController();
   final national_id=TextEditingController();
@@ -73,7 +72,7 @@ int period;
      print(full_name.text+" "+email.text+" "+phone.text+" "+national_id.text+" "+country.text+" "+city.text+" "+source1+" "+target1);
       print(token);
    });
-    var Url="http://localhost:8080/api/AddNormalSubscription";
+    var Url="http://localhost:8080/AddNormalSubscription";
    var jsonResponse;
     var response =await http.post(Uri.parse(Url),
         headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token},

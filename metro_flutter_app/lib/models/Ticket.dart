@@ -3,16 +3,16 @@ import 'TicketsTypes.dart';
 
 class Ticket {
   final int ticketID;
-  final int basicID;
-  final String hexaCode;
+  int price;
+  int maximum_trips;
+  String source_station;
   bool valid = false;
   String source="";
   String destination="";
 
   Ticket({
     @required this.ticketID,
-    @required this.basicID,
-    @required this.hexaCode,
+
   });
 
   String getSource(){
@@ -31,22 +31,22 @@ class Ticket {
       return destination;
     }
   }
-  String getPrice(){
-    for (int i=0 ; i< productss.length;i++){
-      if (productss[i].id==basicID){
-        return productss[i].price;
-      }
-    }
-    return null;
-  }
-  String getLimit(){
-    for (int i=0 ; i< productss.length;i++){
-      if (productss[i].id==basicID){
-        return productss[i].stations;
-      }
-    }
-    return null;
-  }
+  // String getPrice(){
+  //   for (int i=0 ; i< productss.length;i++){
+  //     if (productss[i].id==basicID){
+  //       return productss[i].price;
+  //     }
+  //   }
+  //   return null;
+  // }
+  // String getLimit(){
+  //   for (int i=0 ; i< productss.length;i++){
+  //     if (productss[i].id==basicID){
+  //       return productss[i].stations;
+  //     }
+  //   }
+  //   return null;
+  // }
 }
 
-Ticket ticket = new Ticket(ticketID: 20170008, basicID: 1, hexaCode: "20170008114");
+// Ticket ticket = new Ticket(ticketID: 20170008, basicID: 1, hexaCode: "20170008114");

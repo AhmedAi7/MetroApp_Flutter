@@ -43,15 +43,6 @@ class StationList extends StatelessWidget {
                         fontFamily: 'Segoe UI',
                       ),
                     ),
-                    if (stations[index].direction != null)
-                      Text(
-                        stations[index].direction,
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                   ],
                 ),
               ],

@@ -24,7 +24,7 @@ class _SubscriptionSwitchState extends State<SubscriptionSwitch> {
     });
 
     var jsonResponse;
-    var Url = "http://localhost:8080/api/CheckSubscripe";
+    var Url = "http://localhost:8080/CheckSubscripe";
     var response = await http.get(Uri.parse(Url),
         headers: <String, String>{
           "Content-Type": "application/json",

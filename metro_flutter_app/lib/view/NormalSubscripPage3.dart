@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/models/NormalSubscription.dart';
+import 'package:metro_flutter_app/view/Update_Subscription.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,7 +25,7 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
     });
 
     var jsonResponse;
-    var Url="http://localhost:8080/api/CheckSubscripe";
+    var Url="http://localhost:8080/CheckSubscripe";
     var response =await http.get(Uri.parse(Url),
         headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
     if(response.statusCode==200) {
@@ -198,11 +199,44 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
                     ),
                   ),
                 ),
-              )
+              ),
+
             ],
           ),
         ),
     )
+            ,
+            SizedBox(height: 12.0)
+            , InkWell(
+              onTap: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          UpdateSubscription(),
+                    ));
+              },
+              child:Padding(
+                padding: EdgeInsets.only(top: 400,left: 500),
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  decoration: CustomBoxDecoration.decorationStyle(
+                      Color(0xFFFFFFFF), 10.0),
+                  child: Center(
+                    child: Text(
+                      "Update Subscription",
+                      style: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
     ]
       )
     );
