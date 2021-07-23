@@ -1,14 +1,32 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
+import 'package:http/http.dart' as http;
+import 'package:metro_flutter_app/view/SignUp1Page.dart';
+
+import 'LoginPage.dart';
 
 class SignUp4Page extends StatefulWidget {
+  String username;
+  String name;
+  String email;
+  String phoneNumber;
+  String dateOfBirth;
+  SignUp4Page(this.username, this.name, this.email, this.phoneNumber, this.dateOfBirth);
+
   @override
-  _SignUp4PageState createState() => _SignUp4PageState();
+  _SignUp4PageState createState() => _SignUp4PageState(username,name,email,phoneNumber,dateOfBirth);
 }
 
 class _SignUp4PageState extends State<SignUp4Page> {
+  String username;
+  String name;
+  String email;
+  String phoneNumber;
+  String dateOfBirth;
   String newPassword;
   String confirmNewPassword;
 
@@ -20,6 +38,87 @@ class _SignUp4PageState extends State<SignUp4Page> {
   bool numberFlag;
   bool matchFlag;
   final _formKey = GlobalKey<FormState>();
+
+  _SignUp4PageState(this.username, this.name, this.email, this.phoneNumber, this.dateOfBirth);
+
+  Future<bool> alertDialog(String text, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Done'),
+            content: Text(text),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future SignUp(BuildContext context)async
+  {
+    //SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
+    var Url = "https://metro-user-api.azurewebsites.net/SignUp";
+    var jsonResponse;
+    var date=DateTime.parse( dateOfBirth);
+    setState(() {
+      print(username + " " + newPassword + " "+dateOfBirth+" "+date.toString());
+    });
+
+    var response = await http.post(Uri.parse(Url),
+        headers: <String, String>{"Content-Type": "application/json"},
+        body: jsonEncode(<String, dynamic>{
+          "username": username,
+          "fullname": name,
+          "email": email,
+          "password": newPassword,
+          "phone_number": phoneNumber,
+          "date_of_birth": date.toIso8601String()
+        }));
+    setState(() {
+      print(response.statusCode);
+      print("ResponseBody : " + response.body);
+    });
+    jsonResponse = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print("ResponseBody : " + response.body);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginPage()
+          ));
+    }
+    else {
+
+      if (jsonResponse["message"] == "Error: Username is already taken!") {
+        setState(() {
+          print("yesss");
+        });
+        await alertDialog("Error: Username is already taken!", context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SignUp1Page()
+            ));
+      }
+      else {
+        await alertDialog("Error: Email is already in use!", context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SignUp1Page()
+            ));
+      }
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
 
   void _checkPasswordValidation() {
     if ((newPassword.length >= 6 && newPassword.length <= 20) ||
@@ -72,9 +171,9 @@ class _SignUp4PageState extends State<SignUp4Page> {
       });
   }
 
-  void _send() {
+  void _send() async{
     if (upperFlag && lowerFlag && numberFlag && matchFlag && lenghtFlag) {
-      Navigator.popAndPushNamed(context, 'HomePage');
+      await SignUp(context);
     }
   }
 
@@ -97,6 +196,7 @@ class _SignUp4PageState extends State<SignUp4Page> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              arrowback(context),
               Image.asset("images/metro-logo.png"),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -216,7 +316,7 @@ class _SignUp4PageState extends State<SignUp4Page> {
                       height: 30,
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
                           _checkPasswordValidation();
@@ -231,7 +331,7 @@ class _SignUp4PageState extends State<SignUp4Page> {
                             Color(0xFFFFFFFF), 10.0),
                         child: Center(
                           child: Text(
-                            "Finish",
+                            "Sign Up",
                             style: TextStyle(
                               color: Color(0xFFFFFFFF),
                               fontSize: 20,

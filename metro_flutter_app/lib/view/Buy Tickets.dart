@@ -1,9 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
 import 'package:metro_flutter_app/models/TicketsTypes.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'NavgPage.dart';
+
 
 class BuyTicket extends StatefulWidget {
   @override
@@ -11,6 +19,107 @@ class BuyTicket extends StatefulWidget {
 }
 
 class _BuyTicketState extends State<BuyTicket> {
+
+  Future<bool> alertDialog(String text, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Done'),
+            content: Text(text),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  
+  var price;
+
+Future<bool> BuyTicket()async
+{
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  String token = "Bearer " + sharedPreferences.getString("token");
+  setState(() {
+    print("Price :" + price.toString());
+  });
+  var jsonResponse;
+  Map<String, String> queryParams = {
+    'price': price.toString(),
+  };
+
+
+  String queryString = Uri(queryParameters: queryParams).query;
+
+  var Url = "https://metro-user-api.azurewebsites.net/BuyTicket" + '?' + queryString;
+  var response = await http.get(Uri.parse(Url),
+      headers: <String, String>{
+        "Content-Type": "application/json",
+        HttpHeaders.authorizationHeader: token
+      });
+
+  setState(() {
+    print(response.statusCode);
+  });
+
+  if (response.statusCode == 200) {
+    jsonResponse = json.decode(response.body);
+    print("ResponseBody : " + response.body);
+    if (jsonResponse["message"] == "success") {
+      await alertDialog("Ticket is purchased", context);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => NavScreen(0)
+          ));
+    }
+    else {
+      await alertDialog("Failed , Check Your Balance", context);
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+}
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation Purchase'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text('Would you like to confirm Buy this Ticket?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () async{
+                print('Confirmed');
+                await BuyTicket();
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +154,7 @@ class _BuyTicketState extends State<BuyTicket> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 5,
                     mainAxisSpacing: 5,
-                    childAspectRatio: .7,
+                    childAspectRatio: .9,
                   ),
                   itemBuilder: (context, index) => card(
                     productss[index],
@@ -122,7 +231,12 @@ class _BuyTicketState extends State<BuyTicket> {
             width: 135,
             // ignore: deprecated_member_use
             child: RaisedButton(
-              onPressed: () => Navigator.pushNamed(context, "HomePage"),
+              onPressed: () {
+               setState(() async {
+                 price=product1.value;
+                 await _showMyDialog();
+               });
+              },
               //padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(

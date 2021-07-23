@@ -23,6 +23,13 @@ class _SettingsState extends State<Settings>  {
   String phone;
   String dateofbirth;
 
+  var user;
+
+  @override
+  void initState() {
+    user = getUser();
+    super.initState();
+  }
 Future getUser()async
 {
   SharedPreferences sharedPreferences= await SharedPreferences.getInstance();

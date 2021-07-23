@@ -30,7 +30,7 @@ class loginStatues
     final value=prefs.getString(key)??false;
     return value;
   }
-  setUser(String fullname,String email,String password,String phone_number,String date_of_birth)async
+  setUser(String fullname,String email,String password,String phone_number,String date_of_birth, String balance)async
   {
     final prefs=await SharedPreferences.getInstance();
     prefs.setString("fullname", fullname);
@@ -38,5 +38,6 @@ class loginStatues
     prefs.setString("password", password);
     prefs.setString("phone_number", phone_number);
     prefs.setString("date_of_birth", date_of_birth);
+    prefs.setString("balance", balance);
   }
 }

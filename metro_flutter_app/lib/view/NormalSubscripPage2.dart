@@ -72,7 +72,7 @@ int period;
      print(full_name.text+" "+email.text+" "+phone.text+" "+national_id.text+" "+country.text+" "+city.text+" "+source1+" "+target1);
       print(token);
    });
-    var Url="http://localhost:8080/AddNormalSubscription";
+    var Url="https://metro-user-api.azurewebsites.net/AddNormalSubscription";
    var jsonResponse;
     var response =await http.post(Uri.parse(Url),
         headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token},

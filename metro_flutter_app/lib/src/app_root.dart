@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       initialRoute: 'Login',
       routes: {
         'Login': (context) => LoginPage(),
+        'LogOut': (context) => LoginPage(),
         'SignUp1': (context) => SignUp1Page(),
         'SignUp2': (context) => SignUp2Page(),
         'HomePage': (context) => NavScreen(0),
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
         'ContactUs': (context) => ContactUs(),
         "UseTickets": (context) => UseTicket(),
         'SignUp3': (context) => SignUp3Page(),
-        'SignUp4': (context) => SignUp4Page(),
+      //  'SignUp4': (context) => SignUp4Page(),
         'EditPhoneNumber': (context) => EditPhoneNumber(),
         'EditEmail': (context) => EditEmail(),
       },

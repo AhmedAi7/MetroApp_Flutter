@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/view/HomePage.dart';
+import 'package:metro_flutter_app/view/HomeSplash.dart';
 import 'package:metro_flutter_app/view/NormalSubscripPage1.dart';
 import 'package:metro_flutter_app/view/Settings.dart';
+import 'package:metro_flutter_app/view/SettingsSplash.dart';
 import 'package:metro_flutter_app/view/SubscriptionPage.dart';
+import 'package:metro_flutter_app/view/SubscriptionSwitchSplash.dart';
 import '../component/main_drawer.dart';
+import 'HomePageSplash.dart';
 import 'SubscriptionSwitch.dart';
 
 class NavScreen extends StatefulWidget {
@@ -22,9 +26,9 @@ class _NavScreenState extends State<NavScreen> {
   }
 
   List<Widget> screens = [
-    HomePage(),
-    SubscriptionSwitch(),
-    Settings(),
+    HomePageSplash(),
+    SubscriptionSwitchSplash(),
+    SettingsSplash(),
   ];
   Map<String, IconData> icons = {
     "Home": Icons.home,
