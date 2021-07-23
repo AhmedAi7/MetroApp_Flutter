@@ -29,7 +29,7 @@ class _ChargeWalletState extends State<ChargeWallet> {
     SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
     String token="Bearer "+sharedPreferences.getString("token");
 
-    var Url="http://localhost:8080/charges";
+    var Url="https://metro-user-api.azurewebsites.net/charges";
     var jsonResponse;
     var exp_month = int.parse(dateCtl.text.split("-")[1]);
     assert(exp_month is int);

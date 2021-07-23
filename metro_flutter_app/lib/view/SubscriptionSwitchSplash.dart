@@ -9,12 +9,14 @@ import 'package:metro_flutter_app/view/NormalSubscripPage3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class SubscriptionSwitch extends StatefulWidget {
+import 'HomeSplash.dart';
+
+class SubscriptionSwitchSplash extends StatefulWidget {
   @override
-  _SubscriptionSwitchState createState() => _SubscriptionSwitchState();
+  _SubscriptionSwitchSplashState createState() => _SubscriptionSwitchSplashState();
 }
 
-class _SubscriptionSwitchState extends State<SubscriptionSwitch> {
+class _SubscriptionSwitchSplashState extends State<SubscriptionSwitchSplash> {
   Future<bool> checkSubscripe() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = "Bearer " + sharedPreferences.getString("token");
@@ -30,12 +32,12 @@ class _SubscriptionSwitchState extends State<SubscriptionSwitch> {
           HttpHeaders.authorizationHeader: token
         });
     setState(() {
-      res=response;
+      res = response;
     });
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       print("ResponseBody : " + response.body);
-     return true;
+      return true;
     }
     else {
       setState(() {
@@ -49,26 +51,39 @@ class _SubscriptionSwitchState extends State<SubscriptionSwitch> {
     NormalSubscription1(),
     NormalSubscription3()
   ];
+  var subscripe;
+
+  @override
+  void initState() {
+    subscripe = checkSubscripe();
+    super.initState();
+  }
+
   Widget selectedscreen;
-  int counter=0;
- http.Response res;
+  int counter = 0;
+  http.Response res;
+
   @override
   Widget build(BuildContext context) {
-    while(counter==0) {
-
-      checkSubscripe();
-
-        if (res.statusCode==200) {
-          selectedscreen = screens[1];
-        }
-        else {
-          selectedscreen = screens[0];
-        }
-
-      setState(() {
-        counter=counter+1;
-      });
-    }
-    return selectedscreen;
+    return
+      FutureBuilder<dynamic>(
+          future: subscripe, // function where you call your api
+          builder: (BuildContext context,
+              AsyncSnapshot<
+                  dynamic> snapshot) { // AsyncSnapshot<Your object type>
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return SplashScreen();
+            }
+            else {
+              if (res.statusCode == 200) {
+                selectedscreen = screens[1];
+              }
+              else {
+                selectedscreen = screens[0];
+              }
+              return selectedscreen;
+            }
+          }
+      );
   }
 }

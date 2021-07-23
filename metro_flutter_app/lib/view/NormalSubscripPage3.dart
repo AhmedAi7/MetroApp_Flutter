@@ -25,7 +25,7 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
     });
 
     var jsonResponse;
-    var Url="http://localhost:8080/CheckSubscripe";
+    var Url="https://metro-user-api.azurewebsites.net/CheckSubscripe";
     var response =await http.get(Uri.parse(Url),
         headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
     if(response.statusCode==200) {
@@ -207,30 +207,33 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
     )
             ,
             SizedBox(height: 12.0)
-            , InkWell(
-              onTap: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          UpdateSubscription(),
-                    ));
-              },
-              child:Padding(
-                padding: EdgeInsets.only(top: 400,left: 500),
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  decoration: CustomBoxDecoration.decorationStyle(
-                      Color(0xFFFFFFFF), 10.0),
-                  child: Center(
-                    child: Text(
-                      "Update Subscription",
-                      style: TextStyle(
-                        color: Color(0xFFFFFFFF),
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
+            , Align(
+              alignment: Alignment.bottomRight,
+              child: InkWell(
+                onTap: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            UpdateSubscription(),
+                      ));
+                },
+                child:Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Container(
+                    width: 200,
+                    height: 50,
+                    decoration: CustomBoxDecoration.decorationStyle(
+                        Color(0xFFFFFFFF), 10.0),
+                    child: Center(
+                      child: Text(
+                        "Update Subscription",
+                        style: TextStyle(
+                          color: Color(0xFFFFFFFF),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ),
                   ),

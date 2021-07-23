@@ -72,7 +72,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/GetSubscriptionPrice" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetSubscriptionPrice" + '?' + queryString;
 
     var jsonResponse;
     var response =await http.get(Uri.parse(Url),

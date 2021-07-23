@@ -47,7 +47,7 @@ class _GetRouteState extends State<GetRoute> {
     };
 
     String queryString = Uri(queryParameters: queryParams).query;
-    var Url = "http://localhost:8080/GetPath" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetPath" + '?' + queryString;
     var jsonResponse;
     var response =await http.get(Uri.parse(Url),
         headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
@@ -80,6 +80,7 @@ class _GetRouteState extends State<GetRoute> {
   }
   void _setFullRoute()
   {
+    fullRoute.clear();
     setState(() {
       Path1.forEach((k, v)
           {
@@ -92,6 +93,7 @@ class _GetRouteState extends State<GetRoute> {
 
   void _setShortRoute()
   {
+    shortRoute.clear();
     setState(() {
       for(int i=0;i<fullRoute.length; i++)
         {

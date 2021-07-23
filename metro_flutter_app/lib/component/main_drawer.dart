@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(String title, IconData icon, Function location) {
@@ -131,7 +132,9 @@ class MainDrawer extends StatelessWidget {
           buildListTile(
             'Log Out',
             Icons.logout,
-            () {
+            () async {
+              SharedPreferences sh=await SharedPreferences.getInstance();
+              await sh.clear();
               Navigator.pushNamed(context, 'LogOut');
             },
           ),

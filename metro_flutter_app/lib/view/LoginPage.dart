@@ -8,6 +8,7 @@ import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:http/http.dart' as http;
 import 'package:metro_flutter_app/component/User_Status.dart';
 import 'package:metro_flutter_app/models/LoginRequest.dart';
+import 'package:metro_flutter_app/view/HomeSplash.dart';
 import 'package:metro_flutter_app/view/NavgPage.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   Future Login(String username,String password,BuildContext context)async
   {
     //SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
-    var Url="http://localhost:8080/Login";
+    var Url="https://metro-user-api.azurewebsites.net/Login";
     var jsonResponse;
     setState(() {
       print(username+" "+password);
@@ -179,7 +180,6 @@ class _LoginPageState extends State<LoginPage> {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
                           LoginRequestModel model = await Login(username,password,context);
-
                         }
                         }catch(e)
                         {
@@ -214,55 +214,8 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        'Forget Password?',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                            color: Color(0xFFE5E5E5)),
-                      ),
-                    ),
                   ]),
                 ),
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                    child: Row(children: [
-                      Expanded(
-                          child:
-                              Divider(color: Color(0xFFE5E5E5), thickness: 1)),
-                      Text(
-                        '    Or Login With    ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                            color: Color(0xFFE5E5E5)),
-                      ),
-                      Expanded(
-                          child:
-                              Divider(color: Color(0xFFE5E5E5), thickness: 1)),
-                    ]),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      InkWell(
-                          onTap: () {},
-                          child: Image.asset("images/facebook-logo.png")),
-                      InkWell(
-                          onTap: () {},
-                          child: Image.asset("images/google-logo.png")),
-                    ],
-                  ),
-                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
