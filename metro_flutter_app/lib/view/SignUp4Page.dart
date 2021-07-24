@@ -15,10 +15,12 @@ class SignUp4Page extends StatefulWidget {
   String email;
   String phoneNumber;
   String dateOfBirth;
-  SignUp4Page(this.username, this.name, this.email, this.phoneNumber, this.dateOfBirth);
+  SignUp4Page(
+      this.username, this.name, this.email, this.phoneNumber, this.dateOfBirth);
 
   @override
-  _SignUp4PageState createState() => _SignUp4PageState(username,name,email,phoneNumber,dateOfBirth);
+  _SignUp4PageState createState() =>
+      _SignUp4PageState(username, name, email, phoneNumber, dateOfBirth);
 }
 
 class _SignUp4PageState extends State<SignUp4Page> {
@@ -39,7 +41,8 @@ class _SignUp4PageState extends State<SignUp4Page> {
   bool matchFlag;
   final _formKey = GlobalKey<FormState>();
 
-  _SignUp4PageState(this.username, this.name, this.email, this.phoneNumber, this.dateOfBirth);
+  _SignUp4PageState(
+      this.username, this.name, this.email, this.phoneNumber, this.dateOfBirth);
 
   Future<bool> alertDialog(String text, BuildContext context) {
     return showDialog(
@@ -60,14 +63,19 @@ class _SignUp4PageState extends State<SignUp4Page> {
         });
   }
 
-  Future SignUp(BuildContext context)async
-  {
+  Future SignUp(BuildContext context) async {
     //SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
     var Url = "https://metro-user-api.azurewebsites.net/SignUp";
     var jsonResponse;
-    var date=DateTime.parse( dateOfBirth);
+    var date = DateTime.parse(dateOfBirth);
     setState(() {
-      print(username + " " + newPassword + " "+dateOfBirth+" "+date.toString());
+      print(username +
+          " " +
+          newPassword +
+          " " +
+          dateOfBirth +
+          " " +
+          date.toString());
     });
 
     var response = await http.post(Uri.parse(Url),
@@ -87,32 +95,21 @@ class _SignUp4PageState extends State<SignUp4Page> {
     jsonResponse = json.decode(response.body);
     if (response.statusCode == 200) {
       print("ResponseBody : " + response.body);
+      await alertDialog("Account Created Successfully", context);
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LoginPage()
-          ));
-    }
-    else {
-
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    } else {
       if (jsonResponse["message"] == "Error: Username is already taken!") {
         setState(() {
           print("yesss");
         });
         await alertDialog("Error: Username is already taken!", context);
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SignUp1Page()
-            ));
-      }
-      else {
+            context, MaterialPageRoute(builder: (context) => SignUp1Page()));
+      } else {
         await alertDialog("Error: Email is already in use!", context);
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SignUp1Page()
-            ));
+            context, MaterialPageRoute(builder: (context) => SignUp1Page()));
       }
       setState(() {
         print(response.statusCode);
@@ -171,7 +168,7 @@ class _SignUp4PageState extends State<SignUp4Page> {
       });
   }
 
-  void _send() async{
+  void _send() async {
     if (upperFlag && lowerFlag && numberFlag && matchFlag && lenghtFlag) {
       await SignUp(context);
     }

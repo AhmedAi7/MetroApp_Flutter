@@ -21,9 +21,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
-
   // _HomePageState()
   // {
   //   setState(() async{
@@ -31,8 +29,7 @@ class _HomePageState extends State<HomePage> {
   //   this.balance= sharedPreferences.getString("balance") as double;
   // });
   // }
-  Future GetUser(BuildContext context) async
-  {
+  Future GetUser(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
@@ -40,99 +37,95 @@ class _HomePageState extends State<HomePage> {
     });
 
     var jsonResponse;
-    var Url = "http://localhost:8080/GetUser";
-    var response = await http.get(Uri.parse(Url),
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          HttpHeaders.authorizationHeader: token
-        });
+    var Url = "https://metro-user-api.azurewebsites.net/GetUser";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       print("ResponseBody : " + response.body);
       print("Response :" + jsonResponse["balance"]);
       setState(() {
-        loginStatues().setUser(jsonResponse["fullname"], jsonResponse["email"],
-            jsonResponse["password"], jsonResponse["phone_number"],
-            jsonResponse["date_of_birth"], jsonResponse["balance"]);
+        loginStatues().setUser(
+            jsonResponse["fullname"],
+            jsonResponse["email"],
+            jsonResponse["password"],
+            jsonResponse["phone_number"],
+            jsonResponse["date_of_birth"],
+            jsonResponse["balance"]);
         balance = double.parse(jsonResponse["balance"]);
         assert(balance is double);
       });
-    }
-    else {
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
-  
-  
-  List <String> stations = [];
-  List <int> lines = [];
 
-  void linesId()
-  {
+  List<String> stations = [];
+  List<int> lines = [];
+
+  void linesId() {
     setState(() {
-      StationLine.forEach((k, v)
-      {
-        if(!lines.contains(v)) {
+      StationLine.forEach((k, v) {
+        if (!lines.contains(v)) {
           lines.add(v);
         }
-      }
-      );
+      });
     });
   }
 
-  void Stations(int id)
-  {
+  void Stations(int id) {
     stations.clear();
     setState(() {
       StationLine.forEach((k, v) {
         if (v == id) {
           stations.add(k);
         }
-      }
-      );
+      });
     });
   }
+
   Map StationLine = new HashMap<String, dynamic>();
-  Future  GetStations(int type,BuildContext context)async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+  Future GetStations(int type, BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
       print(token);
     });
     var jsonResponse;
-    var Url = "http://localhost:8080/GetAllStations" ;
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json",HttpHeaders.authorizationHeader: token});
-    if(response.statusCode==200) {
-      jsonResponse = json.decode(response.body)  as Map<String, dynamic>;
-      print("ResponseBody : "+response.body);
+    var Url = "http://localhost:8080/GetAllStations";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+      print("ResponseBody : " + response.body);
       setState(() {
-        StationLine=jsonResponse["stations"] ;
+        StationLine = jsonResponse["stations"];
         linesId();
         lines.sort();
-        for(int i in lines ) {
+        for (int i in lines) {
           Stations(i);
-          String k=i.toString();
+          String k = i.toString();
           liness.add(Line(k, _getChildren(stations.length, stations, type)));
-      }
+        }
       });
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
-  Future GetTicketPrice(BuildContext context)async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+
+  Future GetTicketPrice(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
-      print(source+" "+destination+" ");
+      print(source + " " + destination + " ");
       print(token);
     });
 
@@ -146,17 +139,17 @@ class _HomePageState extends State<HomePage> {
     var Url = "http://localhost:8080/GetTicketPrice" + '?' + queryString;
 
     var jsonResponse;
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
-    if(response.statusCode==200) {
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
+      print("ResponseBody : " + response.body);
       setState(() {
-        price=jsonResponse["ticket_price"];
+        price = jsonResponse["ticket_price"];
       });
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
@@ -176,7 +169,7 @@ class _HomePageState extends State<HomePage> {
   List _getChildren(int count, List<String> stations, int type) =>
       List<Widget>.generate(
         count,
-            (i) => ListTile(
+        (i) => ListTile(
           leading: Icon(
             Icons.directions_train_sharp,
             color: Color(0xffa80f14),
@@ -207,7 +200,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
- List<ExpansionTile> liness=[];
+  List<ExpansionTile> liness = [];
   _showStations(int type) {
     return showModalBottomSheet<void>(
       context: context,
@@ -220,16 +213,14 @@ class _HomePageState extends State<HomePage> {
               MediaQuery.of(context).viewPadding.bottom, // height modal bottom
           color: Color(0xffD3D3D3),
           child: ListView.builder(
-              itemCount:liness.length ,
+              itemCount: liness.length,
               itemBuilder: (BuildContext context, int index) {
                 return liness[index];
-              }
-          ),
+              }),
         );
       },
     );
   }
-
 
   void _selectPlace(double lat, double lng) {
     _pickedLocation = PlaceLocation(latitude: lat, longitude: lng);
@@ -279,7 +270,7 @@ class _HomePageState extends State<HomePage> {
 
   void _checkPrice() async {
     if (source != null && destination != null) {
-            GetTicketPrice(context);
+      GetTicketPrice(context);
     }
   }
 
@@ -313,10 +304,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Container(
                       height: (MediaQuery.of(context).size.height -
-                          AppBar().preferredSize.height -
-                          MediaQuery.of(context).viewPadding.top -
-                          MediaQuery.of(context).viewPadding.bottom -
-                          kBottomNavigationBarHeight) *
+                              AppBar().preferredSize.height -
+                              MediaQuery.of(context).viewPadding.top -
+                              MediaQuery.of(context).viewPadding.bottom -
+                              kBottomNavigationBarHeight) *
                           0.3,
                       width: MediaQuery.of(context).size.width * 0.88,
                       alignment: Alignment.center,
@@ -334,18 +325,18 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: _previewImageUrl == null
                           ? Text(
-                        'No Loaction is Selected',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      )
+                              'No Loaction is Selected',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            )
                           : Image.network(
-                        _previewImageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
+                              _previewImageUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -499,7 +490,8 @@ class _HomePageState extends State<HomePage> {
       _previewImageUrl = null;
     });
   }
-  int counter =0;
+
+  int counter = 0;
   @override
   Widget build(BuildContext context) {
     while (counter == 0) {
@@ -508,397 +500,360 @@ class _HomePageState extends State<HomePage> {
         counter = counter + 1;
       });
     }
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-              return Scaffold(
-                body: SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(top: 0, bottom: 0),
-                        margin: EdgeInsets.only(top: 0, bottom: 0),
-                        height: screenHeight -
-                            AppBar().preferredSize.height -
-                            MediaQuery
-                                .of(context)
-                                .viewPadding
-                                .top -
-                            MediaQuery
-                                .of(context)
-                                .viewPadding
-                                .bottom -
-                            kBottomNavigationBarHeight,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("images/Background.png"),
-                            fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.8),
-                              BlendMode.dstIn,
-                            ),
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 0, bottom: 0),
+              margin: EdgeInsets.only(top: 0, bottom: 0),
+              height: screenHeight -
+                  AppBar().preferredSize.height -
+                  MediaQuery.of(context).viewPadding.top -
+                  MediaQuery.of(context).viewPadding.bottom -
+                  kBottomNavigationBarHeight,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("images/Background.png"),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.8),
+                    BlendMode.dstIn,
+                  ),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Stack(
+                      // ignore: deprecated_member_use
+                      overflow: Overflow.visible,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 120),
+                          //left: 10,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 18,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context, 'Recharge');
+                                },
+                                child: Container(
+                                  width: screenWidth * 0.5,
+                                  height: (screenHeight -
+                                          MediaQuery.of(context).padding.top -
+                                          AppBar().preferredSize.height) *
+                                      0.08,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffa80f14),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0, 1),
+                                        spreadRadius: -2,
+                                        blurRadius: 6,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Recharge",
+                                      style: TextStyle(
+                                        color: Color(0xFFFFFFFF),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context, 'MyTickets');
+                                },
+                                child: Container(
+                                  width: screenWidth * 0.5,
+                                  height: (screenHeight -
+                                          MediaQuery.of(context).padding.top -
+                                          AppBar().preferredSize.height) *
+                                      0.08,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffa80f14),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0, 1),
+                                        spreadRadius: -2,
+                                        blurRadius: 6,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "  My Tickets",
+                                      style: TextStyle(
+                                        color: Color(0xFFFFFFFF),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 50),
-                              child: Stack(
-                                // ignore: deprecated_member_use
-                                overflow: Overflow.visible,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 120),
-                                    //left: 10,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 18,
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.pushNamed(
-                                                context, 'Recharge');
-                                          },
-                                          child: Container(
-                                            width: screenWidth * 0.5,
-                                            height: (screenHeight -
-                                                MediaQuery
-                                                    .of(context)
-                                                    .padding
-                                                    .top -
-                                                AppBar().preferredSize.height) *
-                                                0.08,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffa80f14),
-                                              borderRadius: BorderRadius
-                                                  .circular(20),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.white,
-                                                  offset: Offset(0, 1),
-                                                  spreadRadius: -2,
-                                                  blurRadius: 6,
-                                                ),
-                                              ],
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                "Recharge",
-                                                style: TextStyle(
-                                                  color: Color(0xFFFFFFFF),
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontStyle: FontStyle.italic,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.pushNamed(
-                                                context, 'MyTickets');
-                                          },
-                                          child: Container(
-                                            width: screenWidth * 0.5,
-                                            height: (screenHeight -
-                                                MediaQuery
-                                                    .of(context)
-                                                    .padding
-                                                    .top -
-                                                AppBar().preferredSize.height) *
-                                                0.08,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffa80f14),
-                                              borderRadius: BorderRadius
-                                                  .circular(20),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.white,
-                                                  offset: Offset(0, 1),
-                                                  spreadRadius: -2,
-                                                  blurRadius: 6,
-                                                ),
-                                              ],
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                "  My Tickets",
-                                                style: TextStyle(
-                                                  color: Color(0xFFFFFFFF),
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontStyle: FontStyle.italic,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 1),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffa80f14),
-                                        borderRadius: BorderRadius.circular(75),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Color(0xffa80f14),
-                                            offset: Offset(0, 1),
-                                            spreadRadius: 0.1,
-                                            blurRadius: 6,
-                                          ),
-                                        ],
-                                      ),
-                                      child: CircleAvatar(
-                                        maxRadius: 75,
-                                        backgroundColor: Colors.white,
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .center,
-                                          children: [
-                                            Text(
-                                              balance.toString(),
-                                              style: TextStyle(
-                                                fontSize: 23,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            Text(
-                                              'EGP',
-                                              style: TextStyle(
-                                                fontSize: 28,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xffa80f14),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 1),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xffa80f14),
+                              borderRadius: BorderRadius.circular(75),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xffa80f14),
+                                  offset: Offset(0, 1),
+                                  spreadRadius: 0.1,
+                                  blurRadius: 6,
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 60, 5, 5),
+                            child: CircleAvatar(
+                              maxRadius: 75,
+                              backgroundColor: Colors.white,
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      InkWell(
-                                        child: Container(
-                                          width: screenWidth * 0.85,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                                10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Color(0xffa80f14),
-                                                offset: Offset(0, 1),
-                                                spreadRadius: 0.1,
-                                                blurRadius: 6,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 15, left: 10),
-                                            child: Text(
-                                              source == null
-                                                  ? "Source"
-                                                  : source,
-                                              style: TextStyle(
-                                                color: source == null
-                                                    ? Colors.grey.withOpacity(
-                                                    0.3)
-                                                    : Colors.black,
-                                                fontStyle: FontStyle.italic,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: source == null
-                                                    ? 15
-                                                    : 20,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: () async{
-                                          await GetStations(1,context);
-                                          _showStations(1);
-                                        },
-                                      ),
-                                      InkWell(
-                                        child: Icon(
-                                          Icons.add_location_alt_outlined,
-                                          size: 30,
-                                          color: Colors.white,
-                                        ),
-                                        onTap: () async {
-                                          await GetStations(1,context);
-                                          _showLocation(1);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      InkWell(
-                                        child: Container(
-                                          width: screenWidth * 0.85,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                                10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Color(0xffa80f14),
-                                                offset: Offset(0, 1),
-                                                spreadRadius: 0.1,
-                                                blurRadius: 6,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 15, left: 10),
-                                            child: Text(
-                                              destination == null
-                                                  ? "Destination"
-                                                  : destination,
-                                              style: TextStyle(
-                                                color: destination == null
-                                                    ? Colors.grey.withOpacity(
-                                                    0.3)
-                                                    : Colors.black,
-                                                fontStyle: FontStyle.italic,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: destination == null
-                                                    ? 15
-                                                    : 20,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: ()async {
-                                          await GetStations(2,context);
-                                          _showStations(2);
-                                        },
-                                      ),
-                                      InkWell(
-                                        child: Icon(
-                                          Icons.add_location_alt_outlined,
-                                          size: 30,
-                                          color: Colors.white,
-                                        ),
-                                        onTap: () {
-                                          _showLocation(2);
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // here
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(35, 15, 5, 5),
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, 'BuyTickets');
-                                    },
-                                    child: Container(
-                                      width: screenWidth * 0.5,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffa80f14),
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.white,
-                                            offset: Offset(0, 1),
-                                            spreadRadius: -2,
-                                            blurRadius: 6,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "Buy Ticket",
-                                          style: TextStyle(
-                                            color: Color(0xFFFFFFFF),
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                        ),
-                                      ),
+                                  Text(
+                                    balance.toString(),
+                                    style: TextStyle(
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        20, 5, 5, 5),
-                                    child: Container(
-                                      width: screenWidth * 0.25,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFFFFFFF),
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Color(0xffa80f14),
-                                            offset: Offset(0, 1),
-                                            spreadRadius: -2,
-                                            blurRadius: 6,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          price.toString() + " EGP",
-                                          style: TextStyle(
-                                            color: Color(0xffa80f14),
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                        ),
-                                      ),
+                                  Text(
+                                    'EGP',
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xffa80f14),
                                     ),
                                   )
                                 ],
                               ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 60, 5, 5),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              child: Container(
+                                width: screenWidth * 0.85,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xffa80f14),
+                                      offset: Offset(0, 1),
+                                      spreadRadius: 0.1,
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 15, left: 10),
+                                  child: Text(
+                                    source == null ? "Source" : source,
+                                    style: TextStyle(
+                                      color: source == null
+                                          ? Colors.grey.withOpacity(0.3)
+                                          : Colors.black,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: source == null ? 15 : 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: () async {
+                                await GetStations(1, context);
+                                _showStations(1);
+                              },
+                            ),
+                            InkWell(
+                              child: Icon(
+                                Icons.add_location_alt_outlined,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              onTap: () async {
+                                await GetStations(1, context);
+                                _showLocation(1);
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              child: Container(
+                                width: screenWidth * 0.85,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xffa80f14),
+                                      offset: Offset(0, 1),
+                                      spreadRadius: 0.1,
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 15, left: 10),
+                                  child: Text(
+                                    destination == null
+                                        ? "Destination"
+                                        : destination,
+                                    style: TextStyle(
+                                      color: destination == null
+                                          ? Colors.grey.withOpacity(0.3)
+                                          : Colors.black,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: destination == null ? 15 : 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: () async {
+                                await GetStations(2, context);
+                                _showStations(2);
+                              },
+                            ),
+                            InkWell(
+                              child: Icon(
+                                Icons.add_location_alt_outlined,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              onTap: () {
+                                _showLocation(2);
+                              },
                             )
                           ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
+                  // here
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(35, 15, 5, 5),
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, 'BuyTickets');
+                          },
+                          child: Container(
+                            width: screenWidth * 0.5,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Color(0xffa80f14),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(0, 1),
+                                  spreadRadius: -2,
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Buy Ticket",
+                                style: TextStyle(
+                                  color: Color(0xFFFFFFFF),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
+                          child: Container(
+                            width: screenWidth * 0.25,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFFFFFFF),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xffa80f14),
+                                  offset: Offset(0, 1),
+                                  spreadRadius: -2,
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                price.toString() + " EGP",
+                                style: TextStyle(
+                                  color: Color(0xffa80f14),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
-  }
+}

@@ -13,8 +13,6 @@ import 'package:metro_flutter_app/view/NavgPage.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -24,47 +22,60 @@ class _LoginPageState extends State<LoginPage> {
   String username;
 
   String password;
- static var response;
+  static var response;
 
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;
 
-  Future Login(String username,String password,BuildContext context)async
-  {
+  Future<bool> alertDialog(String text, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Done'),
+            content: Text(text),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future Login(String username, String password, BuildContext context) async {
     //SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
-    var Url="http://localhost:8080/Login";
+    var Url = "https://metro-user-api.azurewebsites.net/Login";
     var jsonResponse;
     setState(() {
-      print(username+" "+password);
+      print(username + " " + password);
     });
-     response =await http.post(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json"},
-        body: jsonEncode(<String,String>{
-          "username":username,
-          "password":password
-        }));
+    response = await http.post(Uri.parse(Url),
+        headers: <String, String>{"Content-Type": "application/json"},
+        body: jsonEncode(
+            <String, String>{"username": username, "password": password}));
     setState(() {
       print(response.statusCode);
     });
 
-    if(response.statusCode==200) {
+    if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
+      print("ResponseBody : " + response.body);
       loginStatues.writetoken(jsonResponse["Authorization"]);
       Navigator.push(
-          context,
-          MaterialPageRoute(
-          builder: (context) => NavScreen(0)
-    ));
+          context, MaterialPageRoute(builder: (context) => NavScreen(0)));
+    } else {
+      await alertDialog("UserName or Password isn't correct!", context);
+      setState(() {
+        print(response.statusCode);
+      });
     }
-    else
-      {
-        setState(() {
-          print(response.statusCode);
-        });
-      }
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -99,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         validator: (val) {
                           if (val.isEmpty) {
-                            return "Email couldn't be blank!";
+                            return "UserName couldn't be blank!";
                           }
                           return null;
                         },
@@ -109,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontWeight: FontWeight.bold,
                         ),
                         decoration: CustomInputDecoration.textFieldStyle(
-                            " Email", Icon(Icons.email)),
+                            " UserName", Icon(Icons.email)),
                       ),
                     ),
                     SizedBox(
@@ -175,22 +186,22 @@ class _LoginPageState extends State<LoginPage> {
                       height: 25,
                     ),
                     InkWell(
-                      onTap: () async{
-                        try{
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
-                          LoginRequestModel model = await Login(username,password,context);
-                        }
-                        }catch(e)
-                        {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Invalid User !'),
-                                action: SnackBarAction(
-                                  label: 'Undo',
-                                  onPressed: () {
-                                    print('Action in Snackbar has been pressed.');
-                                  },)
-                          ));
+                      onTap: () async {
+                        try {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            LoginRequestModel model =
+                                await Login(username, password, context);
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Invalid User !'),
+                              action: SnackBarAction(
+                                label: 'Undo',
+                                onPressed: () {
+                                  print('Action in Snackbar has been pressed.');
+                                },
+                              )));
                         }
                       },
                       child: Container(

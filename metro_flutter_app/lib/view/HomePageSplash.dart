@@ -21,9 +21,7 @@ class HomePageSplash extends StatefulWidget {
   _HomePageSplashState createState() => _HomePageSplashState();
 }
 
-
 class _HomePageSplashState extends State<HomePageSplash> {
-
   // _HomePageSplashState()
   // {
   //   setState(() async{
@@ -38,101 +36,100 @@ class _HomePageSplashState extends State<HomePageSplash> {
     user = GetUser();
     super.initState();
   }
-  Future GetUser()async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+
+  Future GetUser() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
       print(token);
     });
 
     var jsonResponse;
-    var Url="http://localhost:8080/GetUser";
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
-    if(response.statusCode==200) {
+    var Url = "http://localhost:8080/GetUser";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
-      print("Response :"+jsonResponse["balance"]);
+      print("ResponseBody : " + response.body);
+      print("Response :" + jsonResponse["balance"]);
       setState(() {
-        loginStatues().setUser(jsonResponse["fullname"], jsonResponse["email"], jsonResponse["password"], jsonResponse["phone_number"], jsonResponse["date_of_birth"],jsonResponse["balance"]);
-        balance=double.parse(jsonResponse["balance"]);
+        loginStatues().setUser(
+            jsonResponse["fullname"],
+            jsonResponse["email"],
+            jsonResponse["password"],
+            jsonResponse["phone_number"],
+            jsonResponse["date_of_birth"],
+            jsonResponse["balance"]);
+        balance = double.parse(jsonResponse["balance"]);
         assert(balance is double);
       });
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
 
+  List<String> stations1 = [];
+  List<int> lines = [];
 
-  List <String> stations1 = [];
-  List <int> lines = [];
-
-  void linesId()
-  {
+  void linesId() {
     lines.clear();
     setState(() {
-      StationLine.forEach((k, v)
-      {
-        if(!lines.contains(v)) {
+      StationLine.forEach((k, v) {
+        if (!lines.contains(v)) {
           lines.add(v);
         }
-      }
-      );
+      });
     });
   }
 
-  void Stations()
-  {
+  void Stations() {
     setState(() {
       StationLine.forEach((k, v) {
-          stations1.add(k);
-      }
-      );
+        stations1.add(k);
+      });
     });
   }
 
   Map StationLine = new HashMap<String, dynamic>();
-  Future  GetStations(int type,BuildContext context)async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+  Future GetStations(int type, BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
       print(token);
     });
     var jsonResponse;
-    var Url = "http://localhost:8080/GetAllStations" ;
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json",HttpHeaders.authorizationHeader: token});
-    if(response.statusCode==200) {
-      jsonResponse = json.decode(response.body)  as Map<String, dynamic>;
-      print("ResponseBody : "+response.body);
-        liness.clear();
-        StationLine=jsonResponse["stations"] ;
-          String k=i.toString();
-          ExpansionTile L=Line(k, _getChildren(stations1, stations1.length, type,i));
-          // Linee S= Linee(id : i,stations: st);
-          // Stationlinee.add(S);
-          liness.add(L);
-        }
-    }
-    else
-    {
+    var Url = "https://metro-user-api.azurewebsites.net/GetAllStations";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+      print("ResponseBody : " + response.body);
+      liness.clear();
+      StationLine = jsonResponse["stations"];
+      Stations();
+      ExpansionTile L =
+          Line("0", _getChildren(stations1.length, stations1, type, 0));
+      // Linee S= Linee(id : i,stations: st);
+      // Stationlinee.add(S);
+      liness.add(L);
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
-  Future GetTicketPrice(BuildContext context)async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+
+  Future GetTicketPrice(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
-      print(source+" "+destination+" ");
+      print(source + " " + destination + " ");
       print(token);
     });
 
@@ -143,20 +140,22 @@ class _HomePageSplashState extends State<HomePageSplash> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/GetTicketPrice" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetTicketPrice" +
+        '?' +
+        queryString;
 
     var jsonResponse;
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
-    if(response.statusCode==200) {
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
+      print("ResponseBody : " + response.body);
       setState(() {
-        price=jsonResponse["ticket_price"];
+        price = jsonResponse["ticket_price"];
       });
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
@@ -172,20 +171,20 @@ class _HomePageSplashState extends State<HomePageSplash> {
   // ignore: unused_field
   PlaceLocation _pickedLocation;
   String _nearestStation = "Al-Sayeda Zainab";
-  List<Linee> Stationlinee=[];
+  List<Linee> Stationlinee = [];
   String value;
 
-  List _getChildren(int count, List<String> stationss, int type,int id) =>
+  List _getChildren(int count, List<String> stationss, int type, int id) =>
       List<Widget>.generate(
         count,
-            (i) => ListTile(
+        (i) => ListTile(
           leading: Icon(
             Icons.directions_train_sharp,
             color: Color(0xffa80f14),
             size: 25,
           ),
           title: TextButton(
-            child:Text(
+            child: Text(
               stationss[i],
               style: TextStyle(
                 color: Colors.black,
@@ -194,7 +193,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
                 fontStyle: FontStyle.italic,
               ),
             ),
-            onPressed: (){
+            onPressed: () {
               if (type == 1) {
                 setState(() {
                   source = stationss[i];
@@ -203,7 +202,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
                 _checkPrice();
               } else {
                 setState(() {
-                  destination = stationss[i] ;
+                  destination = stationss[i];
                 });
                 _checkPrice();
               }
@@ -218,7 +217,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
         ),
       );
 
-  List<ExpansionTile> liness=[];
+  List<ExpansionTile> liness = [];
   _showStations(int type) {
     return showModalBottomSheet<void>(
       context: context,
@@ -231,11 +230,10 @@ class _HomePageSplashState extends State<HomePageSplash> {
               MediaQuery.of(context).viewPadding.bottom, // height modal bottom
           color: Color(0xffD3D3D3),
           child: ListView.builder(
-              itemCount:liness.length ,
+              itemCount: liness.length,
               itemBuilder: (BuildContext context, int index) {
                 return liness[index];
-              }
-          ),
+              }),
         );
       },
     );
@@ -323,10 +321,10 @@ class _HomePageSplashState extends State<HomePageSplash> {
                   children: [
                     Container(
                       height: (MediaQuery.of(context).size.height -
-                          AppBar().preferredSize.height -
-                          MediaQuery.of(context).viewPadding.top -
-                          MediaQuery.of(context).viewPadding.bottom -
-                          kBottomNavigationBarHeight) *
+                              AppBar().preferredSize.height -
+                              MediaQuery.of(context).viewPadding.top -
+                              MediaQuery.of(context).viewPadding.bottom -
+                              kBottomNavigationBarHeight) *
                           0.3,
                       width: MediaQuery.of(context).size.width * 0.88,
                       alignment: Alignment.center,
@@ -344,18 +342,18 @@ class _HomePageSplashState extends State<HomePageSplash> {
                       ),
                       child: _previewImageUrl == null
                           ? Text(
-                        'No Loaction is Selected',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      )
+                              'No Loaction is Selected',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            )
                           : Image.network(
-                        _previewImageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
+                              _previewImageUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -509,7 +507,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
       _previewImageUrl = null;
     });
   }
-  int counter =0;
+
+  int counter = 0;
   @override
   Widget build(BuildContext context) {
     // while (counter == 0) {
@@ -518,22 +517,15 @@ class _HomePageSplashState extends State<HomePageSplash> {
     //     counter = counter + 1;
     //   });
     // }
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    return  FutureBuilder<dynamic>(
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    return FutureBuilder<dynamic>(
         future: user, // function where you call your api
-        builder: (BuildContext context,
-            AsyncSnapshot<dynamic> snapshot) { // AsyncSnapshot<Your object type>
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          // AsyncSnapshot<Your object type>
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SplashScreen();
-          }
-          else {
+          } else {
             // if (snapshot.hasError)
             //   return Center(child: Text('Error: ${snapshot.error}'));
             // else
@@ -547,14 +539,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
                       margin: EdgeInsets.only(top: 0, bottom: 0),
                       height: screenHeight -
                           AppBar().preferredSize.height -
-                          MediaQuery
-                              .of(context)
-                              .viewPadding
-                              .top -
-                          MediaQuery
-                              .of(context)
-                              .viewPadding
-                              .bottom -
+                          MediaQuery.of(context).viewPadding.top -
+                          MediaQuery.of(context).viewPadding.bottom -
                           kBottomNavigationBarHeight,
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -591,16 +577,17 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                         child: Container(
                                           width: screenWidth * 0.5,
                                           height: (screenHeight -
-                                              MediaQuery
-                                                  .of(context)
-                                                  .padding
-                                                  .top -
-                                              AppBar().preferredSize.height) *
+                                                  MediaQuery.of(context)
+                                                      .padding
+                                                      .top -
+                                                  AppBar()
+                                                      .preferredSize
+                                                      .height) *
                                               0.08,
                                           decoration: BoxDecoration(
                                             color: Color(0xffa80f14),
-                                            borderRadius: BorderRadius
-                                                .circular(20),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.white,
@@ -634,16 +621,17 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                         child: Container(
                                           width: screenWidth * 0.5,
                                           height: (screenHeight -
-                                              MediaQuery
-                                                  .of(context)
-                                                  .padding
-                                                  .top -
-                                              AppBar().preferredSize.height) *
+                                                  MediaQuery.of(context)
+                                                      .padding
+                                                      .top -
+                                                  AppBar()
+                                                      .preferredSize
+                                                      .height) *
                                               0.08,
                                           decoration: BoxDecoration(
                                             color: Color(0xffa80f14),
-                                            borderRadius: BorderRadius
-                                                .circular(20),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.white,
@@ -688,8 +676,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                       maxRadius: 75,
                                       backgroundColor: Colors.white,
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             balance.toString(),
@@ -728,8 +716,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                         height: 50,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                              10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Color(0xffa80f14),
@@ -743,25 +731,21 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                           padding: EdgeInsets.only(
                                               top: 15, left: 10),
                                           child: Text(
-                                            source == null
-                                                ? "Source"
-                                                : source,
+                                            source == null ? "Source" : source,
                                             style: TextStyle(
                                               color: source == null
-                                                  ? Colors.grey.withOpacity(
-                                                  0.3)
+                                                  ? Colors.grey.withOpacity(0.3)
                                                   : Colors.black,
                                               fontStyle: FontStyle.italic,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: source == null
-                                                  ? 15
-                                                  : 20,
+                                              fontSize:
+                                                  source == null ? 15 : 20,
                                             ),
                                           ),
                                         ),
                                       ),
-                                      onTap: ()async {
-                                        await GetStations(1,context);
+                                      onTap: () async {
+                                        await GetStations(1, context);
                                         _showStations(1);
                                       },
                                     ),
@@ -789,8 +773,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                         height: 50,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                              10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Color(0xffa80f14),
@@ -809,20 +793,18 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                                 : destination,
                                             style: TextStyle(
                                               color: destination == null
-                                                  ? Colors.grey.withOpacity(
-                                                  0.3)
+                                                  ? Colors.grey.withOpacity(0.3)
                                                   : Colors.black,
                                               fontStyle: FontStyle.italic,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: destination == null
-                                                  ? 15
-                                                  : 20,
+                                              fontSize:
+                                                  destination == null ? 15 : 20,
                                             ),
                                           ),
                                         ),
                                       ),
-                                      onTap: ()async {
-                                        await GetStations(2,context);
+                                      onTap: () async {
+                                        await GetStations(2, context);
                                         _showStations(2);
                                       },
                                     ),
@@ -848,8 +830,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    Navigator.pushNamed(
-                                        context, 'BuyTickets');
+                                    Navigator.pushNamed(context, 'BuyTickets');
                                   },
                                   child: Container(
                                     width: screenWidth * 0.5,
@@ -880,8 +861,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      20, 5, 5, 5),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 5, 5, 5),
                                   child: Container(
                                     width: screenWidth * 0.25,
                                     height: 50,
@@ -921,7 +902,6 @@ class _HomePageSplashState extends State<HomePageSplash> {
               ),
             );
           }
-        }
-    );
+        });
   }
 }

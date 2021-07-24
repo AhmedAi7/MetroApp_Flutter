@@ -15,73 +15,72 @@ class MyTickets extends StatefulWidget {
   @override
   _MyTicketsState createState() => _MyTicketsState();
 }
+
 List<dynamic> Tickets;
+
 class _MyTicketsState extends State<MyTickets> {
-  Future<bool> GetTickets()async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+  Future<bool> GetTickets() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
       print(token);
     });
 
     var jsonResponse;
     //http://localhost:8080
-    var Url="https://metro-user-api.azurewebsites.net/GetUserTickets";
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
+    var Url = "https://metro-user-api.azurewebsites.net/GetUserTickets";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
 
-    if(response.statusCode==200) {
+    if (response.statusCode == 200) {
       // final j="[" + response.body + "]";
       jsonResponse = jsonDecode(response.body);
-      print("Response" +jsonResponse["tickets_data"].toString());
+      print("Response" + jsonResponse["tickets_data"].toString());
       setState(() {
-        Tickets=jsonResponse["tickets_data"];
+        Tickets = jsonResponse["tickets_data"];
         _Set_Tickets();
-        print("Tickets"+ Tickets.toString());
+        print("Tickets" + Tickets.toString());
       });
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
-  void _Set_Tickets()
-  {
+
+  void _Set_Tickets() {
     setState(() {
       Tickets_five.clear();
       Tickets_seven.clear();
       Tickets_ten.clear();
       for (int i = 0; i < Tickets.length; i++) {
         if (Tickets[i]["price"] == 5) {
-          Tickett ticket = Tickett(
-              Tickets[i]["id"], Tickets[i]["price"], Tickets[i]["maximumTrips"],
-              Tickets[i]["source_station"]);
+          Tickett ticket = Tickett(Tickets[i]["id"], Tickets[i]["price"],
+              Tickets[i]["maximumTrips"], Tickets[i]["source_station"]);
           Tickets_five.add(ticket);
         }
         if (Tickets[i]["price"] == 7) {
-          Tickett ticket = Tickett(
-              Tickets[i]["id"], Tickets[i]["price"], Tickets[i]["maximumTrips"],
-              Tickets[i]["source_station"]);
+          Tickett ticket = Tickett(Tickets[i]["id"], Tickets[i]["price"],
+              Tickets[i]["maximumTrips"], Tickets[i]["source_station"]);
           Tickets_seven.add(ticket);
         }
         if (Tickets[i]["price"] == 10) {
-          Tickett ticket = Tickett(
-              Tickets[i]["id"], Tickets[i]["price"], Tickets[i]["maximumTrips"],
-              Tickets[i]["source_station"]);
+          Tickett ticket = Tickett(Tickets[i]["id"], Tickets[i]["price"],
+              Tickets[i]["maximumTrips"], Tickets[i]["source_station"]);
           Tickets_ten.add(ticket);
         }
       }
     });
-    }
+  }
+
   static int selectedindex = 0;
   List<String> cat = ["5 EGP Tickets", "7 EGP Tickets", "10 EGP Tickets"];
-  int counter=0;
+  int counter = 0;
   @override
   Widget build(BuildContext context) {
-    if(counter==0) {
+    if (counter == 0) {
       setState(() {
         GetTickets();
         counter++;
@@ -117,21 +116,19 @@ class _MyTicketsState extends State<MyTickets> {
 
   Padding girdView() {
     int count;
-    List <Tickett> k;
-setState(() {
-    if (selectedindex == 0) {
-      count = Tickets_five.length;
-      k=Tickets_five;
-    }
-    else if (selectedindex == 1) {
-      count = Tickets_seven.length;
-      k=Tickets_seven;
-    }
-    else if (selectedindex == 2) {
-      count = Tickets_ten.length;
-      k=Tickets_ten;
-    }
-});
+    List<Tickett> k;
+    setState(() {
+      if (selectedindex == 0) {
+        count = Tickets_five.length;
+        k = Tickets_five;
+      } else if (selectedindex == 1) {
+        count = Tickets_seven.length;
+        k = Tickets_seven;
+      } else if (selectedindex == 2) {
+        count = Tickets_ten.length;
+        k = Tickets_ten;
+      }
+    });
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 90),
       child: Container(
@@ -144,7 +141,7 @@ setState(() {
               crossAxisCount: 2,
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
-              childAspectRatio: 0.9,
+              childAspectRatio: 0.8,
             ),
             itemBuilder: (context, index) => card(
               k[index],
@@ -201,7 +198,7 @@ setState(() {
                   height: 5.0,
                 ),
                 Text(
-                  "${product1.price.toString() +" EGP"} ",
+                  "${product1.price.toString() + " EGP"} ",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
