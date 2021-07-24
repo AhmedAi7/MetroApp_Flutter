@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   Future Login(String username,String password,BuildContext context)async
   {
     //SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
-    var Url="https://metro-user-api.azurewebsites.net/Login";
+    var Url="http://localhost:8080/Login";
     var jsonResponse;
     setState(() {
       print(username+" "+password);

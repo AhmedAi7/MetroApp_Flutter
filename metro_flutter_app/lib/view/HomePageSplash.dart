@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:metro_flutter_app/component/User_Status.dart';
 import 'package:metro_flutter_app/helpers/location_helper.dart';
+import 'package:metro_flutter_app/models/Lines.dart';
 import 'package:metro_flutter_app/models/place.dart';
 import 'package:metro_flutter_app/models/station.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,7 +47,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
     });
 
     var jsonResponse;
-    var Url="https://metro-user-api.azurewebsites.net/GetUser";
+    var Url="http://localhost:8080/GetUser";
     var response =await http.get(Uri.parse(Url),
         headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
     if(response.statusCode==200) {
@@ -57,6 +59,66 @@ class _HomePageSplashState extends State<HomePageSplash> {
         balance=double.parse(jsonResponse["balance"]);
         assert(balance is double);
       });
+    }
+    else
+    {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
+
+  List <String> stations1 = [];
+  List <int> lines = [];
+
+  void linesId()
+  {
+    lines.clear();
+    setState(() {
+      StationLine.forEach((k, v)
+      {
+        if(!lines.contains(v)) {
+          lines.add(v);
+        }
+      }
+      );
+    });
+  }
+
+  void Stations()
+  {
+    setState(() {
+      StationLine.forEach((k, v) {
+          stations1.add(k);
+      }
+      );
+    });
+  }
+
+  Map StationLine = new HashMap<String, dynamic>();
+  Future  GetStations(int type,BuildContext context)async
+  {
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
+    String token="Bearer "+sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    var jsonResponse;
+    var Url = "http://localhost:8080/GetAllStations" ;
+    var response =await http.get(Uri.parse(Url),
+        headers: <String,String>{"Content-Type":"application/json",HttpHeaders.authorizationHeader: token});
+    if(response.statusCode==200) {
+      jsonResponse = json.decode(response.body)  as Map<String, dynamic>;
+      print("ResponseBody : "+response.body);
+        liness.clear();
+        StationLine=jsonResponse["stations"] ;
+          String k=i.toString();
+          ExpansionTile L=Line(k, _getChildren(stations1, stations1.length, type,i));
+          // Linee S= Linee(id : i,stations: st);
+          // Stationlinee.add(S);
+          liness.add(L);
+        }
     }
     else
     {
@@ -81,7 +143,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-user-api.azurewebsites.net/GetTicketPrice" + '?' + queryString;
+    var Url = "http://localhost:8080/GetTicketPrice" + '?' + queryString;
 
     var jsonResponse;
     var response =await http.get(Uri.parse(Url),
@@ -110,8 +172,10 @@ class _HomePageSplashState extends State<HomePageSplash> {
   // ignore: unused_field
   PlaceLocation _pickedLocation;
   String _nearestStation = "Al-Sayeda Zainab";
+  List<Linee> Stationlinee=[];
+  String value;
 
-  List _getChildren(int count, List<Station> stations, int type) =>
+  List _getChildren(int count, List<String> stationss, int type,int id) =>
       List<Widget>.generate(
         count,
             (i) => ListTile(
@@ -120,9 +184,9 @@ class _HomePageSplashState extends State<HomePageSplash> {
             color: Color(0xffa80f14),
             size: 25,
           ),
-          title: InkWell(
-            child: Text(
-              '${stations[i].stationName}',
+          title: TextButton(
+            child:Text(
+              stationss[i],
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
@@ -130,15 +194,23 @@ class _HomePageSplashState extends State<HomePageSplash> {
                 fontStyle: FontStyle.italic,
               ),
             ),
-            onTap: () {
+            onPressed: (){
               if (type == 1) {
-                source = stations[i].stationName;
+                setState(() {
+                  source = stationss[i];
+                });
+
                 _checkPrice();
               } else {
-                destination = stations[i].stationName;
+                setState(() {
+                  destination = stationss[i] ;
+                });
                 _checkPrice();
               }
               setState(() {
+                // print("1: "+liness[0].children.length.toString());
+                // print("2: "+liness[1].children.length.toString());
+                // print("3: "+liness[2].children.length.toString());
                 Navigator.pop(context);
               });
             },
@@ -146,6 +218,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
         ),
       );
 
+  List<ExpansionTile> liness=[];
   _showStations(int type) {
     return showModalBottomSheet<void>(
       context: context,
@@ -157,48 +230,11 @@ class _HomePageSplashState extends State<HomePageSplash> {
               MediaQuery.of(context).viewPadding.top -
               MediaQuery.of(context).viewPadding.bottom, // height modal bottom
           color: Color(0xffD3D3D3),
-          child: ListView(
-            children: [
-              ExpansionTile(
-                title: Text(
-                  'Line 1',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine1.length, stationsLine1, type),
-              ),
-              ExpansionTile(
-                title: Text(
-                  'Line 2',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine2.length, stationsLine2, type),
-              ),
-              ExpansionTile(
-                title: Text(
-                  'Line 3',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine3.length, stationsLine3, type),
-              ),
-            ],
+          child: ListView.builder(
+              itemCount:liness.length ,
+              itemBuilder: (BuildContext context, int index) {
+                return liness[index];
+              }
           ),
         );
       },
@@ -724,7 +760,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                           ),
                                         ),
                                       ),
-                                      onTap: () {
+                                      onTap: ()async {
+                                        await GetStations(1,context);
                                         _showStations(1);
                                       },
                                     ),
@@ -784,7 +821,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
                                           ),
                                         ),
                                       ),
-                                      onTap: () {
+                                      onTap: ()async {
+                                        await GetStations(2,context);
                                         _showStations(2);
                                       },
                                     ),

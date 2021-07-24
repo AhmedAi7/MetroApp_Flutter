@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -30,80 +31,93 @@ class _HomePageState extends State<HomePage> {
   //   this.balance= sharedPreferences.getString("balance") as double;
   // });
   // }
-  Future GetUser(BuildContext context)async
+  Future GetUser(BuildContext context) async
   {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
       print(token);
     });
 
     var jsonResponse;
-    var Url="https://metro-user-api.azurewebsites.net/GetUser";
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
-    if(response.statusCode==200) {
+    var Url = "http://localhost:8080/GetUser";
+    var response = await http.get(Uri.parse(Url),
+        headers: <String, String>{
+          "Content-Type": "application/json",
+          HttpHeaders.authorizationHeader: token
+        });
+    if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
-      print("Response :"+jsonResponse["balance"]);
+      print("ResponseBody : " + response.body);
+      print("Response :" + jsonResponse["balance"]);
       setState(() {
-        loginStatues().setUser(jsonResponse["fullname"], jsonResponse["email"], jsonResponse["password"], jsonResponse["phone_number"], jsonResponse["date_of_birth"],jsonResponse["balance"]);
-        balance=double.parse(jsonResponse["balance"]);
+        loginStatues().setUser(jsonResponse["fullname"], jsonResponse["email"],
+            jsonResponse["password"], jsonResponse["phone_number"],
+            jsonResponse["date_of_birth"], jsonResponse["balance"]);
+        balance = double.parse(jsonResponse["balance"]);
         assert(balance is double);
       });
     }
-    else
-    {
+    else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
-  List listid=[];
+  
+  
+  List <String> stations = [];
+  List <int> lines = [];
 
-  Future GetLinesId()async
-  { var jsonResponse;
-    var Url2="https://metro-user-api.azurewebsites.net/GetAllLines";
-    var response=await http.get(Uri.parse(Url2),
-        headers: <String,String>{"Content-Type":"application/json"});
-    if(response.statusCode==200) {
-      jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
-      setState(() {
-        listid=jsonResponse["lines"];
-      });
-    }
-    else
-    {
-      setState(() {
-        print(response.statusCode);
-      });
-    }
-    }
-    List <String> stations=[];
-  Future GetLines(int id,int type,BuildContext context)async
+  void linesId()
+  {
+    setState(() {
+      StationLine.forEach((k, v)
+      {
+        if(!lines.contains(v)) {
+          lines.add(v);
+        }
+      }
+      );
+    });
+  }
+
+  void Stations(int id)
+  {
+    stations.clear();
+    setState(() {
+      StationLine.forEach((k, v) {
+        if (v == id) {
+          stations.add(k);
+        }
+      }
+      );
+    });
+  }
+  Map StationLine = new HashMap<String, dynamic>();
+  Future  GetStations(int type,BuildContext context)async
   {
     SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
     String token="Bearer "+sharedPreferences.getString("token");
     setState(() {
       print(token);
     });
-
     var jsonResponse;
-    Map<String, String> queryParams = {
-      'id': id.toString(),
-    };
-
-    String queryString = Uri(queryParameters: queryParams).query;
-    var Url = "https://metro-user-api.azurewebsites.net/GetLineStations" + '?' + queryString;
+    var Url = "http://localhost:8080/GetAllStations" ;
     var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
+        headers: <String,String>{"Content-Type":"application/json",HttpHeaders.authorizationHeader: token});
     if(response.statusCode==200) {
-      jsonResponse = json.decode(response.body);
+      jsonResponse = json.decode(response.body)  as Map<String, dynamic>;
       print("ResponseBody : "+response.body);
       setState(() {
-       stations=jsonResponse["Stations"];
-       lines.add(Line(id.toString(), _getChildren(stations.length, stations,type)));
+        StationLine=jsonResponse["stations"] ;
+        linesId();
+        lines.sort();
+        for(int i in lines ) {
+          Stations(i);
+          String k=i.toString();
+          liness.add(Line(k, _getChildren(stations.length, stations, type)));
+      }
       });
     }
     else
@@ -129,7 +143,7 @@ class _HomePageState extends State<HomePage> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://localhost:8080/GetTicketPrice" + '?' + queryString;
+    var Url = "http://localhost:8080/GetTicketPrice" + '?' + queryString;
 
     var jsonResponse;
     var response =await http.get(Uri.parse(Url),
@@ -193,7 +207,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
- List<ExpansionTile> lines=[];
+ List<ExpansionTile> liness=[];
   _showStations(int type) {
     return showModalBottomSheet<void>(
       context: context,
@@ -206,9 +220,9 @@ class _HomePageState extends State<HomePage> {
               MediaQuery.of(context).viewPadding.bottom, // height modal bottom
           color: Color(0xffD3D3D3),
           child: ListView.builder(
-              itemCount:lines.length ,
+              itemCount:liness.length ,
               itemBuilder: (BuildContext context, int index) {
-                return lines[index];
+                return liness[index];
               }
           ),
         );
@@ -725,7 +739,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        onTap: () {
+                                        onTap: () async{
+                                          await GetStations(1,context);
                                           _showStations(1);
                                         },
                                       ),
@@ -735,7 +750,8 @@ class _HomePageState extends State<HomePage> {
                                           size: 30,
                                           color: Colors.white,
                                         ),
-                                        onTap: () {
+                                        onTap: () async {
+                                          await GetStations(1,context);
                                           _showLocation(1);
                                         },
                                       ),
@@ -785,7 +801,8 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        onTap: () {
+                                        onTap: ()async {
+                                          await GetStations(2,context);
                                           _showStations(2);
                                         },
                                       ),
