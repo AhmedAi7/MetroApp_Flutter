@@ -1,4 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String _username;
+Future<Null> getSharedPrefs() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  _username = prefs.getString("username");
+}
+
+@override
+void initState() {
+  initState();
+  _username = "";
+  getSharedPrefs();
+}
 
 AppBar buildAppBar() {
   return AppBar(
@@ -7,7 +21,7 @@ AppBar buildAppBar() {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(
-          "User221",
+          _username,
           style: TextStyle(
             color: Colors.white,
           ),
