@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/helpers/location_helper.dart';
+import 'package:metro_flutter_app/models/Lines.dart';
 import 'package:metro_flutter_app/models/place.dart';
 import 'package:metro_flutter_app/models/station.dart';
 import 'package:metro_flutter_app/view/station_list.dart';
@@ -27,17 +28,16 @@ class _GetRouteState extends State<GetRoute> {
   bool fullFlag = false;
   String _previewImageUrl;
   bool flag = false;
- // Map<String,bool> Path1;
+  // Map<String,bool> Path1;
   Map Path1 = new HashMap<String, dynamic>();
 
   // ignore: unused_field
   PlaceLocation _pickedLocation;
   String _nearestStation = "Al-Sayeda Zainab";
 
-  Future<bool> GetPath()async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+  Future<bool> GetPath() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
       print(token);
     });
@@ -47,29 +47,29 @@ class _GetRouteState extends State<GetRoute> {
     };
 
     String queryString = Uri(queryParameters: queryParams).query;
-    var Url = "https://metro-user-api.azurewebsites.net/GetPath" + '?' + queryString;
+    var Url = "http://localhost:8080/GetPath" + '?' + queryString;
     var jsonResponse;
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
-    if(response.statusCode==200) {
-     // final j="[" + response.body + "]";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      // final j="[" + response.body + "]";
       jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-      print("Response" +jsonResponse["path"].toString());
+      print("Response" + jsonResponse["path"].toString());
       print(jsonResponse["path"].runtimeType);
       setState(() {
-          Path1=jsonResponse["path"] ;
-          _setFullRoute();
-          _setShortRoute();
-
+        Path1 = jsonResponse["path"];
+        _setFullRoute();
+        _setShortRoute();
       });
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
+
   List<Station> shortRoute = [];
   List<Station> fullRoute = [];
   void _getFullRoute() {
@@ -78,32 +78,28 @@ class _GetRouteState extends State<GetRoute> {
       shortFlag = false;
     });
   }
-  void _setFullRoute()
-  {
+
+  void _setFullRoute() {
     fullRoute.clear();
     setState(() {
-      Path1.forEach((k, v)
-          {
-            Station s=Station(stationName: k, state: v, line: 0);
-            fullRoute.add(s);
-          }
-    );
-  });
-}
-
-  void _setShortRoute()
-  {
-    shortRoute.clear();
-    setState(() {
-      for(int i=0;i<fullRoute.length; i++)
-        {
-           if(i==0||i==fullRoute.length-1 ||fullRoute[i].state==true)
-             {
-               shortRoute.add(fullRoute[i]);
-             }
-        }
+      Path1.forEach((k, v) {
+        Station s = Station(stationName: k, state: v, line: 0);
+        fullRoute.add(s);
+      });
     });
   }
+
+  void _setShortRoute() {
+    shortRoute.clear();
+    setState(() {
+      for (int i = 0; i < fullRoute.length; i++) {
+        if (i == 0 || i == fullRoute.length - 1 || fullRoute[i].state == true) {
+          shortRoute.add(fullRoute[i]);
+        }
+      }
+    });
+  }
+
   void _getShortRoute() {
     setState(() {
       shortFlag = true;
@@ -118,7 +114,62 @@ class _GetRouteState extends State<GetRoute> {
       return true;
   }
 
-  List _getChildren(int count, List<Station> stations, int type) =>
+  List<String> stations1 = [];
+  List<int> lines = [];
+
+  void linesId() {
+    lines.clear();
+    setState(() {
+      StationLine.forEach((k, v) {
+        if (!lines.contains(v)) {
+          lines.add(v);
+        }
+      });
+    });
+  }
+
+  void Stations() {
+    setState(() {
+      StationLine.forEach((k, v) {
+        stations1.add(k);
+      });
+      stations1.sort();
+    });
+  }
+
+  Map StationLine = new HashMap<String, dynamic>();
+  Future GetStations(int type, BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    var jsonResponse;
+    var Url = "http://localhost:8080/GetAllStations";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+      print("ResponseBody : " + response.body);
+      liness.clear();
+      stations1.clear();
+      StationLine = jsonResponse["stations"];
+      Stations();
+      ExpansionTile L =
+          Line("0", _getChildren(stations1.length, stations1, type, 0));
+      // Linee S= Linee(id : i,stations: st);
+      // Stationlinee.add(S);
+      liness.add(L);
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
+  List _getChildren(int count, List<String> stationss, int type, int id) =>
       List<Widget>.generate(
         count,
         (i) => ListTile(
@@ -127,9 +178,9 @@ class _GetRouteState extends State<GetRoute> {
             color: Color(0xffa80f14),
             size: 25,
           ),
-          title: InkWell(
+          title: TextButton(
             child: Text(
-              '${stations[i].stationName}',
+              stationss[i],
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
@@ -137,12 +188,20 @@ class _GetRouteState extends State<GetRoute> {
                 fontStyle: FontStyle.italic,
               ),
             ),
-            onTap: () {
-              if (type == 1)
-                source = stations[i].stationName;
-              else
-                destination = stations[i].stationName;
+            onPressed: () {
+              if (type == 1) {
+                setState(() {
+                  source = stationss[i];
+                });
+              } else {
+                setState(() {
+                  destination = stationss[i];
+                });
+              }
               setState(() {
+                // print("1: "+liness[0].children.length.toString());
+                // print("2: "+liness[1].children.length.toString());
+                // print("3: "+liness[2].children.length.toString());
                 Navigator.pop(context);
               });
             },
@@ -150,6 +209,7 @@ class _GetRouteState extends State<GetRoute> {
         ),
       );
 
+  List<ExpansionTile> liness = [];
   _showStations(int type) {
     return showModalBottomSheet<void>(
       context: context,
@@ -161,49 +221,11 @@ class _GetRouteState extends State<GetRoute> {
               MediaQuery.of(context).viewPadding.top -
               MediaQuery.of(context).viewPadding.bottom, // height modal bottom
           color: Color(0xffD3D3D3),
-          child: ListView(
-            children: [
-              ExpansionTile(
-                title: Text(
-                  'Line 1',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                    _getChildren(stationsLine1.length, stationsLine1, type),
-              ),
-              ExpansionTile(
-                title: Text(
-                  'Line 2',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                    _getChildren(stationsLine2.length, stationsLine2, type),
-              ),
-              ExpansionTile(
-                title: Text(
-                  'Line 3',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                    _getChildren(stationsLine3.length, stationsLine3, type),
-              ),
-            ],
-          ),
+          child: ListView.builder(
+              itemCount: liness.length,
+              itemBuilder: (BuildContext context, int index) {
+                return liness[index];
+              }),
         );
       },
     );
@@ -536,7 +558,8 @@ class _GetRouteState extends State<GetRoute> {
                               ),
                             ),
                           ),
-                          onTap: () {
+                          onTap: () async {
+                            await GetStations(1, context);
                             _showStations(1);
                           },
                         ),
@@ -591,7 +614,8 @@ class _GetRouteState extends State<GetRoute> {
                               ),
                             ),
                           ),
-                          onTap: () {
+                          onTap: () async {
+                            await GetStations(2, context);
                             _showStations(2);
                           },
                         ),
@@ -613,7 +637,7 @@ class _GetRouteState extends State<GetRoute> {
                   height: 20,
                 ),
                 InkWell(
-                  onTap: ()async {
+                  onTap: () async {
                     if (_checkValidate()) {
                       await GetPath();
                       _getShortRoute();
