@@ -18,32 +18,30 @@ class NormalSubscription2 extends StatefulWidget {
   String source;
   String target;
   int period;
-  NormalSubscription2( this.source, this.target, this.period);
-
-
+  NormalSubscription2(this.source, this.target, this.period);
 
   @override
-  _NormalSubscription2State createState() => _NormalSubscription2State(source,target,period);
+  _NormalSubscription2State createState() =>
+      _NormalSubscription2State(source, target, period);
 }
 
 class _NormalSubscription2State extends State<NormalSubscription2> {
-
-  int id=14;
-  final full_name=TextEditingController();
-  final email=TextEditingController();
-  final phone=TextEditingController();
-  final national_id=TextEditingController();
-  final country=TextEditingController();
-  final city=TextEditingController();
-  final source=TextEditingController();
-  final target=TextEditingController();
- // Product product=products[index1];
+  int id = 14;
+  final full_name = TextEditingController();
+  final email = TextEditingController();
+  final phone = TextEditingController();
+  final national_id = TextEditingController();
+  final country = TextEditingController();
+  final city = TextEditingController();
+  final source = TextEditingController();
+  final target = TextEditingController();
+  // Product product=products[index1];
   final _formKey1 = GlobalKey<FormState>();
   bool _obscureText = true;
   _NormalSubscription2State(this.source1, this.target1, this.period);
-String source1;
-String target1;
-int period;
+  String source1;
+  String target1;
+  int period;
 
   Future<bool> alertDialog(String text, BuildContext context) {
     return showDialog(
@@ -64,48 +62,59 @@ int period;
         });
   }
 
-  Future AddSubscription(BuildContext context)async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-   String token="Bearer "+sharedPreferences.getString("token");
-   setState(() {
-     print(full_name.text+" "+email.text+" "+phone.text+" "+national_id.text+" "+country.text+" "+city.text+" "+source1+" "+target1);
+  Future AddSubscription(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(full_name.text +
+          " " +
+          email.text +
+          " " +
+          phone.text +
+          " " +
+          national_id.text +
+          " " +
+          country.text +
+          " " +
+          city.text +
+          " " +
+          source1 +
+          " " +
+          target1);
       print(token);
-   });
-    var Url="https://metro-user-api.azurewebsites.net/AddNormalSubscription";
-   var jsonResponse;
-    var response =await http.post(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token},
-        body: jsonEncode(<String,dynamic>{
-          "full_name" :full_name.text ,
-          "email":email.text  ,
-          "phone": phone.text  ,
-          "national_id" :national_id.text  ,
-          "country" :country.text ,
-          "city" :city.text  ,
-          "source" : source1 ,
-          "target":target1 ,
-          "period":period
+    });
+    var Url = "http://localhost:8080/AddNormalSubscription";
+    var jsonResponse;
+    var response = await http.post(Uri.parse(Url),
+        headers: <String, String>{
+          "Content-Type": "application/json",
+          HttpHeaders.authorizationHeader: token
+        },
+        body: jsonEncode(<String, dynamic>{
+          "full_name": full_name.text,
+          "email": email.text,
+          "phone": phone.text,
+          "national_id": national_id.text,
+          "country": country.text,
+          "city": city.text,
+          "source": source1,
+          "target": target1,
+          "period": period
         }));
-   if(response.statusCode==200) {
-     jsonResponse = json.decode(response.body);
-     print("ResponseBody : "+response.body);
-     if(jsonResponse["message"]=="success") {
-       await alertDialog("Subscription is Added",context);
-       Navigator.popAndPushNamed(context, 'NavgPage');
-     }
-     else
-       {
-         await alertDialog("Check Your balance or your info",context);
-       }
-   }
-   else
-   {
-     setState(() {
-       print(response.statusCode);
-     });
-   }
-
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      if (jsonResponse["message"] == "success") {
+        await alertDialog("Subscription is Added", context);
+        Navigator.popAndPushNamed(context, 'NavgPage');
+      } else {
+        await alertDialog("Check Your balance or your info", context);
+      }
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
   }
 
   Widget build(BuildContext context) {
@@ -228,19 +237,21 @@ int period;
                             try {
                               if (_formKey1.currentState.validate()) {
                                 _formKey1.currentState.save();
-                                NormalSubscriptionmodel model = await AddSubscription(context);
+                                NormalSubscriptionmodel model =
+                                    await AddSubscription(context);
                               }
-                            }
-                            catch (e) {
+                            } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Check Your balance or your info'),
+                                  SnackBar(
+                                      content: Text(
+                                          'Check Your balance or your info'),
                                       action: SnackBarAction(
                                         label: 'Undo',
                                         onPressed: () {
-                                          print('Action in Snackbar has been pressed.');
-                                        },)
-                                  ));
-
+                                          print(
+                                              'Action in Snackbar has been pressed.');
+                                        },
+                                      )));
                             }
                           },
                           child: Padding(
