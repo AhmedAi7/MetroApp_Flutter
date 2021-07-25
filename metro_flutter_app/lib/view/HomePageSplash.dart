@@ -56,6 +56,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
       print("Response :" + jsonResponse["balance"]);
       setState(() {
         loginStatues().setUser(
+            jsonResponse["username"],
             jsonResponse["fullname"],
             jsonResponse["email"],
             jsonResponse["password"],
@@ -91,6 +92,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
       StationLine.forEach((k, v) {
         stations1.add(k);
       });
+      stations1.sort();
     });
   }
 
@@ -102,7 +104,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
       print(token);
     });
     var jsonResponse;
-    var Url = "https://metro-user-api.azurewebsites.net/GetAllStations";
+    var Url = "http://localhost:8080/GetAllStations";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
@@ -111,6 +113,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
       jsonResponse = json.decode(response.body) as Map<String, dynamic>;
       print("ResponseBody : " + response.body);
       liness.clear();
+      stations1.clear();
       StationLine = jsonResponse["stations"];
       Stations();
       ExpansionTile L =
@@ -140,9 +143,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-user-api.azurewebsites.net/GetTicketPrice" +
-        '?' +
-        queryString;
+    var Url = "http://localhost:8080/GetTicketPrice" + '?' + queryString;
 
     var jsonResponse;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
@@ -207,9 +208,6 @@ class _HomePageSplashState extends State<HomePageSplash> {
                 _checkPrice();
               }
               setState(() {
-                // print("1: "+liness[0].children.length.toString());
-                // print("2: "+liness[1].children.length.toString());
-                // print("3: "+liness[2].children.length.toString());
                 Navigator.pop(context);
               });
             },
