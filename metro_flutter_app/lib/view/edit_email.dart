@@ -1,22 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
-import 'package:metro_flutter_app/view/confirm_email.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
-class EditEmail extends StatelessWidget {
+class EditEmail extends StatefulWidget {
+  @override
+  _EditEmailState createState() => _EditEmailState();
+}
+
+class _EditEmailState extends State<EditEmail> {
   String newEmail;
+  String password;
+  bool _obscureText = true;
   final _formKey = GlobalKey<FormState>();
 
-  void _sendDataToSecondScreen(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ConfirmEmail(
-          newEmail: newEmail,
-        ),
-      ),
-    );
+  Future<bool> alertDialog(String text, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Done'),
+            content: Text(text),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future changeEmail(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    Map<String, String> queryParams = {
+      'password': password,
+      'newEmail': newEmail,
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "http://localhost:8080/ChangeUserEmail" + '?' + queryString;
+
+    var jsonResponse;
+    var response = await http.post(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      if (jsonResponse["message"] == "User Email updated successfully") {
+        setState(() {
+          sharedPreferences.setString("email", newEmail);
+        });
+        await alertDialog("User Email updated successfully", context);
+        Navigator.popAndPushNamed(context, "Settings");
+      }
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+      await alertDialog("Password is wrong , try again", context);
+      Navigator.popAndPushNamed(context, "Settings");
+    }
   }
 
   @override
@@ -79,11 +136,70 @@ class EditEmail extends StatelessWidget {
                 SizedBox(
                   height: 25,
                 ),
+                Container(
+                  decoration: CustomBoxDecoration.decorationStyle(
+                      Color(0xffa80f14), 15.0),
+                  child: TextFormField(
+                    obscureText: _obscureText,
+                    onSaved: (val) {
+                      setState(() {
+                        this.password = val;
+                      });
+                    },
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "Password couldn't be blank!";
+                      }
+                      return null;
+                    },
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    decoration: InputDecoration(
+                      errorStyle: TextStyle(
+                          color: Color(0xFFFFFFFF),
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xffa80f14)),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15.0),
+                        ),
+                      ),
+                      fillColor: Color(0xFFFFFFFF),
+                      filled: true,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      ),
+                      labelStyle: TextStyle(
+                          color: Color(0xFFE5E5E5),
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic),
+                      labelText: " Password",
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
-                      _sendDataToSecondScreen(context);
+                      await changeEmail(context);
                       try {} catch (error) {}
                     }
                   },
