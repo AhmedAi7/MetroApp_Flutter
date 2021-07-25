@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MainDrawer extends StatelessWidget {
+class MainDrawer extends StatefulWidget {
+  @override
+  _MainDrawerState createState() => _MainDrawerState();
+}
+
+class _MainDrawerState extends State<MainDrawer> {
   Widget buildListTile(String title, IconData icon, Function location) {
     return ListTile(
         leading: Icon(
@@ -19,6 +24,20 @@ class MainDrawer extends StatelessWidget {
           ),
         ),
         onTap: location);
+  }
+
+  String _username;
+
+  Future<Null> getSharedPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _username = prefs.getString("username");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _username = "";
+    getSharedPrefs();
   }
 
   Widget buildIcon(
@@ -65,7 +84,7 @@ class MainDrawer extends StatelessWidget {
                   width: 5,
                 ),
                 Text(
-                  'User123',
+                  _username,
                   style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 25,
@@ -93,7 +112,7 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           buildIcon(
-            'Nearset Staion',
+            'Nearset Station',
             'walk.png',
             45,
             () {
@@ -116,6 +135,13 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           buildListTile(
+            'Metro Map',
+            Icons.map,
+            () {
+              Navigator.pushNamed(context, 'MetroMap');
+            },
+          ),
+          buildListTile(
             'Contact Us',
             Icons.support_agent_rounded,
             () {
@@ -133,7 +159,7 @@ class MainDrawer extends StatelessWidget {
             'Log Out',
             Icons.logout,
             () async {
-              SharedPreferences sh=await SharedPreferences.getInstance();
+              SharedPreferences sh = await SharedPreferences.getInstance();
               await sh.clear();
               Navigator.pushNamed(context, 'LogOut');
             },
