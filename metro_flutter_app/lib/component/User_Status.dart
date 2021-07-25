@@ -1,38 +1,36 @@
-
-
 import 'package:shared_preferences/shared_preferences.dart';
 
-class loginStatues
-{
-  readStatus() async
-  {
+class loginStatues {
+  readStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    final key= "status";
-    final value =prefs.getBool(key) ?? false;
+    final key = "status";
+    final value = prefs.getBool(key) ?? false;
     return value;
   }
-  writeStatus(bool status)async
-  {
+
+  static writeStatus(bool status) async {
     final prefs = await SharedPreferences.getInstance();
-    final key= "status";
+    final key = "status";
     prefs.setBool(key, status);
   }
-  static void writetoken(String value) async
-  {
-  final prefs= await SharedPreferences.getInstance();
-  final key= "token";
-  prefs.setString(key, value);
- }
-  readtoken()async
-  {
-    final prefs=await SharedPreferences.getInstance();
-    final key="token";
-    final value=prefs.getString(key)??false;
+
+  static void writetoken(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = "token";
+    prefs.setString(key, value);
+  }
+
+  readtoken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = "token";
+    final value = prefs.getString(key) ?? false;
     return value;
   }
-  setUser(String fullname,String email,String password,String phone_number,String date_of_birth, String balance)async
-  {
-    final prefs=await SharedPreferences.getInstance();
+
+  setUser(String username, String fullname, String email, String password,
+      String phone_number, String date_of_birth, String balance) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("username", username);
     prefs.setString("fullname", fullname);
     prefs.setString("email", email);
     prefs.setString("password", password);
