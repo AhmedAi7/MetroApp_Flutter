@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
+import 'package:metro_flutter_app/models/Lines.dart';
 import 'package:metro_flutter_app/models/SubTypes.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -17,9 +19,8 @@ import 'map_screen.dart';
 import 'NormalSubscripPage2.dart';
 import 'package:http/http.dart' as http;
 
-
 class Item {
-  const Item(this.name,this.icon,this.period);
+  const Item(this.name, this.icon, this.period);
   final String name;
   final Icon icon;
   final int period;
@@ -33,7 +34,6 @@ class NormalSubscription1 extends StatefulWidget {
 }
 
 class _NormalSubscription1State extends State<NormalSubscription1> {
-
   Future<bool> alertDialog(String text, BuildContext context) {
     return showDialog(
         context: context,
@@ -53,12 +53,11 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
         });
   }
 
-  Future GetSubscriptionPrice(BuildContext context)async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+  Future GetSubscriptionPrice(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
-      print(source+" "+destination+" ");
+      print(source + " " + destination + " ");
       print(selected_user.period);
       print(token);
     });
@@ -66,32 +65,31 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
     Map<String, String> queryParams = {
       'source': source,
       'target': destination,
-      'period':selected_user.period.toString()
+      'period': selected_user.period.toString()
     };
-
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-user-api.azurewebsites.net/GetSubscriptionPrice" + '?' + queryString;
+    var Url = "http://localhost:8080/GetSubscriptionPrice" + '?' + queryString;
 
     var jsonResponse;
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
-    if(response.statusCode==200) {
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
+      print("ResponseBody : " + response.body);
       setState(() {
-        price=jsonResponse["price"];
+        price = jsonResponse["price"];
       });
-
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
+
   String source;
   String destination;
   String period;
@@ -103,24 +101,73 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
   PlaceLocation _pickedLocation;
   String _nearestStation = "Al-Sayeda Zainab";
 
-  static List<Item> Periods = <Item>[
-  const Item('1 Month',Icon(Icons.date_range,color:  const Color(0xffa80f14),),1),
-  const Item('3 Months',Icon(Icons.date_range,color:  const Color(0xffa80f14),),3),
-  const Item('1 year',Icon(Icons.date_range,color:  const Color(0xffa80f14),),12),
-  ];
-  Item selected_user=Periods[0];
-  List _getChildren(int count, List<Station> stations, int type) =>
+  List<String> stations1 = [];
+  List<int> lines = [];
+
+  void linesId() {
+    lines.clear();
+    setState(() {
+      StationLine.forEach((k, v) {
+        if (!lines.contains(v)) {
+          lines.add(v);
+        }
+      });
+    });
+  }
+
+  void Stations() {
+    setState(() {
+      StationLine.forEach((k, v) {
+        stations1.add(k);
+      });
+      stations1.sort();
+    });
+  }
+
+  Map StationLine = new HashMap<String, dynamic>();
+  Future GetStations(int type, BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    var jsonResponse;
+    var Url = "http://localhost:8080/GetAllStations";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+      print("ResponseBody : " + response.body);
+      liness.clear();
+      stations1.clear();
+      StationLine = jsonResponse["stations"];
+      Stations();
+      ExpansionTile L =
+          Line("0", _getChildren(stations1.length, stations1, type, 0));
+      // Linee S= Linee(id : i,stations: st);
+      // Stationlinee.add(S);
+      liness.add(L);
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
+  List _getChildren(int count, List<String> stationss, int type, int id) =>
       List<Widget>.generate(
         count,
-            (i) => ListTile(
+        (i) => ListTile(
           leading: Icon(
             Icons.directions_train_sharp,
             color: Color(0xffa80f14),
             size: 25,
           ),
-          title: InkWell(
+          title: TextButton(
             child: Text(
-              '${stations[i].stationName}',
+              stationss[i],
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20,
@@ -128,12 +175,20 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                 fontStyle: FontStyle.italic,
               ),
             ),
-            onTap: () {
-              if (type == 1)
-                source = stations[i].stationName;
-              else
-                destination = stations[i].stationName;
+            onPressed: () {
+              if (type == 1) {
+                setState(() {
+                  source = stationss[i];
+                });
+              } else {
+                setState(() {
+                  destination = stationss[i];
+                });
+              }
               setState(() {
+                // print("1: "+liness[0].children.length.toString());
+                // print("2: "+liness[1].children.length.toString());
+                // print("3: "+liness[2].children.length.toString());
                 Navigator.pop(context);
               });
             },
@@ -141,6 +196,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
         ),
       );
 
+  List<ExpansionTile> liness = [];
   _showStations(int type) {
     return showModalBottomSheet<void>(
       context: context,
@@ -152,53 +208,40 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
               MediaQuery.of(context).viewPadding.top -
               MediaQuery.of(context).viewPadding.bottom, // height modal bottom
           color: Color(0xffD3D3D3),
-          child: ListView(
-            children: [
-              ExpansionTile(
-                title: Text(
-                  'Line 1',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine1.length, stationsLine1, type),
-              ),
-              ExpansionTile(
-                title: Text(
-                  'Line 2',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine2.length, stationsLine2, type),
-              ),
-              ExpansionTile(
-                title: Text(
-                  'Line 3',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine3.length, stationsLine3, type),
-              ),
-            ],
-          ),
+          child: ListView.builder(
+              itemCount: liness.length,
+              itemBuilder: (BuildContext context, int index) {
+                return liness[index];
+              }),
         );
       },
     );
   }
+
+  static List<Item> Periods = <Item>[
+    const Item(
+        '1 Month',
+        Icon(
+          Icons.date_range,
+          color: const Color(0xffa80f14),
+        ),
+        1),
+    const Item(
+        '3 Months',
+        Icon(
+          Icons.date_range,
+          color: const Color(0xffa80f14),
+        ),
+        3),
+    const Item(
+        '1 year',
+        Icon(
+          Icons.date_range,
+          color: const Color(0xffa80f14),
+        ),
+        12),
+  ];
+  Item selected_user = Periods[0];
 
   void _selectPlace(double lat, double lng) {
     _pickedLocation = PlaceLocation(latitude: lat, longitude: lng);
@@ -276,10 +319,10 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                   children: [
                     Container(
                       height: (MediaQuery.of(context).size.height -
-                          AppBar().preferredSize.height -
-                          MediaQuery.of(context).viewPadding.top -
-                          MediaQuery.of(context).viewPadding.bottom -
-                          kBottomNavigationBarHeight) *
+                              AppBar().preferredSize.height -
+                              MediaQuery.of(context).viewPadding.top -
+                              MediaQuery.of(context).viewPadding.bottom -
+                              kBottomNavigationBarHeight) *
                           0.3,
                       width: MediaQuery.of(context).size.width * 0.88,
                       alignment: Alignment.center,
@@ -297,18 +340,18 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                       ),
                       child: _previewImageUrl == null
                           ? Text(
-                        'No Loaction is Selected',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      )
+                              'No Loaction is Selected',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            )
                           : Image.network(
-                        _previewImageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
+                              _previewImageUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -462,6 +505,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
       _previewImageUrl = null;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -490,121 +534,122 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 60),
             child: Container(
-              alignment: Alignment.bottomCenter,
-              child:
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 60, 5, 5),
-                child : Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          child: Container(
-                            width: screenWidth * 0.85,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffa80f14),
-                                  offset: Offset(0, 1),
-                                  spreadRadius: 0.1,
-                                  blurRadius: 6,
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 15, left: 10),
-                              child: Text(
-                                source == null ? "Source" : source,
-                                style: TextStyle(
-                                  color: source == null
-                                      ? Colors.grey.withOpacity(0.3)
-                                      : Colors.black,
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: source == null ? 15 : 20,
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 60, 5, 5),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              width: screenWidth * 0.85,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xffa80f14),
+                                    offset: Offset(0, 1),
+                                    spreadRadius: 0.1,
+                                    blurRadius: 6,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 15, left: 10),
+                                child: Text(
+                                  source == null ? "Source" : source,
+                                  style: TextStyle(
+                                    color: source == null
+                                        ? Colors.grey.withOpacity(0.3)
+                                        : Colors.black,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: source == null ? 15 : 20,
+                                  ),
                                 ),
                               ),
                             ),
+                            onTap: () async {
+                              await GetStations(1, context);
+                              _showStations(1);
+                            },
                           ),
-                          onTap: () {
-                            _showStations(1);
-                          },
-                        ),
-                        InkWell(
-                          child: Icon(
-                            Icons.add_location_alt_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          onTap: () {
-                            _showLocation(1);
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          child: Container(
-                            width: screenWidth * 0.85,
-                            height: 50,
-                            decoration: BoxDecoration(
+                          InkWell(
+                            child: Icon(
+                              Icons.add_location_alt_outlined,
+                              size: 30,
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffa80f14),
-                                  offset: Offset(0, 1),
-                                  spreadRadius: 0.1,
-                                  blurRadius: 6,
-                                ),
-                              ],
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 15, left: 10),
-                              child: Text(
-                                destination == null
-                                    ? "Destination"
-                                    : destination,
-                                style: TextStyle(
-                                  color: destination == null
-                                      ? Colors.grey.withOpacity(0.3)
-                                      : Colors.black,
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: destination == null ? 15 : 20,
+                            onTap: () {
+                              _showLocation(1);
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              width: screenWidth * 0.85,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xffa80f14),
+                                    offset: Offset(0, 1),
+                                    spreadRadius: 0.1,
+                                    blurRadius: 6,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 15, left: 10),
+                                child: Text(
+                                  destination == null
+                                      ? "Destination"
+                                      : destination,
+                                  style: TextStyle(
+                                    color: destination == null
+                                        ? Colors.grey.withOpacity(0.3)
+                                        : Colors.black,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: destination == null ? 15 : 20,
+                                  ),
                                 ),
                               ),
                             ),
+                            onTap: () {
+                              _showStations(2);
+                            },
                           ),
-                          onTap: () {
-                            _showStations(2);
-                          },
-                        ),
-                        InkWell(
-                          child: Icon(
-                            Icons.add_location_alt_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          onTap: () {
-                            _showLocation(2);
-                          },
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 15.0),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 30.0),
-                      child: Container(
+                          InkWell(
+                            child: Icon(
+                              Icons.add_location_alt_outlined,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            onTap: () async {
+                              await GetStations(2, context);
+                              _showLocation(2);
+                            },
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 15.0),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 30.0),
+                        child: Container(
                           width: screenWidth * 0.85,
                           height: 50,
                           decoration: BoxDecoration(
@@ -619,167 +664,163 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                               ),
                             ],
                           ),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 7, left: 10),
-                        child: DropdownButton<Item>(
-                          focusColor:Colors.transparent ,
-                          isExpanded: true,
-                          hint:  Text("Select Period"),
-                          value: selected_user,
-                          onChanged: (Item Value) {
-                            setState(() {
-                              selected_user = Value;
-                            });
-                          },
-                          items: Periods.map((Item user) {
-                            return  DropdownMenuItem<Item>(
-                              value: user,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    user.name,
-                                    style: TextStyle(color: Colors.black,
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: user.name == null ? 15 : 20,
-                                    )
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 7, left: 10),
+                            child: DropdownButton<Item>(
+                              focusColor: Colors.transparent,
+                              isExpanded: true,
+                              hint: Text("Select Period"),
+                              value: selected_user,
+                              onChanged: (Item Value) {
+                                setState(() {
+                                  selected_user = Value;
+                                });
+                              },
+                              items: Periods.map((Item user) {
+                                return DropdownMenuItem<Item>(
+                                  value: user,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(user.name,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontStyle: FontStyle.italic,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize:
+                                                user.name == null ? 15 : 20,
+                                          )),
+                                      user.icon,
+                                    ],
                                   ),
-                                  user.icon,
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(35, 15, 5, 5),
-                      child: Row(
-                        children: [
-                          InkWell (
-                            onTap: () async{
-                              await GetSubscriptionPrice(context);
-                            },
-                            child: Container(
-                              width: screenWidth * 0.5,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Color(0xffa80f14),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    offset: Offset(0, 1),
-                                    spreadRadius: -2,
-                                    blurRadius: 6,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Show Price",
-                                  style: TextStyle(
-                                    color: Color(0xFFFFFFFF),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                              ),
+                                );
+                              }).toList(),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
-                            child: Container(
-                              width: screenWidth * 0.25,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFFFFFFF),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xffa80f14),
-                                    offset: Offset(0, 1),
-                                    spreadRadius: -2,
-                                    blurRadius: 6,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  price + " EGP",
-                                  style: TextStyle(
-                                    color: Color(0xffa80f14),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(35, 15, 5, 5),
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () async {
+                                await GetSubscriptionPrice(context);
+                              },
+                              child: Container(
+                                width: screenWidth * 0.5,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffa80f14),
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(0, 1),
+                                      spreadRadius: -2,
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Show Price",
+                                    style: TextStyle(
+                                      color: Color(0xFFFFFFFF),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 5, 5, 5),
+                              child: Container(
+                                width: screenWidth * 0.25,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFFFFFFF),
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xffa80f14),
+                                      offset: Offset(0, 1),
+                                      spreadRadius: -2,
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    price + " EGP",
+                                    style: TextStyle(
+                                      color: Color(0xffa80f14),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    )
-                    ,
-                    SizedBox(height:5.0),
-                    Center(
-                      child: InkWell(
-                        onTap: () async {
-                          try {
-                            if (source != null && destination != null) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        NormalSubscription2(source, destination,
-                                            selected_user.period),
-                                  ));
-                            }
-                            else
-                              {
-                                await alertDialog("Check Empty Fields",context);
+                      SizedBox(height: 5.0),
+                      Center(
+                        child: InkWell(
+                          onTap: () async {
+                            try {
+                              if (source != null && destination != null) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => NormalSubscription2(
+                                          source,
+                                          destination,
+                                          selected_user.period),
+                                    ));
+                              } else {
+                                await alertDialog(
+                                    "Check Empty Fields", context);
                               }
-                          }
-                          catch(e){
-
-                          }
-                        },
-                        child: Container(
-                          width: screenWidth * 0.5,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Color(0xffa80f14),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white,
-                                offset: Offset(0, 1),
-                                spreadRadius: -2,
-                                blurRadius: 6,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Subscripe",
-                              style: TextStyle(
-                                color: Color(0xFFFFFFFF),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
+                            } catch (e) {}
+                          },
+                          child: Container(
+                            width: screenWidth * 0.5,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Color(0xffa80f14),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white,
+                                  offset: Offset(0, 1),
+                                  spreadRadius: -2,
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Subscripe",
+                                style: TextStyle(
+                                  color: Color(0xFFFFFFFF),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ),
+                    ],
+                  ),
+                )),
           ),
         ],
       ),
