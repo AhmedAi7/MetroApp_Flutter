@@ -65,7 +65,7 @@ class _SignUp4PageState extends State<SignUp4Page> {
 
   Future SignUp(BuildContext context) async {
     //SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
-    var Url = "https://metro-user-api.azurewebsites.net/SignUp";
+    var Url = "http://localhost:8080/SignUp";
     var jsonResponse;
     var date = DateTime.parse(dateOfBirth);
     setState(() {
