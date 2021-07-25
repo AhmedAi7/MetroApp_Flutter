@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:metro_flutter_app/helpers/screen.dart';
 import 'package:metro_flutter_app/view/Buy%20Tickets.dart';
 import 'package:metro_flutter_app/view/ChargeWallet.dart';
 import 'package:metro_flutter_app/view/MyTicketss.dart';
@@ -43,12 +44,13 @@ class MyApp extends StatelessWidget {
         'ContactUs': (context) => ContactUs(),
         "UseTickets": (context) => UseTicket(),
         'SignUp3': (context) => SignUp3Page(),
-      //  'SignUp4': (context) => SignUp4Page(),
+        //  'SignUp4': (context) => SignUp4Page(),
         'EditPhoneNumber': (context) => EditPhoneNumber(),
         'EditEmail': (context) => EditEmail(),
+        'screen': (context) => Screen(),
       },
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: Screen(),
     );
   }
 }
