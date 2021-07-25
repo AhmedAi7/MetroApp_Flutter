@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
+import 'package:metro_flutter_app/models/Lines.dart';
 import 'package:metro_flutter_app/models/SubTypes.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -17,9 +19,8 @@ import 'map_screen.dart';
 import 'NormalSubscripPage2.dart';
 import 'package:http/http.dart' as http;
 
-
 class Item {
-  const Item(this.name,this.icon,this.period);
+  const Item(this.name, this.icon, this.period);
   final String name;
   final Icon icon;
   final int period;
@@ -31,7 +32,6 @@ class UpdateSubscription extends StatefulWidget {
 }
 
 class _UpdateSubscriptionState extends State<UpdateSubscription> {
-
   Future<bool> alertDialog(String text, BuildContext context) {
     return showDialog(
         context: context,
@@ -51,12 +51,128 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
         });
   }
 
-  Future GetSubscriptionPrice(BuildContext context)async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+  List<String> stations1 = [];
+  List<int> lines = [];
+
+  void linesId() {
+    lines.clear();
     setState(() {
-      print(source+" "+destination+" ");
+      StationLine.forEach((k, v) {
+        if (!lines.contains(v)) {
+          lines.add(v);
+        }
+      });
+    });
+  }
+
+  void Stations() {
+    setState(() {
+      StationLine.forEach((k, v) {
+        stations1.add(k);
+      });
+      stations1.sort();
+    });
+  }
+
+  Map StationLine = new HashMap<String, dynamic>();
+  Future GetStations(int type, BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    var jsonResponse;
+    var Url = "http://localhost:8080/GetAllStations";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+      print("ResponseBody : " + response.body);
+      liness.clear();
+      stations1.clear();
+      StationLine = jsonResponse["stations"];
+      Stations();
+      ExpansionTile L =
+          Line("0", _getChildren(stations1.length, stations1, type, 0));
+      // Linee S= Linee(id : i,stations: st);
+      // Stationlinee.add(S);
+      liness.add(L);
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
+  List _getChildren(int count, List<String> stationss, int type, int id) =>
+      List<Widget>.generate(
+        count,
+        (i) => ListTile(
+          leading: Icon(
+            Icons.directions_train_sharp,
+            color: Color(0xffa80f14),
+            size: 25,
+          ),
+          title: TextButton(
+            child: Text(
+              stationss[i],
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            onPressed: () {
+              if (type == 1) {
+                setState(() {
+                  source = stationss[i];
+                });
+              } else {
+                setState(() {
+                  destination = stationss[i];
+                });
+              }
+              setState(() {
+                // print("1: "+liness[0].children.length.toString());
+                // print("2: "+liness[1].children.length.toString());
+                // print("3: "+liness[2].children.length.toString());
+                Navigator.pop(context);
+              });
+            },
+          ),
+        ),
+      );
+
+  List<ExpansionTile> liness = [];
+  _showStations(int type) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height -
+              AppBar().preferredSize.height -
+              MediaQuery.of(context).viewPadding.top -
+              MediaQuery.of(context).viewPadding.bottom, // height modal bottom
+          color: Color(0xffD3D3D3),
+          child: ListView.builder(
+              itemCount: liness.length,
+              itemBuilder: (BuildContext context, int index) {
+                return liness[index];
+              }),
+        );
+      },
+    );
+  }
+
+  Future GetSubscriptionPrice(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(source + " " + destination + " ");
       print(selected_user.period);
       print(token);
     });
@@ -64,35 +180,32 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
     Map<String, String> queryParams = {
       'source': source,
       'target': destination,
-      'period':selected_user.period.toString()
+      'period': selected_user.period.toString()
     };
-
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-user-api.azurewebsites.net/GetSubscriptionPrice" + '?' + queryString;
+    var Url = "http://localhost:8080/GetSubscriptionPrice" + '?' + queryString;
 
     var jsonResponse;
-    var response =await http.get(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token});
-    if(response.statusCode==200) {
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
+      print("ResponseBody : " + response.body);
       setState(() {
-        price=jsonResponse["price"];
+        price = jsonResponse["price"];
       });
-
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
   }
 
-  Future update(BuildContext context)async
-  {
+  Future update(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = "Bearer " + sharedPreferences.getString("token");
 
@@ -111,22 +224,20 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-ticket-reservation-app.herokuapp.com/UpdateNormalSubscription" + '?' +
-        queryString;
+    var Url =
+        "http://localhost:8080/UpdateNormalSubscription" + '?' + queryString;
 
-    var response = await http.post(Uri.parse(Url),
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          HttpHeaders.authorizationHeader: token
-        });
+    var response = await http.post(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       print("ResponseBody : " + response.body);
       if (jsonResponse["message"] == "success") {
         await alertDialog("Subscription is Updated", context);
         Navigator.popAndPushNamed(context, 'NavgPage');
-      }
-      else {
+      } else {
         await alertDialog("Check balance or info", context);
         setState(() {
           print(response.statusCode);
@@ -134,6 +245,7 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
       }
     }
   }
+
   String source;
   String destination;
   String period;
@@ -146,101 +258,29 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
   String _nearestStation = "Al-Sayeda Zainab";
 
   static List<Item> Periods = <Item>[
-    const Item('1 Month',Icon(Icons.date_range,color:  const Color(0xffa80f14),),1),
-    const Item('3 Months',Icon(Icons.date_range,color:  const Color(0xffa80f14),),3),
-    const Item('1 year',Icon(Icons.date_range,color:  const Color(0xffa80f14),),12),
-  ];
-  Item selected_user=Periods[0];
-  List _getChildren(int count, List<Station> stations, int type) =>
-      List<Widget>.generate(
-        count,
-            (i) => ListTile(
-          leading: Icon(
-            Icons.directions_train_sharp,
-            color: Color(0xffa80f14),
-            size: 25,
-          ),
-          title: InkWell(
-            child: Text(
-              '${stations[i].stationName}',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-            onTap: () {
-              if (type == 1)
-                source = stations[i].stationName;
-              else
-                destination = stations[i].stationName;
-              setState(() {
-                Navigator.pop(context);
-              });
-            },
-          ),
+    const Item(
+        '1 Month',
+        Icon(
+          Icons.date_range,
+          color: const Color(0xffa80f14),
         ),
-      );
-
-  _showStations(int type) {
-    return showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return Container(
-          height: MediaQuery.of(context).size.height -
-              AppBar().preferredSize.height -
-              MediaQuery.of(context).viewPadding.top -
-              MediaQuery.of(context).viewPadding.bottom, // height modal bottom
-          color: Color(0xffD3D3D3),
-          child: ListView(
-            children: [
-              ExpansionTile(
-                title: Text(
-                  'Line 1',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine1.length, stationsLine1, type),
-              ),
-              ExpansionTile(
-                title: Text(
-                  'Line 2',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine2.length, stationsLine2, type),
-              ),
-              ExpansionTile(
-                title: Text(
-                  'Line 3',
-                  style: TextStyle(
-                    color: Color(0xffa80f14).withOpacity(0.8),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                children:
-                _getChildren(stationsLine3.length, stationsLine3, type),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+        1),
+    const Item(
+        '3 Months',
+        Icon(
+          Icons.date_range,
+          color: const Color(0xffa80f14),
+        ),
+        3),
+    const Item(
+        '1 year',
+        Icon(
+          Icons.date_range,
+          color: const Color(0xffa80f14),
+        ),
+        12),
+  ];
+  Item selected_user = Periods[0];
 
   void _selectPlace(double lat, double lng) {
     _pickedLocation = PlaceLocation(latitude: lat, longitude: lng);
@@ -318,10 +358,10 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                   children: [
                     Container(
                       height: (MediaQuery.of(context).size.height -
-                          AppBar().preferredSize.height -
-                          MediaQuery.of(context).viewPadding.top -
-                          MediaQuery.of(context).viewPadding.bottom -
-                          kBottomNavigationBarHeight) *
+                              AppBar().preferredSize.height -
+                              MediaQuery.of(context).viewPadding.top -
+                              MediaQuery.of(context).viewPadding.bottom -
+                              kBottomNavigationBarHeight) *
                           0.3,
                       width: MediaQuery.of(context).size.width * 0.88,
                       alignment: Alignment.center,
@@ -339,18 +379,18 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                       ),
                       child: _previewImageUrl == null
                           ? Text(
-                        'No Loaction is Selected',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      )
+                              'No Loaction is Selected',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            )
                           : Image.network(
-                        _previewImageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
+                              _previewImageUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -504,6 +544,7 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
       _previewImageUrl = null;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -533,10 +574,9 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
             padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 60),
             child: Container(
                 alignment: Alignment.bottomCenter,
-                child:
-                Padding(
+                child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 60, 5, 5),
-                  child : Column(
+                  child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -572,7 +612,8 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                                 ),
                               ),
                             ),
-                            onTap: () {
+                            onTap: () async {
+                              await GetStations(1, context);
                               _showStations(1);
                             },
                           ),
@@ -627,7 +668,8 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                                 ),
                               ),
                             ),
-                            onTap: () {
+                            onTap: () async {
+                              await GetStations(2, context);
                               _showStations(2);
                             },
                           ),
@@ -664,9 +706,9 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                           child: Padding(
                             padding: EdgeInsets.only(top: 7, left: 10),
                             child: DropdownButton<Item>(
-                              focusColor:Colors.transparent ,
+                              focusColor: Colors.transparent,
                               isExpanded: true,
-                              hint:  Text("Select Period"),
+                              hint: Text("Select Period"),
                               value: selected_user,
                               onChanged: (Item Value) {
                                 setState(() {
@@ -674,19 +716,20 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                                 });
                               },
                               items: Periods.map((Item user) {
-                                return  DropdownMenuItem<Item>(
+                                return DropdownMenuItem<Item>(
                                   value: user,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Text(
-                                          user.name,
-                                          style: TextStyle(color: Colors.black,
+                                      Text(user.name,
+                                          style: TextStyle(
+                                            color: Colors.black,
                                             fontStyle: FontStyle.italic,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: user.name == null ? 15 : 20,
-                                          )
-                                      ),
+                                            fontSize:
+                                                user.name == null ? 15 : 20,
+                                          )),
                                       user.icon,
                                     ],
                                   ),
@@ -700,8 +743,8 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                         padding: const EdgeInsets.fromLTRB(35, 15, 5, 5),
                         child: Row(
                           children: [
-                            InkWell (
-                              onTap: () async{
+                            InkWell(
+                              onTap: () async {
                                 await GetSubscriptionPrice(context);
                               },
                               child: Container(
@@ -764,24 +807,19 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                             )
                           ],
                         ),
-                      )
-                      ,
-                      SizedBox(height:5.0),
+                      ),
+                      SizedBox(height: 5.0),
                       Center(
                         child: InkWell(
                           onTap: () async {
                             try {
                               if (source != null && destination != null) {
-                                 await update(context);
+                                await update(context);
+                              } else {
+                                await alertDialog(
+                                    "Check Empty Fields", context);
                               }
-                              else
-                              {
-                                await alertDialog("Check Empty Fields",context);
-                              }
-                            }
-                            catch(e){
-
-                            }
+                            } catch (e) {}
                           },
                           child: Container(
                             width: screenWidth * 0.5,
@@ -800,7 +838,7 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                             ),
                             child: Center(
                               child: Text(
-                                "Update Subscription",
+                                "Renew Subscription",
                                 style: TextStyle(
                                   color: Color(0xFFFFFFFF),
                                   fontSize: 20,
@@ -814,8 +852,7 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                       ),
                     ],
                   ),
-                )
-            ),
+                )),
           ),
         ],
       ),
