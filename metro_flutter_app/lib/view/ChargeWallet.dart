@@ -16,61 +16,66 @@ class ChargeWallet extends StatefulWidget {
   _ChargeWalletState createState() => _ChargeWalletState();
 }
 
-
 class _ChargeWalletState extends State<ChargeWallet> {
   String expireDate, expireYear;
   TextEditingController dateCtl = TextEditingController();
-  final Credit_number= TextEditingController();
-  final Cvvnumber= TextEditingController();
-  final Amount=TextEditingController();
+  final Credit_number = TextEditingController();
+  final Cvvnumber = TextEditingController();
+  final Amount = TextEditingController();
   final _formKey2 = GlobalKey<FormState>();
-  Future ChargeWallett(BuildContext context)async
-  {
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance() ;
-    String token="Bearer "+sharedPreferences.getString("token");
+  Future ChargeWallett(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
 
-    var Url="https://metro-user-api.azurewebsites.net/charges";
+    var Url = "http://localhost:8080/charges";
     var jsonResponse;
     var exp_month = int.parse(dateCtl.text.split("-")[1]);
     assert(exp_month is int);
-    var exp_year  = int.parse(dateCtl.text.split("-")[0]);
+    var exp_year = int.parse(dateCtl.text.split("-")[0]);
     assert(exp_year is int);
     var amount = int.parse(Amount.text);
     assert(amount is int);
 
     setState(() {
-      print(Credit_number.text+" "+Cvvnumber.text+" "+exp_month.toString()+" "+exp_year.toString()+" "+amount.toString());
+      print(Credit_number.text +
+          " " +
+          Cvvnumber.text +
+          " " +
+          exp_month.toString() +
+          " " +
+          exp_year.toString() +
+          " " +
+          amount.toString());
       print(token);
     });
-    var response =await http.post(Uri.parse(Url),
-        headers: <String,String>{"Content-Type":"application/json", HttpHeaders.authorizationHeader:token},
-        body: jsonEncode(<String,dynamic>{
-          "amount" :amount ,
-          "cardnum":Credit_number.text ,
-          "cvv": Cvvnumber.text  ,
-          "exp_month" : exp_month ,
-          "exp_year" :exp_year  ,
+    var response = await http.post(Uri.parse(Url),
+        headers: <String, String>{
+          "Content-Type": "application/json",
+          HttpHeaders.authorizationHeader: token
+        },
+        body: jsonEncode(<String, dynamic>{
+          "amount": amount,
+          "cardnum": Credit_number.text,
+          "cvv": Cvvnumber.text,
+          "exp_month": exp_month,
+          "exp_year": exp_year,
         }));
-    if(response.statusCode==200) {
+    if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
-      print("ResponseBody : "+response.body);
-      if(jsonResponse["message"]=="Balance Charged Successfully") {
-        await alertDialog("Balance Charged Successfully",context);
+      print("ResponseBody : " + response.body);
+      if (jsonResponse["message"] == "Balance Charged Successfully") {
+        await alertDialog("Balance Charged Successfully", context);
         Navigator.pushNamed(context, "HomePage");
+      } else {
+        await alertDialog("Check Your balance or your info", context);
       }
-      else
-      {
-        await alertDialog("Check Your balance or your info",context);
-      }
-    }
-    else
-    {
+    } else {
       setState(() {
         print(response.statusCode);
       });
     }
-
   }
+
   Future<bool> alertDialog(String text, BuildContext context) {
     return showDialog(
         context: context,
@@ -89,6 +94,7 @@ class _ChargeWalletState extends State<ChargeWallet> {
           );
         });
   }
+
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -142,14 +148,15 @@ class _ChargeWalletState extends State<ChargeWallet> {
                           height: 30,
                         ),
                         Text(
-                          "Credit Card Details :",style: TextStyle(
-                          fontSize: 30,
-                     fontFamily: 'Segoe UI',
-                   color: const Color(0xffffffff),
-                  fontStyle: FontStyle.italic,
-                   fontWeight: FontWeight.bold,
-                   letterSpacing: 2,
-                        ),
+                          "Credit Card Details :",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontFamily: 'Segoe UI',
+                            color: const Color(0xffffffff),
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                          ),
                         ),
                         SizedBox(
                           height: 10,
