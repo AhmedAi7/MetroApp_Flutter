@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future Login(String username, String password, BuildContext context) async {
     //SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
-    var Url = "https://metro-user-api.azurewebsites.net/Login";
+    var Url = "http://localhost:8080/Login";
     var jsonResponse;
     setState(() {
       print(username + " " + password);
@@ -65,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       print("ResponseBody : " + response.body);
+      loginStatues.writeStatus(true);
       loginStatues.writetoken(jsonResponse["Authorization"]);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => NavScreen(0)));
@@ -120,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontWeight: FontWeight.bold,
                         ),
                         decoration: CustomInputDecoration.textFieldStyle(
-                            " UserName", Icon(Icons.email)),
+                            " UserName", Icon(Icons.verified_user)),
                       ),
                     ),
                     SizedBox(
