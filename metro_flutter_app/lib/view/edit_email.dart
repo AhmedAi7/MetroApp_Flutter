@@ -45,7 +45,7 @@ class _EditEmailState extends State<EditEmail> {
     });
     Map<String, String> queryParams = {
       'password': password,
-      'newEmail': newEmail,
+      'Atrr': newEmail,
     };
 
     String queryString = Uri(queryParameters: queryParams).query;
@@ -81,7 +81,7 @@ class _EditEmailState extends State<EditEmail> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Edit Email"),
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height -

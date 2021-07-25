@@ -14,7 +14,7 @@ class _UseTicketState extends State<UseTicket> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Use Ticket"),
       drawer: MainDrawer(),
       body: Stack(
         children: [

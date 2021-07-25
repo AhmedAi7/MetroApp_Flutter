@@ -27,6 +27,24 @@ class _SettingsSplashState extends State<SettingsSplash> {
   String dateofbirth;
 
   var user;
+  Future<bool> alertDialog(String text, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Done'),
+            content: Text(text),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
 
   @override
   void initState() {
@@ -60,6 +78,8 @@ class _SettingsSplashState extends State<SettingsSplash> {
       setState(() {
         sharedPreferences.setString("fullname", newFullName);
       });
+      await alertDialog("Full Name updated successfully", context);
+      Navigator.popAndPushNamed(context, "Settings");
     } else {
       setState(() {
         print(response.statusCode);
@@ -74,25 +94,30 @@ class _SettingsSplashState extends State<SettingsSplash> {
       print(token);
     });
 
-    Map<String, String> queryParams = {
-      'newDate': newDateOfBirth,
-    };
+    var date = DateTime.parse(newDateOfBirth);
+    setState(() {
+      print(date.toIso8601String());
+    });
 
-    String queryString = Uri(queryParameters: queryParams).query;
-
-    var Url = "http://localhost:8080/ChangeUserBirthDate" + '?' + queryString;
+    var Url = "http://localhost:8080/ChangeUserBirthDate";
 
     var jsonResponse;
     var response = await http.post(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
-    });
+    },
+        body: jsonEncode(<String, dynamic>{
+        'newDate': date.toIso8601String()
+        }));
+
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       print("ResponseBody : " + response.body);
       setState(() {
         sharedPreferences.setString("date_of_birth", newDateOfBirth);
       });
+      await alertDialog("Date of Birth updated successfully", context);
+      Navigator.popAndPushNamed(context, "Settings");
     } else {
       setState(() {
         print(response.statusCode);
@@ -120,16 +145,20 @@ class _SettingsSplashState extends State<SettingsSplash> {
         ),
       ),
       onTap: () async {
-        DatePicker.showDatePicker(context,
-            showTitleActions: true,
-            minTime: DateTime(1921, 1, 1),
-            maxTime: DateTime(2121, 12, 31), onConfirm: (date) {
-          final formattedStr = DateFormat.yMMMd().format(date);
-          newDateOfBirth = formattedStr.toString();
-          //String x = date.;
-        }, currentTime: DateTime.now(), locale: LocaleType.en);
-        await changeDateOfBirth(context);
-      },
+              DateTime date = DateTime(1900);
+              FocusScope.of(context)
+                  .requestFocus(new FocusNode());
+              date = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100),
+              );
+              setState(() {
+                newDateOfBirth = date.toString().substring(0, 10);
+              });
+              await changeDateOfBirth(context);
+            },
     );
   }
 

@@ -10,6 +10,7 @@ import 'package:metro_flutter_app/models/TicketsTypes.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'HomeSplash.dart';
 import 'NavgPage.dart';
 
 class BuyTicket extends StatefulWidget {
@@ -36,6 +37,52 @@ class _BuyTicketState extends State<BuyTicket> {
           );
         });
   }
+
+  List<dynamic> Tickets;
+
+  Future<bool> GetBasicTickets() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+
+    var jsonResponse;
+    var Url = "http://localhost:8080/GetBasicTickets";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+
+    if (response.statusCode == 200) {
+      jsonResponse = jsonDecode(response.body);
+      print("Response" + jsonResponse["Basic Tickets:"].toString());
+      setState(() {
+        Tickets = jsonResponse["Basic Tickets:"];
+        _Set_Tickets();
+        print("Tickets" + Tickets.toString());
+      });
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
+  void _Set_Tickets() {
+    setState(() {
+      productss.clear();
+      for (int i = 0; i < Tickets.length; i++) {
+        var value = Tickets[i]["price"].toString() + " EGP";
+        var limitt = Tickets[i]["maximum_trips"].toString() + " Stations";
+        Productt ticket = Productt(
+            limitt, value, Tickets[i]["id"], Tickets[i]["maximum_trips"],
+            Tickets[i]["price"]);
+        productss.add(ticket);
+      }
+    });
+  }
+
 
   var price;
 
@@ -114,51 +161,76 @@ class _BuyTicketState extends State<BuyTicket> {
     );
   }
 
+  var ticket;
+
+  @override
+  void initState() {
+    ticket = GetBasicTickets();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      drawer: MainDrawer(),
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/Background.png"),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8),
-                  BlendMode.dstIn,
-                ),
-              ),
-            ),
-          ),
-          arrowbackhome(context),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 60),
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: GridView.builder(
-                  itemCount: 3,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                    childAspectRatio: 0.8,
+    return FutureBuilder<dynamic>(
+        future: ticket, // function where you call your api
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          // AsyncSnapshot<Your object type>
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SplashScreen();
+          }
+          else {
+            return Scaffold
+              (
+              appBar: buildAppBar("BuyTicket"),
+              drawer: MainDrawer(),
+              body: Stack(
+                children: [
+                  Container(
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("images/Background.png"),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.8),
+                          BlendMode.dstIn,
+                        ),
+                      ),
+                    ),
                   ),
-                  itemBuilder: (context, index) => card(
-                    productss[index],
+                  arrowbackhome(context),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 22.0, vertical: 60),
+                    child: Container(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: GridView.builder(
+                          itemCount: 3,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5,
+                            childAspectRatio: 0.8,
+                          ),
+                          itemBuilder: (context, index) =>
+                              card(
+                                productss[index],
+                              ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
+            );
+          }
+        }
     );
   }
 

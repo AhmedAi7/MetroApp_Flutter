@@ -629,7 +629,8 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                                 ),
                               ),
                             ),
-                            onTap: () {
+                            onTap: () async{
+                              await GetStations(2, context);
                               _showStations(2);
                             },
                           ),

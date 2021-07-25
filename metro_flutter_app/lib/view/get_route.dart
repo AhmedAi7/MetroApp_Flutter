@@ -498,7 +498,7 @@ class _GetRouteState extends State<GetRoute> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Get Route"),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(top: 0, bottom: 0),

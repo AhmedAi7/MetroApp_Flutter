@@ -10,9 +10,7 @@ class Tickett {
 }
 
 List<List<Tickett>> ListType=[
-  Tickets_five,
-  Tickets_seven,
-  Tickets_ten
+
 ];
 List<Tickett> Tickets_five = [
 

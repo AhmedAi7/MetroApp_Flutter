@@ -11,12 +11,15 @@ import 'package:metro_flutter_app/models/UserTickets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'HomeSplash.dart';
+
 class MyTickets extends StatefulWidget {
   @override
   _MyTicketsState createState() => _MyTicketsState();
 }
 
 List<dynamic> Tickets;
+List<dynamic> Ticketsss;
 
 class _MyTicketsState extends State<MyTickets> {
   Future<bool> GetTickets() async {
@@ -50,84 +53,155 @@ class _MyTicketsState extends State<MyTickets> {
     }
   }
 
+  Future<bool> GetBasicTickets() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+
+    var jsonResponse;
+    var Url = "http://localhost:8080/GetBasicTickets";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+
+    if (response.statusCode == 200) {
+      jsonResponse = jsonDecode(response.body);
+      print("Response" + jsonResponse["Basic Tickets:"].toString());
+      setState(() {
+        Ticketsss = jsonResponse["Basic Tickets:"];
+        Set_Tickets();
+        print("Tickets" + Ticketsss.toString());
+      });
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+  void Set_Tickets()
+  {
+    setState(() {
+      for (int i = 0; i < Ticketsss.length; i++) {
+         int k=i+1;
+        var value =  "Tickets Type $k"; //Ticketsss[i]["price"].toString() + " EGP
+        cat.add(value);
+      }});
+  }
   void _Set_Tickets() {
     setState(() {
-      Tickets_five.clear();
-      Tickets_seven.clear();
-      Tickets_ten.clear();
+      ListType.clear();
+      List<int> prices=[];
+      Tickets.sort((a, b) => a["price"].compareTo(b["price"]));
       for (int i = 0; i < Tickets.length; i++) {
-        if (Tickets[i]["price"] == 5) {
-          Tickett ticket = Tickett(Tickets[i]["id"], Tickets[i]["price"],
-              Tickets[i]["maximumTrips"], Tickets[i]["source_station"]);
-          Tickets_five.add(ticket);
+        List<Tickett> Ticketts=new List<Tickett>();
+        Tickett ticket = Tickett(Tickets[i]["id"], Tickets[i]["price"],
+            Tickets[i]["maximumTrips"], Tickets[i]["source_station"]);
+        if (!prices.contains(Tickets[i]["price"])) {
+          print("yes "+Tickets[i]["price"].toString());
+          prices.add(Tickets[i]["price"]);
+          Ticketts.add(ticket);
+          ListType.add(Ticketts);
         }
-        if (Tickets[i]["price"] == 7) {
-          Tickett ticket = Tickett(Tickets[i]["id"], Tickets[i]["price"],
-              Tickets[i]["maximumTrips"], Tickets[i]["source_station"]);
-          Tickets_seven.add(ticket);
-        }
-        if (Tickets[i]["price"] == 10) {
-          Tickett ticket = Tickett(Tickets[i]["id"], Tickets[i]["price"],
-              Tickets[i]["maximumTrips"], Tickets[i]["source_station"]);
-          Tickets_ten.add(ticket);
-        }
+        else
+          {
+            print("no");
+            for(int i=0;i<prices.length;i++) {
+            if(prices[i]==Tickets[i]["price"])
+              {
+               ListType[i].add(ticket);
+              }
+          }
+         }
       }
     });
   }
 
   static int selectedindex = 0;
-  List<String> cat = ["5 EGP Tickets", "7 EGP Tickets", "10 EGP Tickets"];
+  List<String> cat = [];
   int counter = 0;
+  var ticket;
+
+  // @override
+  // void initState() {
+  //   ticket = GetTickets();
+  //   super.initState();
+  // }
+
   @override
   Widget build(BuildContext context) {
     if (counter == 0) {
       setState(() {
+        GetBasicTickets();
         GetTickets();
         counter++;
       });
     }
-    return Scaffold(
-      appBar: buildAppBar(),
-      drawer: MainDrawer(),
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/Background.png"),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8),
-                  BlendMode.dstIn,
-                ),
+    // return FutureBuilder<dynamic>(
+    //     future: ticket, // function where you call your api
+    //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    //       // AsyncSnapshot<Your object type>
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return SplashScreen();
+    //       }
+    //       else {
+            return Scaffold(
+              appBar: buildAppBar("My Tickets"),
+              drawer: MainDrawer(),
+              body: Stack(
+                children: [
+                  Container(
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("images/Background.png"),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.8),
+                          BlendMode.dstIn,
+                        ),
+                      ),
+                    ),
+                  ),
+                  arrowbackhome(context),
+                  buildchoices(cat),
+                  SizedBox(height: 25.0),
+                  girdView(),
+                ],
               ),
-            ),
-          ),
-          arrowbackhome(context),
-          buildchoices(cat),
-          SizedBox(height: 25.0),
-          girdView(),
-        ],
-      ),
-    );
+            );
+    //       }
+    //     }
+    // );
   }
 
   Padding girdView() {
-    int count;
-    List<Tickett> k;
+    int count=0;
+    List<Tickett> k=[];
     setState(() {
-      if (selectedindex == 0) {
-        count = Tickets_five.length;
-        k = Tickets_five;
-      } else if (selectedindex == 1) {
-        count = Tickets_seven.length;
-        k = Tickets_seven;
-      } else if (selectedindex == 2) {
-        count = Tickets_ten.length;
-        k = Tickets_ten;
+
+      if(selectedindex<ListType.length) {
+        print(ListType[selectedindex][0].price);
+          k = ListType[selectedindex];
+          count = ListType[selectedindex].length;
+        cat[selectedindex].replaceAll( cat[selectedindex].split(" ")[0],ListType[selectedindex][0].price.toString());
       }
+      // if (selectedindex == 0) {
+      //   count = Tickets_five.length;
+      //   k = Tickets_five;
+      // } else if (selectedindex == 1) {
+      //   count = Tickets_seven.length;
+      //   k = Tickets_seven;
+      // } else if (selectedindex == 2) {
+      //   count = Tickets_ten.length;
+      //   k = Tickets_ten;
+      // }
     });
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 90),
@@ -309,3 +383,4 @@ class _MyTicketsState extends State<MyTickets> {
     );
   }
 }
+
