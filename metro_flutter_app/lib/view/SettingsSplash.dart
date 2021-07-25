@@ -1,11 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metro_flutter_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/user.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 import 'HomeSplash.dart';
 
@@ -14,8 +16,7 @@ class SettingsSplash extends StatefulWidget {
   _SettingsSplashState createState() => _SettingsSplashState();
 }
 
-class _SettingsSplashState extends State<SettingsSplash>  {
-
+class _SettingsSplashState extends State<SettingsSplash> {
   String newFullName;
   String newDateOfBirth;
   DateTime selectedDate = DateTime.now();
@@ -33,31 +34,79 @@ class _SettingsSplashState extends State<SettingsSplash>  {
     super.initState();
   }
 
-  Future getUser()async
-  {
-    SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
+  Future changeUserNamee(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
-      fullname=sharedPreferences.getString("fullname");
-      email=sharedPreferences.getString("email");
-      phone=sharedPreferences.getString("phone_number");
-      dateofbirth=sharedPreferences.getString("date_of_birth");
-
+      print(token);
     });
 
-  }
-  void _changeUserName() {
-    if (newFullName == null) return;
-    setState(() {
-      print("newFullName");
-      changeUserName(newFullName);
+    Map<String, String> queryParams = {
+      'newName': newFullName,
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "http://localhost:8080/ChangeUserName" + '?' + queryString;
+
+    var jsonResponse;
+    var response = await http.post(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
     });
-    Navigator.pop(context);
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      setState(() {
+        sharedPreferences.setString("fullname", newFullName);
+      });
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
   }
 
-  void _changeDateOfBirth() {
-    if (newDateOfBirth == null) return;
+  Future changeDateOfBirth(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
     setState(() {
-      changeDateOfBirth(newDateOfBirth);
+      print(token);
+    });
+
+    Map<String, String> queryParams = {
+      'newDate': newDateOfBirth,
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "http://localhost:8080/ChangeUserBirthDate" + '?' + queryString;
+
+    var jsonResponse;
+    var response = await http.post(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      setState(() {
+        sharedPreferences.setString("date_of_birth", newDateOfBirth);
+      });
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
+  Future getUser() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      fullname = sharedPreferences.getString("fullname");
+      email = sharedPreferences.getString("email");
+      phone = sharedPreferences.getString("phone_number");
+      dateofbirth = sharedPreferences.getString("date_of_birth");
     });
   }
 
@@ -70,20 +119,21 @@ class _SettingsSplashState extends State<SettingsSplash>  {
           fontSize: 15,
         ),
       ),
-      onTap: () {
+      onTap: () async {
         DatePicker.showDatePicker(context,
             showTitleActions: true,
             minTime: DateTime(1921, 1, 1),
             maxTime: DateTime(2121, 12, 31), onConfirm: (date) {
-              final formattedStr = DateFormat.yMMMd().format(date);
-              newDateOfBirth = formattedStr.toString();
-              //String x = date.;
-              _changeDateOfBirth();
-            }, currentTime: DateTime.now(), locale: LocaleType.en);
+          final formattedStr = DateFormat.yMMMd().format(date);
+          newDateOfBirth = formattedStr.toString();
+          //String x = date.;
+        }, currentTime: DateTime.now(), locale: LocaleType.en);
+        await changeDateOfBirth(context);
       },
     );
   }
-  int counter =0;
+
+  int counter = 0;
   @override
   Widget build(BuildContext context) {
     while (counter == 0) {
@@ -92,36 +142,22 @@ class _SettingsSplashState extends State<SettingsSplash>  {
         counter = counter + 1;
       });
     }
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double screenWidth = MediaQuery.of(context).size.width;
     return FutureBuilder<dynamic>(
         future: user, // function where you call your api
-        builder: (BuildContext context,
-            AsyncSnapshot<
-                dynamic> snapshot) { // AsyncSnapshot<Your object type>
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          // AsyncSnapshot<Your object type>
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SplashScreen();
-          }
-          else {
-           return Scaffold(
+          } else {
+            return Scaffold(
               body: SingleChildScrollView(
                 //physics: NeverScrollableScrollPhysics(),
                 child: Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height -
+                  height: MediaQuery.of(context).size.height -
                       AppBar().preferredSize.height -
-                      MediaQuery
-                          .of(context)
-                          .viewPadding
-                          .top -
-                      MediaQuery
-                          .of(context)
-                          .viewPadding
-                          .bottom -
+                      MediaQuery.of(context).viewPadding.top -
+                      MediaQuery.of(context).viewPadding.bottom -
                       kBottomNavigationBarHeight,
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -190,21 +226,20 @@ class _SettingsSplashState extends State<SettingsSplash>  {
                                         ),
                                         Container(
                                           width: screenWidth * 0.89,
-                                          decoration:
-                                          CustomBoxDecoration.decorationStyle(
+                                          decoration: CustomBoxDecoration
+                                              .decorationStyle(
                                             Color(0xffa80f14),
                                             15.0,
                                           ),
                                           child: TextFormField(
                                             controller: _textEditingController,
-                                            keyboardType: TextInputType
-                                                .emailAddress,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
                                             ),
-                                            decoration:
-                                            CustomInputDecoration
+                                            decoration: CustomInputDecoration
                                                 .textFieldStyle(
                                               "New Full Name",
                                               Icon(Icons.perm_identity),
@@ -215,16 +250,16 @@ class _SettingsSplashState extends State<SettingsSplash>  {
                                           height: 20,
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                           children: [
                                             Container(
                                               height: 30,
                                               width: 60,
                                               decoration: BoxDecoration(
                                                 color: Color(0xffa80f14),
-                                                borderRadius: BorderRadius
-                                                    .circular(10),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.white,
@@ -240,19 +275,20 @@ class _SettingsSplashState extends State<SettingsSplash>  {
                                                     'Apply',
                                                     style: TextStyle(
                                                       fontSize: 18,
-                                                      fontWeight: FontWeight
-                                                          .bold,
-                                                      fontStyle: FontStyle
-                                                          .italic,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontStyle:
+                                                          FontStyle.italic,
                                                       color: Colors.white,
                                                     ),
                                                   ),
                                                 ),
-                                                onTap: () {
+                                                onTap: () async {
                                                   newFullName =
                                                       _textEditingController
                                                           .text;
-                                                  _changeUserName();
+                                                  await changeUserNamee(
+                                                      context);
                                                 },
                                               ),
                                             ),
@@ -320,8 +356,8 @@ class _SettingsSplashState extends State<SettingsSplash>  {
                             ),
                             onTap: () {
                               // navigate to change phone number
-                              Navigator.of(context).pushNamed(
-                                  'EditPhoneNumber');
+                              Navigator.of(context)
+                                  .pushNamed('EditPhoneNumber');
                             },
                           ),
                         ],
@@ -403,10 +439,7 @@ class _SettingsSplashState extends State<SettingsSplash>  {
                       ),
                       Container(
                         height: 1.0,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        width: MediaQuery.of(context).size.width,
                         color: Colors.black.withOpacity(0.2),
                       ),
                       SizedBox(
@@ -445,10 +478,7 @@ class _SettingsSplashState extends State<SettingsSplash>  {
                       ),
                       Container(
                         height: 1.0,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        width: MediaQuery.of(context).size.width,
                         color: Colors.black.withOpacity(0.2),
                       ),
                       SizedBox(
@@ -488,7 +518,6 @@ class _SettingsSplashState extends State<SettingsSplash>  {
               ),
             );
           }
-        }
-    );
+        });
   }
 }
