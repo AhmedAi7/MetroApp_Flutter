@@ -19,7 +19,7 @@ class _NearestStationState extends State<NearestStation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Nearest Station"),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: Column(

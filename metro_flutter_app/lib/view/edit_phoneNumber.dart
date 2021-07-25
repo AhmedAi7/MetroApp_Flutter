@@ -48,7 +48,7 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
     });
     Map<String, String> queryParams = {
       'password': password,
-      'newPhoneNum': newPhoneNumber,
+      'Atrr': newPhoneNumber,
     };
 
     String queryString = Uri(queryParameters: queryParams).query;
@@ -84,7 +84,7 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Edit PhoneNumber"),
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height -

@@ -163,17 +163,17 @@ class _HomePageSplashState extends State<HomePageSplash> {
     }
   }
 
-  String source;
-  String destination;
+  String source="";
+  String destination="";
   double balance = 0.0;
   int price = 0;
-  String _previewImageUrl;
+  String _previewImageUrl="";
   bool flag = false;
   // ignore: unused_field
   PlaceLocation _pickedLocation;
   String _nearestStation = "Al-Sayeda Zainab";
   List<Linee> Stationlinee = [];
-  String value;
+  String value="";
 
   List _getChildren(int count, List<String> stationss, int type, int id) =>
       List<Widget>.generate(

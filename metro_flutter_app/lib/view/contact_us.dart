@@ -39,7 +39,7 @@ class ContactUs extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Contact Us"),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: Container(

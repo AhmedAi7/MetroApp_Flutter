@@ -121,7 +121,7 @@ class _NormalSubscription2State extends State<NormalSubscription2> {
     double screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: MainDrawer(),
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Subscription Form"),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: Stack(

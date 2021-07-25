@@ -98,7 +98,7 @@ class _ChargeWalletState extends State<ChargeWallet> {
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Charge Wallet"),
       drawer: MainDrawer(),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),

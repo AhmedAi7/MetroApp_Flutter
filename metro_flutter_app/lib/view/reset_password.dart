@@ -54,8 +54,8 @@ class _ResetPasswordState extends State<ResetPassword> {
       print(token);
     });
     Map<String, String> queryParams = {
-      'oldPassword': oldPassword,
-      'newPassword': newPassword,
+      'password': oldPassword,
+      'Atrr': newPassword,
     };
 
     String queryString = Uri(queryParameters: queryParams).query;
@@ -146,7 +146,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar("Reset Password"),
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height -
