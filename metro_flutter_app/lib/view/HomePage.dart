@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     var jsonResponse;
-    var Url = "https://metro-user-api.azurewebsites.net/GetUser";
+    var Url = "http://localhost:8080/GetUser";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
       print("Response :" + jsonResponse["balance"]);
       setState(() {
         loginStatues().setUser(
+            jsonResponse["username"],
             jsonResponse["fullname"],
             jsonResponse["email"],
             jsonResponse["password"],
