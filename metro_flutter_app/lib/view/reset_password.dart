@@ -1,10 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/models/user.dart';
-import 'package:metro_flutter_app/view/confirm_password.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ResetPassword extends StatefulWidget {
   @override
@@ -22,20 +25,68 @@ class _ResetPasswordState extends State<ResetPassword> {
   bool upperFlag;
   bool lowerFlag;
   bool numberFlag;
-  bool oldPasswordFlag;
   bool matchFlag;
   final _formKey = GlobalKey<FormState>();
 
-  void _checkPasswordValidation() {
-    if (oldPassword == user.password)
-      setState(() {
-        oldPasswordFlag = true;
-      });
-    else
-      setState(() {
-        oldPasswordFlag = false;
-      });
+  Future<bool> alertDialog(String text, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Done'),
+            content: Text(text),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
 
+  Future changePassword(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    Map<String, String> queryParams = {
+      'oldPassword': oldPassword,
+      'newPassword': newPassword,
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "http://localhost:8080/ChangeUserPassword" + '?' + queryString;
+
+    var jsonResponse;
+    var response = await http.post(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      if (jsonResponse["message"] == "User Password updated successfully") {
+        setState(() {
+          sharedPreferences.setString("password", newPassword);
+        });
+        await alertDialog("User Password updated successfully", context);
+        Navigator.popAndPushNamed(context, "Settings");
+      }
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+      await alertDialog("Old password is wrong , try again", context);
+      Navigator.popAndPushNamed(context, "Settings");
+    }
+  }
+
+  void _checkPasswordValidation() {
     if ((newPassword.length >= 6 && newPassword.length <= 20) ||
         (confirmNewPassword.length >= 6 && confirmNewPassword.length <= 20))
       setState(() {
@@ -86,21 +137,9 @@ class _ResetPasswordState extends State<ResetPassword> {
       });
   }
 
-  void _send() {
-    if (oldPasswordFlag &&
-        upperFlag &&
-        lowerFlag &&
-        numberFlag &&
-        matchFlag &&
-        lenghtFlag) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ConfirmPassword(
-            newPassword: newPassword,
-          ),
-        ),
-      );
+  void _send() async {
+    if (upperFlag && lowerFlag && numberFlag && matchFlag && lenghtFlag) {
+      await changePassword(context);
     }
   }
 
@@ -487,33 +526,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                           ),
                         Text(
                           " Match Confirm Password.",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        if (oldPasswordFlag == null)
-                          Icon(
-                            Icons.info,
-                            color: Colors.grey,
-                          ),
-                        if (oldPasswordFlag == true)
-                          Icon(
-                            Icons.check_circle,
-                            color: Color(0xff1CA612),
-                          ),
-                        if (oldPasswordFlag == false)
-                          Icon(
-                            Icons.not_interested,
-                            color: Colors.redAccent[700],
-                          ),
-                        Text(
-                          " Old Password should be correct.",
                           style: TextStyle(
                             color: Colors.white,
                             fontStyle: FontStyle.italic,
