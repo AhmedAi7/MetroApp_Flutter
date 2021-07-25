@@ -12,14 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'NavgPage.dart';
 
-
 class BuyTicket extends StatefulWidget {
   @override
   _BuyTicketState createState() => _BuyTicketState();
 }
 
 class _BuyTicketState extends State<BuyTicket> {
-
   Future<bool> alertDialog(String text, BuildContext context) {
     return showDialog(
         context: context,
@@ -39,54 +37,49 @@ class _BuyTicketState extends State<BuyTicket> {
         });
   }
 
-  
   var price;
 
-Future<bool> BuyTicket()async
-{
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String token = "Bearer " + sharedPreferences.getString("token");
-  setState(() {
-    print("Price :" + price.toString());
-  });
-  var jsonResponse;
-  Map<String, String> queryParams = {
-    'price': price.toString(),
-  };
+  Future<bool> BuyTicket() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print("Price :" + price.toString());
+    });
+    var jsonResponse;
+    Map<String, String> queryParams = {
+      'price': price.toString(),
+    };
 
+    String queryString = Uri(queryParameters: queryParams).query;
 
-  String queryString = Uri(queryParameters: queryParams).query;
+    var Url = "http://localhost:8080/BuyTicket" +
+        '?' +
+        queryString;
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
 
-  var Url = "https://metro-user-api.azurewebsites.net/BuyTicket" + '?' + queryString;
-  var response = await http.get(Uri.parse(Url),
-      headers: <String, String>{
-        "Content-Type": "application/json",
-        HttpHeaders.authorizationHeader: token
-      });
+    setState(() {
+      print(response.statusCode);
+    });
 
-  setState(() {
-    print(response.statusCode);
-  });
-
-  if (response.statusCode == 200) {
-    jsonResponse = json.decode(response.body);
-    print("ResponseBody : " + response.body);
-    if (jsonResponse["message"] == "success") {
-      await alertDialog("Ticket is purchased", context);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => NavScreen(0)
-          ));
-    }
-    else {
-      await alertDialog("Failed , Check Your Balance", context);
-      setState(() {
-        print(response.statusCode);
-      });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      if (jsonResponse["message"] == "success") {
+        await alertDialog("Ticket is purchased", context);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => NavScreen(0)));
+      } else {
+        await alertDialog("Failed , Check Your Balance", context);
+        setState(() {
+          print(response.statusCode);
+        });
+      }
     }
   }
-}
+
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -104,7 +97,7 @@ Future<bool> BuyTicket()async
           actions: <Widget>[
             TextButton(
               child: Text('Confirm'),
-              onPressed: () async{
+              onPressed: () async {
                 print('Confirmed');
                 await BuyTicket();
               },
@@ -120,6 +113,7 @@ Future<bool> BuyTicket()async
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,7 +148,7 @@ Future<bool> BuyTicket()async
                     crossAxisCount: 2,
                     crossAxisSpacing: 5,
                     mainAxisSpacing: 5,
-                    childAspectRatio: .9,
+                    childAspectRatio: 0.8,
                   ),
                   itemBuilder: (context, index) => card(
                     productss[index],
@@ -232,10 +226,10 @@ Future<bool> BuyTicket()async
             // ignore: deprecated_member_use
             child: RaisedButton(
               onPressed: () {
-               setState(() async {
-                 price=product1.value;
-                 await _showMyDialog();
-               });
+                setState(() async {
+                  price = product1.value;
+                  await _showMyDialog();
+                });
               },
               //padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
