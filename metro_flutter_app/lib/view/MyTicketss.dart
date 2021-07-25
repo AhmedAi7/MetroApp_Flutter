@@ -28,7 +28,7 @@ class _MyTicketsState extends State<MyTickets> {
 
     var jsonResponse;
     //http://localhost:8080
-    var Url = "https://metro-user-api.azurewebsites.net/GetUserTickets";
+    var Url = "http://localhost:8080/GetUserTickets";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
