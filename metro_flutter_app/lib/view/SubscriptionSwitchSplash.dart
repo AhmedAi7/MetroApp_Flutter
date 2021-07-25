@@ -13,7 +13,8 @@ import 'HomeSplash.dart';
 
 class SubscriptionSwitchSplash extends StatefulWidget {
   @override
-  _SubscriptionSwitchSplashState createState() => _SubscriptionSwitchSplashState();
+  _SubscriptionSwitchSplashState createState() =>
+      _SubscriptionSwitchSplashState();
 }
 
 class _SubscriptionSwitchSplashState extends State<SubscriptionSwitchSplash> {
@@ -25,12 +26,11 @@ class _SubscriptionSwitchSplashState extends State<SubscriptionSwitchSplash> {
     });
 
     var jsonResponse;
-    var Url = "https://metro-user-api.azurewebsites.net/CheckSubscripe";
-    var response = await http.get(Uri.parse(Url),
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          HttpHeaders.authorizationHeader: token
-        });
+    var Url = "http://localhost:8080/CheckSubscripe";
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
     setState(() {
       res = response;
     });
@@ -38,8 +38,7 @@ class _SubscriptionSwitchSplashState extends State<SubscriptionSwitchSplash> {
       jsonResponse = json.decode(response.body);
       print("ResponseBody : " + response.body);
       return true;
-    }
-    else {
+    } else {
       setState(() {
         print(response.statusCode);
       });
@@ -47,10 +46,7 @@ class _SubscriptionSwitchSplashState extends State<SubscriptionSwitchSplash> {
     }
   }
 
-  List<Widget> screens = [
-    NormalSubscription1(),
-    NormalSubscription3()
-  ];
+  List<Widget> screens = [NormalSubscription1(), NormalSubscription3()];
   var subscripe;
 
   @override
@@ -65,25 +61,20 @@ class _SubscriptionSwitchSplashState extends State<SubscriptionSwitchSplash> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      FutureBuilder<dynamic>(
-          future: subscripe, // function where you call your api
-          builder: (BuildContext context,
-              AsyncSnapshot<
-                  dynamic> snapshot) { // AsyncSnapshot<Your object type>
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return SplashScreen();
+    return FutureBuilder<dynamic>(
+        future: subscripe, // function where you call your api
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          // AsyncSnapshot<Your object type>
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SplashScreen();
+          } else {
+            if (res.statusCode == 200) {
+              selectedscreen = screens[1];
+            } else {
+              selectedscreen = screens[0];
             }
-            else {
-              if (res.statusCode == 200) {
-                selectedscreen = screens[1];
-              }
-              else {
-                selectedscreen = screens[0];
-              }
-              return selectedscreen;
-            }
+            return selectedscreen;
           }
-      );
+        });
   }
 }
