@@ -71,6 +71,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  cupertino_icons:
+    dependency: "direct main"
+    description:
+      name: cupertino_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  custom_navigator:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "84bc85880abaa0d4a0f37098c9e6f4bd58b19b0a"
+      url: "https://github.com/kjawadDeveloper/Custom-navigator.git"
+    source: git
+    version: "0.2.0"
   date_format:
     dependency: "direct main"
     description:

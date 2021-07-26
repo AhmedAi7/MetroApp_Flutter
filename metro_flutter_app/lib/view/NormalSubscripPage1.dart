@@ -582,7 +582,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                         children: [
                           InkWell(
                             child: Container(
-                              width: screenWidth * 0.85,
+                              width: screenWidth * 0.75,
                               height: 50,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -636,7 +636,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                         children: [
                           InkWell(
                             child: Container(
-                              width: screenWidth * 0.85,
+                              width: screenWidth * 0.75,
                               height: 50,
                               decoration: BoxDecoration(
                                 color: Colors.white,

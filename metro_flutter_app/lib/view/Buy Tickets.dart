@@ -204,7 +204,7 @@ class _BuyTicketState extends State<BuyTicket> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 20.0),
                         child: GridView.builder(
-                          itemCount: 3,
+                          itemCount: productss.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,

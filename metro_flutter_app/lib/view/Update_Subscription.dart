@@ -622,7 +622,7 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                         children: [
                           InkWell(
                             child: Container(
-                              width: screenWidth * 0.85,
+                              width: screenWidth * 0.75,
                               height: 50,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -676,7 +676,7 @@ class _UpdateSubscriptionState extends State<UpdateSubscription> {
                         children: [
                           InkWell(
                             child: Container(
-                              width: screenWidth * 0.85,
+                              width: screenWidth * 0.75,
                               height: 50,
                               decoration: BoxDecoration(
                                 color: Colors.white,

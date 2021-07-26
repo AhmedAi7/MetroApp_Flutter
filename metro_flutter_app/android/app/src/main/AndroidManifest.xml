@@ -10,7 +10,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Cairo Metro"
-        android:icon="@mipmap/metro-logo">
+        android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyCFovLWPbXUiSBY_6LeES1Hnjvt-ewtob0"/>
         <activity
