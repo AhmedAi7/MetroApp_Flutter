@@ -6,12 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/Textfeildd.dart';
-import 'package:metro_flutter_app/component/User_Status.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:metro_flutter_app/models/NormalSubscription.dart';
-import 'package:metro_flutter_app/models/SubTypes.dart';
-import 'package:metro_flutter_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NormalSubscription2 extends StatefulWidget {
