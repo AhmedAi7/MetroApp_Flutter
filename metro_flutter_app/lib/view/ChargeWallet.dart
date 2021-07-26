@@ -7,7 +7,6 @@ import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/Textfeildd.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
-import 'package:metro_flutter_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
