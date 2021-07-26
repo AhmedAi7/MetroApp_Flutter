@@ -6,13 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
-import 'package:metro_flutter_app/models/TicketsTypes.dart';
 import 'package:metro_flutter_app/models/UserTickets.dart';
 import 'package:metro_flutter_app/view/UseTicket.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
-import 'HomeSplash.dart';
 
 class MyTickets extends StatefulWidget {
   @override
@@ -31,7 +28,7 @@ class _MyTicketsState extends State<MyTickets> {
     });
 
     var jsonResponse;
-    //http://localhost:8080
+    //https://metro-user-api.azurewebsites.net
     var Url = "https://metro-user-api.azurewebsites.net/GetUserTickets";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
@@ -82,40 +79,40 @@ class _MyTicketsState extends State<MyTickets> {
       });
     }
   }
-  void Set_Tickets()
-  {
+
+  void Set_Tickets() {
     setState(() {
       for (int i = 0; i < Ticketsss.length; i++) {
-         int k=i+1;
-        var value =  "Tickets Type $k"; //Ticketsss[i]["price"].toString() + " EGP
+        int k = i + 1;
+        var value =
+            "Tickets Type $k"; //Ticketsss[i]["price"].toString() + " EGP
         cat.add(value);
-      }});
+      }
+    });
   }
+
   void _Set_Tickets() {
     setState(() {
       ListType.clear();
-      List<int> prices=[];
+      List<int> prices = [];
       Tickets.sort((a, b) => a["price"].compareTo(b["price"]));
       for (int i = 0; i < Tickets.length; i++) {
-        List<Tickett> Ticketts=new List<Tickett>();
+        List<Tickett> Ticketts = new List<Tickett>();
         Tickett ticket = Tickett(Tickets[i]["id"], Tickets[i]["price"],
             Tickets[i]["maximumTrips"], Tickets[i]["source_station"]);
         if (!prices.contains(Tickets[i]["price"])) {
-          print("yes "+Tickets[i]["price"].toString());
+          print("yes " + Tickets[i]["price"].toString());
           prices.add(Tickets[i]["price"]);
           Ticketts.add(ticket);
           ListType.add(Ticketts);
-        }
-        else
-          {
-            print("no");
-            for(int j=0;j<prices.length;j++) {
-            if(prices[j]==Tickets[i]["price"])
-              {
-               ListType[j].add(ticket);
-              }
+        } else {
+          print("no");
+          for (int i = 0; i < prices.length; i++) {
+            if (prices[i] == Tickets[i]["price"]) {
+              ListType[i].add(ticket);
+            }
           }
-         }
+        }
       }
     });
   }
@@ -148,50 +145,47 @@ class _MyTicketsState extends State<MyTickets> {
     //         return SplashScreen();
     //       }
     //       else {
-            return Scaffold(
-              appBar: buildAppBar("My Tickets"),
-              drawer: MainDrawer(),
-              body: Stack(
-                children: [
-                  Container(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("images/Background.png"),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.8),
-                          BlendMode.dstIn,
-                        ),
-                      ),
-                    ),
-                  ),
-                  arrowbackhome(context),
-                  buildchoices(cat),
-                  SizedBox(height: 25.0),
-                  girdView(),
-                ],
+    return Scaffold(
+      appBar: buildAppBar("My Tickets"),
+      drawer: MainDrawer(),
+      body: Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("images/Background.png"),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.8),
+                  BlendMode.dstIn,
+                ),
               ),
-            );
+            ),
+          ),
+          arrowbackhome(context),
+          buildchoices(cat),
+          SizedBox(height: 25.0),
+          girdView(),
+        ],
+      ),
+    );
     //       }
     //     }
     // );
   }
 
   Padding girdView() {
-    int count=0;
-    List<Tickett> k=[];
+    int count = 0;
+    List<Tickett> k = [];
     setState(() {
-
-      if(selectedindex<ListType.length) {
+      if (selectedindex < ListType.length) {
         print(ListType[selectedindex][0].price);
-          k = ListType[selectedindex];
-          count = ListType[selectedindex].length;
-        cat[selectedindex].replaceAll( cat[selectedindex].split(" ")[0],ListType[selectedindex][0].price.toString());
+        k = ListType[selectedindex];
+        count = ListType[selectedindex].length;
+        cat[selectedindex].replaceAll(cat[selectedindex].split(" ")[0],
+            ListType[selectedindex][0].price.toString());
       }
       // if (selectedindex == 0) {
       //   count = Tickets_five.length;
@@ -295,10 +289,8 @@ class _MyTicketsState extends State<MyTickets> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          UseTicket(product1.ticketID),
-                    )
-                );
+                      builder: (context) => UseTicket(product1.ticketID),
+                    ));
               },
               //padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
@@ -392,4 +384,3 @@ class _MyTicketsState extends State<MyTickets> {
     );
   }
 }
-
