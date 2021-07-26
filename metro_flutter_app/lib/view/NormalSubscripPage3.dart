@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/models/NormalSubscription.dart';
 import 'package:metro_flutter_app/view/Update_Subscription.dart';
+import 'package:metro_flutter_app/view/UseSubscription.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,7 +24,7 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
     });
 
     var jsonResponse;
-    var Url = "http://localhost:8080/CheckSubscripe";
+    var Url = "https://metro-user-api.azurewebsites.net/CheckSubscripe";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
@@ -31,8 +32,9 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       print("ResponseBody : " + response.body);
-      print("Response :" + jsonResponse["source"]);
+      print("Response :" + jsonResponse["Subscription_id"]);
       setState(() {
+        id = jsonResponse["Subscription_id"];
         source = jsonResponse["source"];
         target = jsonResponse["target"];
         Start_date = jsonResponse["Start_date"];
@@ -40,6 +42,7 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
         trips_num = jsonResponse["trips_num"];
         Start_date = Start_date.split(" ")[0];
         End_date = End_date.split(" ")[0];
+        print("id:" +id);
       });
       setState(() {
         print("NO " + jsonResponse["source"]);
@@ -51,6 +54,7 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
     }
   }
 
+  String id="";
   String source = "";
   String target = "";
   String Start_date = "";
@@ -172,7 +176,15 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
                 width: 400,
                 // ignore: deprecated_member_use
                 child: RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              UseSubscription(id),
+                        )
+                    );
+                  },
                   //padding: EdgeInsets.all(15.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(

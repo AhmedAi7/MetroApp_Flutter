@@ -70,7 +70,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/GetSubscriptionPrice" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetSubscriptionPrice" + '?' + queryString;
 
     var jsonResponse;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
@@ -132,7 +132,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
       print(token);
     });
     var jsonResponse;
-    var Url = "http://localhost:8080/GetAllStations";
+    var Url = "https://metro-user-api.azurewebsites.net/GetAllStations";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token

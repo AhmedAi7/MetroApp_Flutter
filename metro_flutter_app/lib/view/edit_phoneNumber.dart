@@ -53,7 +53,7 @@ class _EditPhoneNumberState extends State<EditPhoneNumber> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/ChangeUserPhoneNum" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/ChangeUserPhoneNum" + '?' + queryString;
 
     var jsonResponse;
     var response = await http.post(Uri.parse(Url), headers: <String, String>{

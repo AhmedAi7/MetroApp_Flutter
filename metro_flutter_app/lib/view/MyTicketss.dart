@@ -8,6 +8,7 @@ import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:metro_flutter_app/component/main_drawer.dart';
 import 'package:metro_flutter_app/models/TicketsTypes.dart';
 import 'package:metro_flutter_app/models/UserTickets.dart';
+import 'package:metro_flutter_app/view/UseTicket.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,7 +32,7 @@ class _MyTicketsState extends State<MyTickets> {
 
     var jsonResponse;
     //http://localhost:8080
-    var Url = "http://localhost:8080/GetUserTickets";
+    var Url = "https://metro-user-api.azurewebsites.net/GetUserTickets";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
@@ -61,7 +62,7 @@ class _MyTicketsState extends State<MyTickets> {
     });
 
     var jsonResponse;
-    var Url = "http://localhost:8080/GetBasicTickets";
+    var Url = "https://metro-user-api.azurewebsites.net/GetBasicTickets";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
@@ -108,10 +109,10 @@ class _MyTicketsState extends State<MyTickets> {
         else
           {
             print("no");
-            for(int i=0;i<prices.length;i++) {
-            if(prices[i]==Tickets[i]["price"])
+            for(int j=0;j<prices.length;j++) {
+            if(prices[j]==Tickets[i]["price"])
               {
-               ListType[i].add(ticket);
+               ListType[j].add(ticket);
               }
           }
          }
@@ -290,7 +291,15 @@ class _MyTicketsState extends State<MyTickets> {
             width: 135,
             // ignore: deprecated_member_use
             child: RaisedButton(
-              onPressed: () => Navigator.pushNamed(context, "UseTickets"),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          UseTicket(product1.ticketID),
+                    )
+                );
+              },
               //padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(

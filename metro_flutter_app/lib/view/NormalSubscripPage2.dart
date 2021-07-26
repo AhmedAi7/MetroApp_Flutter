@@ -83,7 +83,7 @@ class _NormalSubscription2State extends State<NormalSubscription2> {
           target1);
       print(token);
     });
-    var Url = "http://localhost:8080/AddNormalSubscription";
+    var Url = "https://metro-user-api.azurewebsites.net/AddNormalSubscription";
     var jsonResponse;
     var response = await http.post(Uri.parse(Url),
         headers: <String, String>{

@@ -47,7 +47,7 @@ class _GetRouteState extends State<GetRoute> {
     };
 
     String queryString = Uri(queryParameters: queryParams).query;
-    var Url = "http://localhost:8080/GetPath" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetPath" + '?' + queryString;
     var jsonResponse;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
@@ -145,7 +145,7 @@ class _GetRouteState extends State<GetRoute> {
       print(token);
     });
     var jsonResponse;
-    var Url = "http://localhost:8080/GetAllStations";
+    var Url = "https://metro-user-api.azurewebsites.net/GetAllStations";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
