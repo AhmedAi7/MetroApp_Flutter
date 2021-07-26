@@ -4,16 +4,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
-import 'package:metro_flutter_app/component/main_drawer.dart';
 import 'package:metro_flutter_app/models/Lines.dart';
-import 'package:metro_flutter_app/models/SubTypes.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:metro_flutter_app/helpers/location_helper.dart';
 import 'package:metro_flutter_app/models/place.dart';
-import 'package:metro_flutter_app/models/station.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'map_screen.dart';
 import 'NormalSubscripPage2.dart';
@@ -70,7 +66,9 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-user-api.azurewebsites.net/GetSubscriptionPrice" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetSubscriptionPrice" +
+        '?' +
+        queryString;
 
     var jsonResponse;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
@@ -99,7 +97,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
   bool flag = false;
   // ignore: unused_field
   PlaceLocation _pickedLocation;
-  String _nearestStation = "Al-Sayeda Zainab";
+  String _nearestStation;
 
   List<String> stations1 = [];
   List<int> lines = [];
@@ -256,9 +254,11 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
   Future<void> _getCurrentLocation(StateSetter st) async {
     try {
       // ignore: unused_local_variable
-      final locData = await Location().getLocation().then((value) {
+      final locData = await Location().getLocation().then((value) async {
         _showPreview(value.latitude, value.longitude);
         _selectPlace(value.latitude, value.longitude);
+        await getClosestStation(
+            context, value.latitude.toString(), value.longitude.toString());
         st(() {
           flag = true;
         });
@@ -282,11 +282,49 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
     }
     _showPreview(selectedLocation.latitude, selectedLocation.longitude);
     _selectPlace(selectedLocation.latitude, selectedLocation.longitude);
+    await getClosestStation(context, selectedLocation.latitude.toString(),
+        selectedLocation.longitude.toString());
     st(() {
       flag = true;
     });
     // selectedLocation has longitude and latitude of the location which the user had selected
     //print(selectedLocation.latitude);
+  }
+
+  Future getClosestStation(
+      BuildContext context, String lat, String long) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    Map<String, String> queryParams = {
+      'latitude': lat.toString(),
+      'longitude': long.toString(),
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "https://metro-user-api.azurewebsites.net/GetClosestStation" +
+        '?' +
+        queryString;
+
+    var jsonResponse;
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      setState(() {
+        _nearestStation = jsonResponse["station"];
+      });
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
   }
 
   void _set(String str, int type) {
@@ -629,7 +667,7 @@ class _NormalSubscription1State extends State<NormalSubscription1> {
                                 ),
                               ),
                             ),
-                            onTap: () async{
+                            onTap: () async {
                               await GetStations(2, context);
                               _showStations(2);
                             },
