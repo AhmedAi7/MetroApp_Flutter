@@ -33,7 +33,7 @@ class _GetRouteState extends State<GetRoute> {
 
   // ignore: unused_field
   PlaceLocation _pickedLocation;
-  String _nearestStation = "Al-Sayeda Zainab";
+  String _nearestStation;
 
   Future<bool> GetPath() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -47,7 +47,8 @@ class _GetRouteState extends State<GetRoute> {
     };
 
     String queryString = Uri(queryParameters: queryParams).query;
-    var Url = "https://metro-user-api.azurewebsites.net/GetPath" + '?' + queryString;
+    var Url =
+        "https://metro-user-api.azurewebsites.net/GetPath" + '?' + queryString;
     var jsonResponse;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
@@ -231,6 +232,42 @@ class _GetRouteState extends State<GetRoute> {
     );
   }
 
+  Future getClosestStation(
+      BuildContext context, String lat, String long) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    Map<String, String> queryParams = {
+      'latitude': lat.toString(),
+      'longitude': long.toString(),
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "https://metro-user-api.azurewebsites.net/GetClosestStation" +
+        '?' +
+        queryString;
+
+    var jsonResponse;
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      setState(() {
+        _nearestStation = jsonResponse["station"];
+      });
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
+  }
+
   void _set(String str, int type) {
     if (type == 1)
       source = str;
@@ -253,9 +290,11 @@ class _GetRouteState extends State<GetRoute> {
   Future<void> _getCurrentLocation(StateSetter st) async {
     try {
       // ignore: unused_local_variable
-      final locData = await Location().getLocation().then((value) {
+      final locData = await Location().getLocation().then((value) async {
         _showPreview(value.latitude, value.longitude);
         _selectPlace(value.latitude, value.longitude);
+        await getClosestStation(
+            context, value.latitude.toString(), value.longitude.toString());
         st(() {
           flag = true;
         });
@@ -279,6 +318,8 @@ class _GetRouteState extends State<GetRoute> {
     }
     _showPreview(selectedLocation.latitude, selectedLocation.longitude);
     _selectPlace(selectedLocation.latitude, selectedLocation.longitude);
+    await getClosestStation(context, selectedLocation.latitude.toString(),
+        selectedLocation.longitude.toString());
     st(() {
       flag = true;
     });
