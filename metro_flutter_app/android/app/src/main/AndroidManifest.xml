@@ -12,7 +12,7 @@
         android:label="metro_flutter_app"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyBeJ3AN-N1pOg6LQGYplxqtWbAaYGDMZS8"/>
+               android:value="AIzaSyCFovLWPbXUiSBY_6LeES1Hnjvt-ewtob0"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
