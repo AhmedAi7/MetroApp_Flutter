@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +7,7 @@ import 'package:metro_flutter_app/component/CustomStyles.dart';
 import 'package:http/http.dart' as http;
 import 'package:metro_flutter_app/component/User_Status.dart';
 import 'package:metro_flutter_app/models/LoginRequest.dart';
-import 'package:metro_flutter_app/view/HomeSplash.dart';
 import 'package:metro_flutter_app/view/NavgPage.dart';
-import 'package:metro_flutter_app/view/get_route.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -68,8 +63,8 @@ class _LoginPageState extends State<LoginPage> {
       print("ResponseBody : " + response.body);
       //loginStatues.writeStatus(true);
       loginStatues.writetoken(jsonResponse["Authorization"]);
-       Navigator.push(
-           context, MaterialPageRoute(builder: (context) => NavScreen(0)));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => NavScreen(0)));
     } else {
       await alertDialog("UserName or Password isn't correct!", context);
       setState(() {
