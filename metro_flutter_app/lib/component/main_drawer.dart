@@ -26,7 +26,7 @@ class _MainDrawerState extends State<MainDrawer> {
         onTap: location);
   }
 
-  String _username= " ";
+  String _username = "User";
 
   Future<Null> getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
