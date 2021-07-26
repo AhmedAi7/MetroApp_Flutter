@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
-import 'package:metro_flutter_app/models/NormalSubscription.dart';
 import 'package:metro_flutter_app/view/Update_Subscription.dart';
 import 'package:metro_flutter_app/view/UseSubscription.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,7 +41,7 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
         trips_num = jsonResponse["trips_num"];
         Start_date = Start_date.split(" ")[0];
         End_date = End_date.split(" ")[0];
-        print("id:" +id);
+        print("id:" + id);
       });
       setState(() {
         print("NO " + jsonResponse["source"]);
@@ -54,7 +53,7 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
     }
   }
 
-  String id="";
+  String id = "";
   String source = "";
   String target = "";
   String Start_date = "";
@@ -180,10 +179,8 @@ class _NormalSubscription3State extends State<NormalSubscription3> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              UseSubscription(id),
-                        )
-                    );
+                          builder: (context) => UseSubscription(id),
+                        ));
                   },
                   //padding: EdgeInsets.all(15.0),
                   shape: RoundedRectangleBorder(
