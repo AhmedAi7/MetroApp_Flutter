@@ -10,7 +10,6 @@ import 'package:metro_flutter_app/component/User_Status.dart';
 import 'package:metro_flutter_app/helpers/location_helper.dart';
 import 'package:metro_flutter_app/models/Lines.dart';
 import 'package:metro_flutter_app/models/place.dart';
-import 'package:metro_flutter_app/models/station.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'HomeSplash.dart';
 import 'map_screen.dart';
@@ -22,13 +21,6 @@ class HomePageSplash extends StatefulWidget {
 }
 
 class _HomePageSplashState extends State<HomePageSplash> {
-  // _HomePageSplashState()
-  // {
-  //   setState(() async{
-  //     SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-  //   this.balance= sharedPreferences.getString("balance") as double;
-  // });
-  // }
   var user;
 
   @override
@@ -143,7 +135,9 @@ class _HomePageSplashState extends State<HomePageSplash> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-user-api.azurewebsites.net/GetTicketPrice" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetTicketPrice" +
+        '?' +
+        queryString;
 
     var jsonResponse;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
@@ -163,17 +157,17 @@ class _HomePageSplashState extends State<HomePageSplash> {
     }
   }
 
-  String source;
-  String destination;
+  String source = "";
+  String destination = "";
   double balance = 0.0;
   int price = 0;
-  String _previewImageUrl="";
+  String _previewImageUrl = "";
   bool flag = false;
   // ignore: unused_field
   PlaceLocation _pickedLocation;
-  String _nearestStation = "Al-Sayeda Zainab";
+  String _nearestStation;
   List<Linee> Stationlinee = [];
-  String value="";
+  String value = "";
 
   List _getChildren(int count, List<String> stationss, int type, int id) =>
       List<Widget>.generate(
@@ -250,15 +244,53 @@ class _HomePageSplashState extends State<HomePageSplash> {
   Future<void> _getCurrentLocation(StateSetter st) async {
     try {
       // ignore: unused_local_variable
-      final locData = await Location().getLocation().then((value) {
+      final locData = await Location().getLocation().then((value) async {
         _showPreview(value.latitude, value.longitude);
         _selectPlace(value.latitude, value.longitude);
+        await getClosestStation(
+            context, value.latitude.toString(), value.longitude.toString());
         st(() {
           flag = true;
         });
       });
     } catch (error) {
       return;
+    }
+  }
+
+  Future getClosestStation(
+      BuildContext context, String lat, String long) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    Map<String, String> queryParams = {
+      'latitude': lat.toString(),
+      'longitude': long.toString(),
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "https://metro-user-api.azurewebsites.net/GetClosestStation" +
+        '?' +
+        queryString;
+
+    var jsonResponse;
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      setState(() {
+        _nearestStation = jsonResponse["station"];
+      });
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
     }
   }
 
@@ -276,11 +308,11 @@ class _HomePageSplashState extends State<HomePageSplash> {
     }
     _showPreview(selectedLocation.latitude, selectedLocation.longitude);
     _selectPlace(selectedLocation.latitude, selectedLocation.longitude);
+    await getClosestStation(context, selectedLocation.latitude.toString(),
+        selectedLocation.longitude.toString());
     st(() {
       flag = true;
     });
-    // selectedLocation has longitude and latitude of the location which the user had selected
-    //print(selectedLocation.latitude);
   }
 
   void _checkPrice() async {
@@ -352,6 +384,9 @@ class _HomePageSplashState extends State<HomePageSplash> {
                               fit: BoxFit.cover,
                               width: double.infinity,
                             ),
+                    ),
+                    SizedBox(
+                      height: 25,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
