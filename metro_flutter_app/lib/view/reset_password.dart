@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
-import 'package:metro_flutter_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ResetPassword extends StatefulWidget {
