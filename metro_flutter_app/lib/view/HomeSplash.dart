@@ -1,15 +1,6 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metro_flutter_app/component/User_Status.dart';
-import 'package:metro_flutter_app/view/HomePage.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+
 //
 // import 'NavgPage.dart';
 //
@@ -64,13 +55,12 @@ class SplashScreen extends StatefulWidget {
   Splash createState() => Splash();
 }
 
-class Splash extends State<SplashScreen>  {
-
+class Splash extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
     // Timer(
@@ -79,12 +69,11 @@ class Splash extends State<SplashScreen>  {
     //         Navigator.of(context).pushReplacement(MaterialPageRoute(
     //             builder: (BuildContext context) => LandingScreen())));
 
-
     var assetsImage = new AssetImage(
         'images/metro-logo.png'); //<- Creates an object that fetches an image.
     var image = new Image(
         image: assetsImage,
-        height:300); //<- Creates a widget that displays an image.
+        height: 300); //<- Creates a widget that displays an image.
 
     return MaterialApp(
       home: Scaffold(
