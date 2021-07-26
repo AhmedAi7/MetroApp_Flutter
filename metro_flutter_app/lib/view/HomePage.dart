@@ -10,9 +10,7 @@ import 'package:metro_flutter_app/component/User_Status.dart';
 import 'package:metro_flutter_app/helpers/location_helper.dart';
 import 'package:metro_flutter_app/models/Lines.dart';
 import 'package:metro_flutter_app/models/place.dart';
-import 'package:metro_flutter_app/models/station.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'HomeSplash.dart';
 import 'map_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -137,7 +135,9 @@ class _HomePageState extends State<HomePage> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-user-api.azurewebsites.net/GetTicketPrice" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetTicketPrice" +
+        '?' +
+        queryString;
 
     var jsonResponse;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
