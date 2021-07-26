@@ -4,9 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:metro_flutter_app/component/CustomStyles.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import 'HomeSplash.dart';
@@ -65,7 +63,9 @@ class _SettingsSplashState extends State<SettingsSplash> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "https://metro-user-api.azurewebsites.net/ChangeUserName" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/ChangeUserName" +
+        '?' +
+        queryString;
 
     var jsonResponse;
     var response = await http.post(Uri.parse(Url), headers: <String, String>{
@@ -102,13 +102,12 @@ class _SettingsSplashState extends State<SettingsSplash> {
     var Url = "https://metro-user-api.azurewebsites.net/ChangeUserBirthDate";
 
     var jsonResponse;
-    var response = await http.post(Uri.parse(Url), headers: <String, String>{
-      "Content-Type": "application/json",
-      HttpHeaders.authorizationHeader: token
-    },
-        body: jsonEncode(<String, dynamic>{
-        'newDate': date.toIso8601String()
-        }));
+    var response = await http.post(Uri.parse(Url),
+        headers: <String, String>{
+          "Content-Type": "application/json",
+          HttpHeaders.authorizationHeader: token
+        },
+        body: jsonEncode(<String, dynamic>{'newDate': date.toIso8601String()}));
 
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
@@ -145,20 +144,19 @@ class _SettingsSplashState extends State<SettingsSplash> {
         ),
       ),
       onTap: () async {
-              DateTime date = DateTime(1900);
-              FocusScope.of(context)
-                  .requestFocus(new FocusNode());
-              date = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(1900),
-                lastDate: DateTime(2100),
-              );
-              setState(() {
-                newDateOfBirth = date.toString().substring(0, 10);
-              });
-              await changeDateOfBirth(context);
-            },
+        DateTime date = DateTime(1900);
+        FocusScope.of(context).requestFocus(new FocusNode());
+        date = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+        );
+        setState(() {
+          newDateOfBirth = date.toString().substring(0, 10);
+        });
+        await changeDateOfBirth(context);
+      },
     );
   }
 
