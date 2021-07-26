@@ -1,12 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'map_screen.dart';
 import '../helpers/location_helper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // ignore: must_be_immutable
 class LocationInput extends StatefulWidget {
-  String _nearestStation = "Al-Sayeda Zainab";
+  String _nearestStation;
   final Function onSelectPlace;
   LocationInput(this.onSelectPlace);
 
@@ -29,9 +33,11 @@ class _LocationInputState extends State<LocationInput> {
   Future<void> _getCurrentLocation() async {
     try {
       // ignore: unused_local_variable
-      final locData = await Location().getLocation().then((value) {
+      final locData = await Location().getLocation().then((value) async {
         _showPreview(value.latitude, value.longitude);
         widget.onSelectPlace(value.latitude, value.longitude);
+        await getClosestStation(
+            context, value.latitude.toString(), value.longitude.toString());
         setState(() {
           flag = true;
         });
@@ -56,10 +62,46 @@ class _LocationInputState extends State<LocationInput> {
     setState(() {
       flag = true;
     });
-    // selectedLocation has longitude and latitude of the location which the user had selected
-    //print(selectedLocation.latitude);
     _showPreview(selectedLocation.latitude, selectedLocation.longitude);
     widget.onSelectPlace(selectedLocation.latitude, selectedLocation.longitude);
+    await getClosestStation(context, selectedLocation.latitude.toString(),
+        selectedLocation.longitude.toString());
+  }
+
+  Future getClosestStation(
+      BuildContext context, String lat, String long) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = "Bearer " + sharedPreferences.getString("token");
+    setState(() {
+      print(token);
+    });
+    Map<String, String> queryParams = {
+      'latitude': lat.toString(),
+      'longitude': long.toString(),
+    };
+
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var Url = "https://metro-user-api.azurewebsites.net/GetClosestStation" +
+        '?' +
+        queryString;
+
+    var jsonResponse;
+    var response = await http.get(Uri.parse(Url), headers: <String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: token
+    });
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print("ResponseBody : " + response.body);
+      setState(() {
+        widget._nearestStation = jsonResponse["station"];
+      });
+    } else {
+      setState(() {
+        print(response.statusCode);
+      });
+    }
   }
 
   @override
