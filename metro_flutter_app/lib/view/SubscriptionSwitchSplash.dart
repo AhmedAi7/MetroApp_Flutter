@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metro_flutter_app/models/NormalSubscription.dart';
 import 'package:metro_flutter_app/view/NormalSubscripPage1.dart';
 import 'package:metro_flutter_app/view/NormalSubscripPage3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
