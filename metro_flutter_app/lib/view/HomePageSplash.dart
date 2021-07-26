@@ -45,7 +45,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
     });
 
     var jsonResponse;
-    var Url = "http://localhost:8080/GetUser";
+    var Url = "https://metro-user-api.azurewebsites.net/GetUser";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
@@ -104,7 +104,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
       print(token);
     });
     var jsonResponse;
-    var Url = "http://localhost:8080/GetAllStations";
+    var Url = "https://metro-user-api.azurewebsites.net/GetAllStations";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
@@ -143,7 +143,7 @@ class _HomePageSplashState extends State<HomePageSplash> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/GetTicketPrice" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/GetTicketPrice" + '?' + queryString;
 
     var jsonResponse;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
@@ -163,8 +163,8 @@ class _HomePageSplashState extends State<HomePageSplash> {
     }
   }
 
-  String source="";
-  String destination="";
+  String source;
+  String destination;
   double balance = 0.0;
   int price = 0;
   String _previewImageUrl="";

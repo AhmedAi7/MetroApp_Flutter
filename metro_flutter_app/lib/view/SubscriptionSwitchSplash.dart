@@ -26,7 +26,7 @@ class _SubscriptionSwitchSplashState extends State<SubscriptionSwitchSplash> {
     });
 
     var jsonResponse;
-    var Url = "http://localhost:8080/CheckSubscripe";
+    var Url = "https://metro-user-api.azurewebsites.net/CheckSubscripe";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token

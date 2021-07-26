@@ -60,7 +60,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/ChangeUserPassword" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/ChangeUserPassword" + '?' + queryString;
 
     var jsonResponse;
     var response = await http.post(Uri.parse(Url), headers: <String, String>{

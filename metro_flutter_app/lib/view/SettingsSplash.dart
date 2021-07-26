@@ -65,7 +65,7 @@ class _SettingsSplashState extends State<SettingsSplash> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/ChangeUserName" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/ChangeUserName" + '?' + queryString;
 
     var jsonResponse;
     var response = await http.post(Uri.parse(Url), headers: <String, String>{
@@ -99,7 +99,7 @@ class _SettingsSplashState extends State<SettingsSplash> {
       print(date.toIso8601String());
     });
 
-    var Url = "http://localhost:8080/ChangeUserBirthDate";
+    var Url = "https://metro-user-api.azurewebsites.net/ChangeUserBirthDate";
 
     var jsonResponse;
     var response = await http.post(Uri.parse(Url), headers: <String, String>{

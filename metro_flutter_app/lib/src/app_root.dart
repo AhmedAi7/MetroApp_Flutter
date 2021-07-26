@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         "MyTickets": (context) => MyTickets(),
         'GetRoute': (context) => GetRoute(),
         'ContactUs': (context) => ContactUs(),
-        "UseTickets": (context) => UseTicket(),
+        //"UseTickets": (context) => UseTicket(id),
         'SignUp3': (context) => SignUp3Page(),
         //  'SignUp4': (context) => SignUp4Page(),
         'EditPhoneNumber': (context) => EditPhoneNumber(),

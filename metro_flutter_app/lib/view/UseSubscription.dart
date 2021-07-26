@@ -6,23 +6,23 @@ import 'package:metro_flutter_app/component/main_drawer.dart';
 import 'package:metro_flutter_app/models/Ticket.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class UseTicket extends StatefulWidget {
-  int id;
-  UseTicket(this.id);
+class UseSubscription extends StatefulWidget {
+  String id;
+  UseSubscription(this.id);
 
   @override
-  _UseTicketState createState() => _UseTicketState(id);
+  _UseSubscriptionState createState() => _UseSubscriptionState(id);
 }
 
-class _UseTicketState extends State<UseTicket> {
-  int id;
+class _UseSubscriptionState extends State<UseSubscription> {
+  String id;
 
-  _UseTicketState(this.id);
+  _UseSubscriptionState(this.id);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: buildAppBar("Use Ticket"),
+        appBar: buildAppBar("Use Subscription"),
         drawer: MainDrawer(),
         body: Stack(
             children: [
@@ -44,12 +44,12 @@ class _UseTicketState extends State<UseTicket> {
                   )),
               arrowback(context),
               Center(
-                  child: QrImage(
-                    data: "Ticket-$id",
-                    version: QrVersions.auto,
-                    size: 320.0,
-                    backgroundColor: Colors.white,
-                  ),
+                child: QrImage(
+                  data: "Sub-"+id,
+                  version: QrVersions.auto,
+                  size: 320.0,
+                  backgroundColor: Colors.white,
+                ),
               )
             ])
     );

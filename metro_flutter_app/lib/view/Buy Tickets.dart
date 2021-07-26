@@ -48,7 +48,7 @@ class _BuyTicketState extends State<BuyTicket> {
     });
 
     var jsonResponse;
-    var Url = "http://localhost:8080/GetBasicTickets";
+    var Url = "https://metro-user-api.azurewebsites.net/GetBasicTickets";
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
       "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: token
@@ -99,7 +99,7 @@ class _BuyTicketState extends State<BuyTicket> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/BuyTicket" +
+    var Url = "https://metro-user-api.azurewebsites.net/BuyTicket" +
         '?' +
         queryString;
     var response = await http.get(Uri.parse(Url), headers: <String, String>{
@@ -211,7 +211,7 @@ class _BuyTicketState extends State<BuyTicket> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 20.0),
                         child: GridView.builder(
-                          itemCount: 3,
+                          itemCount: productss.length,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 5,

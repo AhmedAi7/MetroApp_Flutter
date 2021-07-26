@@ -50,7 +50,7 @@ class _EditEmailState extends State<EditEmail> {
 
     String queryString = Uri(queryParameters: queryParams).query;
 
-    var Url = "http://localhost:8080/ChangeUserEmail" + '?' + queryString;
+    var Url = "https://metro-user-api.azurewebsites.net/ChangeUserEmail" + '?' + queryString;
 
     var jsonResponse;
     var response = await http.post(Uri.parse(Url), headers: <String, String>{
