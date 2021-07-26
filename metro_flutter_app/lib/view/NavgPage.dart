@@ -1,17 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_flutter_app/component/Appbar.dart';
-import 'package:metro_flutter_app/view/HomePage.dart';
-import 'package:metro_flutter_app/view/HomeSplash.dart';
-import 'package:metro_flutter_app/view/NormalSubscripPage1.dart';
-import 'package:metro_flutter_app/view/Settings.dart';
 import 'package:metro_flutter_app/view/SettingsSplash.dart';
-import 'package:metro_flutter_app/view/SubscriptionPage.dart';
 import 'package:metro_flutter_app/view/SubscriptionSwitchSplash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../component/main_drawer.dart';
 import 'HomePageSplash.dart';
-import 'SubscriptionSwitch.dart';
 
 class NavScreen extends StatefulWidget {
   final index1;
@@ -22,11 +16,10 @@ class NavScreen extends StatefulWidget {
 }
 
 class _NavScreenState extends State<NavScreen> {
-
   _NavScreenState(index1) {
     currentindex = index1;
   }
-  String _username= " ";
+  String _username = " ";
 
   Future<Null> getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,6 +34,7 @@ class _NavScreenState extends State<NavScreen> {
     _username = "";
     getSharedPrefs();
   }
+
   List<Widget> screens = [
     HomePageSplash(),
     SubscriptionSwitchSplash(),
