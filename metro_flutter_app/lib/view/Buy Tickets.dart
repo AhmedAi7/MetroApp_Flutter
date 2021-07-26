@@ -75,14 +75,12 @@ class _BuyTicketState extends State<BuyTicket> {
       for (int i = 0; i < Tickets.length; i++) {
         var value = Tickets[i]["price"].toString() + " EGP";
         var limitt = Tickets[i]["maximum_trips"].toString() + " Stations";
-        Productt ticket = Productt(
-            limitt, value, Tickets[i]["id"], Tickets[i]["maximum_trips"],
-            Tickets[i]["price"]);
+        Productt ticket = Productt(limitt, value, Tickets[i]["id"],
+            Tickets[i]["maximum_trips"], Tickets[i]["price"]);
         productss.add(ticket);
       }
     });
   }
-
 
   var price;
 
@@ -177,19 +175,14 @@ class _BuyTicketState extends State<BuyTicket> {
           // AsyncSnapshot<Your object type>
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SplashScreen();
-          }
-          else {
-            return Scaffold
-              (
+          } else {
+            return Scaffold(
               appBar: buildAppBar("BuyTicket"),
               drawer: MainDrawer(),
               body: Stack(
                 children: [
                   Container(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height,
+                    height: MediaQuery.of(context).size.height,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       image: DecorationImage(
@@ -211,17 +204,17 @@ class _BuyTicketState extends State<BuyTicket> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 20.0),
                         child: GridView.builder(
-                          itemCount: productss.length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          itemCount: 3,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 5,
                             mainAxisSpacing: 5,
                             childAspectRatio: 0.8,
                           ),
-                          itemBuilder: (context, index) =>
-                              card(
-                                productss[index],
-                              ),
+                          itemBuilder: (context, index) => card(
+                            productss[index],
+                          ),
                         ),
                       ),
                     ),
@@ -230,8 +223,7 @@ class _BuyTicketState extends State<BuyTicket> {
               ),
             );
           }
-        }
-    );
+        });
   }
 
   Container card(products) {
