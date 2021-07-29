@@ -51,6 +51,7 @@ Our project solve these problems as below:
 This section list any major frameworks that is used in buliding the project:
 * [Flutter](https://flutter.dev/)
 * [Spring Boot](https://spring.io/)
+* [MySQL](https://www.mysql.com/)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -81,7 +82,6 @@ https://user-images.githubusercontent.com/36138708/127525434-6bcf11b4-09c6-4d93-
 
 
 
-
 <!-- CONTACT -->
 ## Contact
 
@@ -93,4 +93,4 @@ https://user-images.githubusercontent.com/36138708/127525434-6bcf11b4-09c6-4d93-
 
 Project Link: [Metro Ticket Reservation](https://github.com/AhmedAi7/MetroApp_Flutter)
 
-Related Project Link: [Metro Application APIs](https://github.com/Mohamedmohsenn/Metro-Application-APIs)
+Related Project Link that implement the Back-end Part: [Metro Application APIs](https://github.com/Mohamedmohsenn/Metro-Application-APIs)
