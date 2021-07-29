@@ -71,7 +71,7 @@ This is a list of things you need to use the software and how to install them.
    ```sh
    git clone https://github.com/AhmedAi7/MetroApp_Flutter.git
    ```
-3. Navigate to "lib/helpers/location_helper.dart" and "/android/app/src/debug/AndroidManifest.xml" and put the API Key.
+3. Navigate to ```lib/helpers/location_helper.dart``` and ```/android/app/src/debug/AndroidManifest.xml``` and put the API Key.
 
 
 <!-- USAGE EXAMPLES -->
