@@ -50,7 +50,8 @@ Our project solve these problems as below:
 
 This section list any major frameworks that is used in buliding the project:
 * [Flutter](https://flutter.dev/)
-
+* [Spring Boot](https://spring.io/)
+* [MySQL](https://www.mysql.com/)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -58,7 +59,7 @@ This section list any major frameworks that is used in buliding the project:
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+This is a list of things you need to use the software and how to install them.
 * Flutter
 * Google Map API
 
@@ -70,7 +71,7 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/AhmedAi7/MetroApp_Flutter.git
    ```
-3. Navigate to "lib/helpers/location_helper.dart" and "/android/app/src/debug/AndroidManifest.xml" and put the API Key.
+3. Navigate to ```lib/helpers/location_helper.dart``` and ```/android/app/src/debug/AndroidManifest.xml``` and put the API Key.
 
 
 <!-- USAGE EXAMPLES -->
@@ -78,7 +79,6 @@ This is an example of how to list things you need to use the software and how to
 This is a demo for how the project should work and its functionalities.
 
 https://user-images.githubusercontent.com/36138708/127525434-6bcf11b4-09c6-4d93-b6b7-61b74b98017d.mp4
-
 
 
 
@@ -92,3 +92,5 @@ https://user-images.githubusercontent.com/36138708/127525434-6bcf11b4-09c6-4d93-
 * Mohamed Mohsen - [LinkedIn](https://www.linkedin.com/in/mohamed-mohsen-4226661a3/) - midomohsen11@gmail.com
 
 Project Link: [Metro Ticket Reservation](https://github.com/AhmedAi7/MetroApp_Flutter)
+
+Related Project Link that implement the Back-end Part: [Metro Application APIs](https://github.com/Mohamedmohsenn/Metro-Application-APIs)
